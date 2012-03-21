@@ -1,0 +1,34 @@
+<header>
+	<nav class="navbar navbar-fixed-top">
+	  <div class="navbar-inner">
+	    <div class="container">
+				<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+	        <span class="icon-bar"></span>
+	        <span class="icon-bar"></span>
+	        <span class="icon-bar"></span>
+	      </a>
+  			<%= link_to logo, root_path, class: "brand" %>
+ 				<div class="nav-collapse">
+    			<ul class="nav">
+						<li class="divider-vertical"></li>
+      			<li><%= link_to "Home", root_path, class: "lead" %></li>
+						<li class="divider-vertical"></li>
+						<% if current_user %>
+							<li><%= link_to "Sign out", signout_path, class: "lead" %></li>
+							<li class="divider-vertical"></li>
+					</ul>
+					<ul class="nav pull-right">
+						<li class="current-user">Signed in as <%= current_user.email %></li>
+					</ul>
+						<% else %>
+							<li><%= link_to "Sign up", signup_path, class: "lead" %></li>
+							<li class="divider-vertical"></li>
+							<li><%= link_to "Sign in", signin_path, class: "lead" %></li>
+							<li class="divider-vertical"></li>
+						</ul>
+						<% end %>	
+				</div>
+			</div>
+		</div>
+	</nav>
+</header>

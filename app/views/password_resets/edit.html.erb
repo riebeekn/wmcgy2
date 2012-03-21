@@ -1,0 +1,16 @@
+<div class="page-header">
+	<h1>Reset Password</h1>
+</div>
+<%= simple_form_for @user, url: update_password_path(params[:id]), 
+				html: { class: "form-horizontal" } do |f| %>
+	<fieldset>
+		<%= f.input :password %>
+		<%= f.input :password_confirmation, label: "Confirmation" %>
+  	<div class="control-group">
+			<div class="controls">
+				<%= f.submit "Update Password" %>
+			</div>
+		</div>
+	</fieldset>
+<% end %>
+

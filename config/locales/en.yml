@@ -1,0 +1,11 @@
+en:
+  activerecord:
+      attributes:
+        user:
+          password_digest: "Password"
+  flash_messages:
+    activate_account: "Please activate your account"
+    password_resets:
+      email_sent: "Email sent with password reset instructions."
+      invalid_token: "Invalid password reset token, please try again."
+  app_base_title: "Where'd my cash go yo?"

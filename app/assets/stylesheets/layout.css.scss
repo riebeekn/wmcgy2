@@ -1,0 +1,37 @@
+header {
+	li {
+		padding-top: 15px;
+		
+	}
+	.divider-vertical
+	{
+		height: 70px !important;
+	}
+}
+
+footer {
+	border-top: 1px solid #eee;
+	margin-top: 17px;
+  padding-top: 17px;
+	nav {
+    float: none;
+		li {
+			display: inline-block;
+			padding: 0.2em 0.5em;
+		}
+  }
+}
+
+.control-label {
+	input[type="checkbox"] {
+		vertical-align: text-top;
+	}
+}
+
+.btn-wide {
+	width: 120px !important;
+}
+
+.current-user {
+	color: #FEFFF7
+}
