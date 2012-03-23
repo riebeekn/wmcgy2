@@ -3,10 +3,14 @@ header {
 		padding-top: 15px;
 		
 	}
-	.divider-vertical
-	{
+	.divider-vertical {
 		height: 70px !important;
 	}
+	
+}
+
+.test-css-class-on-about-page {
+	color: green;
 }
 
 footer {
@@ -14,11 +18,8 @@ footer {
 	margin-top: 17px;
   padding-top: 17px;
 	nav {
-    float: none;
-		li {
-			display: inline-block;
-			padding: 0.2em 0.5em;
-		}
+		@include horizontal-list;
+		padding-left: 10px;
   }
 }
 
