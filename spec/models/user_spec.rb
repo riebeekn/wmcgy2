@@ -35,6 +35,7 @@ describe User do
   it { should respond_to(:activation_sent_at) }
   it { should respond_to(:active) }
   it { should respond_to(:send_activation_email) }
+  it { should respond_to(:categories) }
   
   it { should be_valid }
   it { should_not be_active }
@@ -138,6 +139,31 @@ describe User do
     it "saves the time the confirm_sign_up_token was sent" do
       user.send_activation_email
       user.reload.activation_sent_at.should be_present
+    end
+  end
+  
+  describe "category associations" do
+    before { @user.save }
+    let!(:category_1) do
+      FactoryGirl.create(:category, user: @user, name: "Transportation costs")
+    end
+    let!(:category_2) do
+      FactoryGirl.create(:category, user: @user, name: "Entertainment")
+    end
+    let!(:category_3) do
+      FactoryGirl.create(:category, user: @user, name: "Groceries")
+    end
+    
+    it "should have the right categories in the right order" do
+      @user.categories.should == [category_2, category_3, category_1]
+    end
+    
+    it "should destroy associated categories when user is destroyed" do
+      categories = @user.categories
+      @user.destroy
+      [category_1, category_2, category_3].each do |category|
+        Category.find_by_id(category.id).should be_nil
+      end
     end
   end
   

@@ -18,7 +18,10 @@
 class User < ActiveRecord::Base
   attr_accessible :email, :password, :password_confirmation
   attr_accessor   :should_validate_password
+  
   has_secure_password
+  
+  has_many :categories, dependent: :destroy
   
   valid_email_regex =  Email.EMAIL_REGEX 
   validates :email, presence: true, format: { with: valid_email_regex },
