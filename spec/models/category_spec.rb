@@ -33,5 +33,26 @@ describe Category do
       before { @category.user_id = nil }
       it { should_not be_valid }
     end
+    
+    describe "duplicate category names for the same user" do
+      before do 
+        user.save!
+        @category_2 = user.categories.build(name: @category.name) 
+      end
+      subject { @category_2 }
+      it { should_not be_valid }
+    end
+    
+    describe "duplicate category names for different users" do
+      let(:user_2) { FactoryGirl.create(:user) }
+      before do
+        user.save!
+        @category_2 = user_2.categories.build(name: @category.name) 
+      end
+      
+      subject { @category_2 } 
+      
+      it { should be_valid }
+    end
   end
 end
