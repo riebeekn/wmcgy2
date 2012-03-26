@@ -1,16 +1,7 @@
 header {
-	li {
-		padding-top: 15px;
-		
-	}
-	.divider-vertical {
-		height: 70px !important;
-	}
-	
-}
-
-.test-css-class-on-about-page {
-	color: green;
+	li { padding-top: 15px; }
+	.divider-vertical { height: 70px !important; }	
+	.current-user { color: #FEFFF7; }
 }
 
 footer {
@@ -23,16 +14,20 @@ footer {
   }
 }
 
-.control-label {
-	input[type="checkbox"] {
-		vertical-align: text-top;
+.sign-in {
+	.control-label { input[type="checkbox"] { vertical-align: text-top; } }
+	.btn-wide { width: 120px; }
+}
+
+.categories {
+	table {
+		width: 10px;
+		min-width: 25%;
 	}
+	.field_with_errors { display: inline-block; }
 }
 
-.btn-wide {
-	width: 120px !important;
-}
+// shared/error messages
+#error_explanation { @include no-bullets; }
 
-.current-user {
-	color: #FEFFF7
-}
+.test-css-class-on-about-page { color: green; }

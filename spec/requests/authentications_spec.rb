@@ -16,6 +16,16 @@ describe "Authentications" do
     
       it { should have_content("Please sign in") }
     end
+    
+    describe "categories" do
+      before { visit categories_path }
+      
+      it "should redirect when attempting to access categories page" do
+        current_path.should == signin_path
+      end
+    
+      it { should have_content("Please sign in") }
+    end
   end
   
   describe "sign in" do

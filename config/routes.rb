@@ -8,6 +8,7 @@ Wmcgy::Application.routes.draw do
   resources :user_activations,  only: [:new, :create, :update]
   resources :sessions,          only: [:new, :create, :destroy]
   resources :password_resets,   only: [:new, :create, :edit, :update]
+  resources :categories,        only: [:create, :destroy, :update]
   
   match '/signup',                  to: 'users#new'
   match '/signin',                  to: 'sessions#new'
@@ -24,6 +25,8 @@ Wmcgy::Application.routes.draw do
   
   match '/account/account_activation_required', 
      to: 'user_activations#new', as: :account_activation_required
+     
+  match '/categories', to: "categories#index"
   
   root to: 'static_pages#home'
 end

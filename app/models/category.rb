@@ -15,6 +15,7 @@ class Category < ActiveRecord::Base
   
   validates :name, presence: true 
   validates :user_id, presence: true
+  validates :name, :uniqueness => { scope: :user_id }
   
-  default_scope order: 'categories.name' 
+  default_scope order: 'LOWER(categories.name)' 
 end
