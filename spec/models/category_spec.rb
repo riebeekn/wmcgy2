@@ -37,7 +37,7 @@ describe Category do
     describe "duplicate category names for the same user" do
       before do 
         user.save!
-        @category_2 = user.categories.build(name: @category.name) 
+        @category_2 = user.categories.build(name: @category.name.upcase) 
       end
       subject { @category_2 }
       it { should_not be_valid }

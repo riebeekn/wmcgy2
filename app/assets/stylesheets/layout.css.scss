@@ -1,16 +1,7 @@
 header {
-	li {
-		padding-top: 15px;
-		
-	}
-	.divider-vertical {
-		height: 70px !important;
-	}
-	
-}
-
-.test-css-class-on-about-page {
-	color: green;
+	li { padding-top: 15px; }
+	.divider-vertical { height: 70px !important; }	
+	.current-user { color: #FEFFF7; }
 }
 
 footer {
@@ -23,16 +14,7 @@ footer {
   }
 }
 
-.control-label {
-	input[type="checkbox"] {
-		vertical-align: text-top;
-	}
-}
+// shared/error messages
+#error_explanation { @include no-bullets; }
 
-.btn-wide {
-	width: 120px !important;
-}
-
-.current-user {
-	color: #FEFFF7
-}
+.test-css-class-on-about-page { color: green; }

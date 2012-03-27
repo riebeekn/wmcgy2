@@ -1,8 +1,16 @@
 en:
   activerecord:
-      attributes:
-        user:
-          password_digest: "Password"
+    attributes:
+      user:
+        password_digest: "Password"
+      category:
+        name: "Category"
+    errors:
+      models:
+        category:
+          attributes:
+            name:
+              taken: "already exists"
   flash_messages:
     activate_account: "Please activate your account"
     password_resets:

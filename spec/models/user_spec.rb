@@ -143,26 +143,43 @@ describe User do
   end
   
   describe "category associations" do
-    before { @user.save }
+    before do 
+      @user_1 = FactoryGirl.create(:user)
+      @user_1.save
+      @user_2 = FactoryGirl.create(:user)
+      @user_2.save
+    end
     let!(:category_1) do
-      FactoryGirl.create(:category, user: @user, name: "Transportation costs")
+      FactoryGirl.create(:category, user: @user_1, name: "Transportation costs")
     end
     let!(:category_2) do
-      FactoryGirl.create(:category, user: @user, name: "Entertainment")
+      FactoryGirl.create(:category, user: @user_1, name: "Entertainment")
     end
     let!(:category_3) do
-      FactoryGirl.create(:category, user: @user, name: "Groceries")
+      FactoryGirl.create(:category, user: @user_1, name: "groceries")
     end
     
     it "should have the right categories in the right order" do
-      @user.categories.should == [category_2, category_3, category_1]
+      @user_1.categories.should == [category_2, category_3, category_1]
     end
     
     it "should destroy associated categories when user is destroyed" do
-      categories = @user.categories
-      @user.destroy
+      categories = @user_1.categories
+      @user_1.destroy
       [category_1, category_2, category_3].each do |category|
         Category.find_by_id(category.id).should be_nil
+      end
+    end
+    
+    describe "duplicate categories" do
+      it "should not create duplicate categories for the same user" do
+        category = @user_1.categories.build(name: "groceries")
+        category.should_not be_valid
+      end
+      
+      it "should allow duplicate categories for different users" do
+        category = @user_2.categories.build(name: "groceries")
+        category.should be_valid
       end
     end
   end

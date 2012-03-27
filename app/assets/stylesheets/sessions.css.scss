@@ -1,3 +1,7 @@
 // Place all the styles related to the Sessions controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+.sign-in {
+	.control-label { input[type="checkbox"] { vertical-align: text-top; } }
+	.btn-wide { width: 120px; }
+}
