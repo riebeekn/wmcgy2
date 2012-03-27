@@ -33,5 +33,19 @@ describe Category do
       before { @category.user_id = nil }
       it { should_not be_valid }
     end
+    
+    describe "duplicates" do
+      it "should not allow duplicates" do
+        user.save!
+        duplicate_category = user.categories.build(name: "some category")
+        duplicate_category.should_not be_valid
+      end
+      
+      it "should not allow duplicates that are of a different case" do
+        user.save!
+        duplicate_category = user.categories.build(name: "SOME category")
+        duplicate_category.should_not be_valid
+      end
+    end
   end
 end

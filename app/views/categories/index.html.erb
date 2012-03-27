@@ -9,18 +9,18 @@
 		<%= f.submit "Add" %>
 	<% end %>
 	<% if @categories.any? %>
-		<table class="table table-bordered table-striped category-table">
+		<table>
 			<tbody>
 				<% @categories.each do |category| %>
 				<tr>
 					<td>
-						<%= category.name %>
+						<%= best_in_place category, :name, activator: "##{category.id}" %>
 					</td>
 					<td>
-						Edit
+						<a id="<%= "#{category.id}" %>" href="#">Edit</a>
 					</td>
 					<td>
-						Delete
+						<%= link_to "Delete", category, method: :delete %>
 					</td>
 				</tr>
 				<% end %>
