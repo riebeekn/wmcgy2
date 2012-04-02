@@ -8,4 +8,13 @@ FactoryGirl.define do
     name "the category"
     user
   end
+  
+  factory :transaction do
+    sequence(:description)  { |n| "Description #{n}" }
+    date Date.today
+    amount { 1 + rand(100) }
+    is_debit true
+    category
+    user
+  end
 end

@@ -29,6 +29,11 @@ describe Category do
       it { should_not be_valid }
     end
     
+    describe "with name that exceeds the maximum length" do
+      before { @category.name = 'a' * 256 }
+      it { should_not be_valid }
+    end
+    
     describe "when user_id is not present" do
       before { @category.user_id = nil }
       it { should_not be_valid }

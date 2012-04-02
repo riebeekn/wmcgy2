@@ -36,6 +36,7 @@ describe User do
   it { should respond_to(:active) }
   it { should respond_to(:send_activation_email) }
   it { should respond_to(:categories) }
+  it { should respond_to(:transactions) }
   
   it { should be_valid }
   it { should_not be_active }
@@ -142,6 +143,15 @@ describe User do
     end
   end
   
+  describe "activate" do
+    let(:user) { FactoryGirl.create(:user) }
+    
+    it "activates the user" do
+      user.activate
+      user.should be_active
+    end
+  end
+  
   describe "category associations" do
     before do 
       @user_1 = FactoryGirl.create(:user)
@@ -183,13 +193,27 @@ describe User do
       end
     end
   end
-  
-  describe "activate" do
-    let(:user) { FactoryGirl.create(:user) }
+
+  describe "transaction associations" do
+    before do
+      @user_1 = FactoryGirl.create(:user)
+      @cat_1 = FactoryGirl.create(:category, user: @user_1)
+      @trans_1 = FactoryGirl.create(:transaction, category: @cat_1, 
+          user: @user_1, created_at: 1.day.ago)
+      @trans_2 = FactoryGirl.create(:transaction, category: @cat_1,
+          user: @user_1, created_at: 1.hour.ago)
+    end
     
-    it "activates the user" do
-      user.activate
-      user.should be_active
+    it "should have the right transactions in the right order" do
+      @user_1.transactions.should == [@trans_2, @trans_1]
+    end
+    
+    it "should destroy associated transactions when user is destroyed" do
+      transactions = @user_1.transactions
+      @user_1.destroy
+      [@trans_1, @trans_2].each do |transaction|
+        Transaction.find_by_id(transaction.id).should be_nil
+      end
     end
   end
 end
