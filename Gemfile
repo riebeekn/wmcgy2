@@ -8,6 +8,8 @@ gem 'active_attr'
 gem 'simple_form'
 gem 'best_in_place'
 gem 'faker' 
+gem 'will_paginate', '~> 3.0.3'
+gem 'will_paginate-bootstrap'
 
 # Gems used only for assets and not required
 # in production environments by default.

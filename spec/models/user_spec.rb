@@ -199,9 +199,9 @@ describe User do
       @user_1 = FactoryGirl.create(:user)
       @cat_1 = FactoryGirl.create(:category, user: @user_1)
       @trans_1 = FactoryGirl.create(:transaction, category: @cat_1, 
-          user: @user_1, created_at: 1.day.ago)
+          user: @user_1, date: 1.day.ago)
       @trans_2 = FactoryGirl.create(:transaction, category: @cat_1,
-          user: @user_1, created_at: 1.hour.ago)
+          user: @user_1, date: 1.hour.ago)
     end
     
     it "should have the right transactions in the right order" do

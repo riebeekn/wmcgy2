@@ -66,5 +66,34 @@ describe "Transactions" do
         it { should_not have_selector('td', text: 'Some other dudes transaction') }
       end
     end
+    
+    describe "pagination" do
+      # each page has 30 items, create 2 pages of items to test with
+      before(:all) { 31.times { FactoryGirl.create(:transaction, user: user) } }
+      after(:all) { User.destroy_all }
+
+      let(:first_page) { user.transactions.paginate(page: 1) }
+      let(:second_page) { user.transactions.paginate(page: 2) }
+
+      it { should have_link('Previous') }
+      it { should have_link('Next') }
+      it { should have_link('2') }
+
+      it "should list the first page of transactions" do
+        first_page.each do |transaction|
+          page.should have_selector('td', text: transaction.date.to_s(:rfc822))
+          page.should have_selector('td', text: transaction.category.name)
+          page.should have_selector('td', text: transaction.description)
+          page.should have_selector('td', text: display_amount(transaction))
+        end
+        page.should have_selector('tbody//tr', count: 30)
+      end
+
+      it "should not list the second page of transactions on the first page" do
+        second_page.each do |transaction|
+          page.should_not have_selector('td', text: transaction.description)
+        end
+      end
+    end
   end
 end

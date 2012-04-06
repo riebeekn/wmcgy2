@@ -11,7 +11,7 @@ FactoryGirl.define do
   
   factory :transaction do
     sequence(:description)  { |n| "Description #{n}" }
-    date Date.today
+    date { rand(100.days).ago }
     amount { 1 + rand(100) }
     is_debit true
     category
