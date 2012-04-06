@@ -51,6 +51,11 @@ describe Transaction do
       it { should_not be_valid }
     end
     
+    describe "with non numeric amount" do
+      before { @transaction.amount = 'foobar' }
+      it { should_not be_valid }
+    end
+    
     describe "with blank is_debit" do
       before { @transaction.is_debit = nil }
       it { should_not be_valid }

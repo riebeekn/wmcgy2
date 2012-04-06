@@ -14,6 +14,9 @@
       			<li><%= link_to "Home", root_path, class: "lead" %></li>
 						<li class="divider-vertical"></li>
 						<% if current_user %>
+						<!-- NOTE : refactor logged in / out into partials -->
+							<li><%= link_to "Transactions", transactions_path, class: "lead" %></li>
+							<li class="divider-vertical"></li>	
 							<li><%= link_to "Categories", categories_path, class: "lead" %></li>
 							<li class="divider-vertical"></li>
 							<li><%= link_to "Sign out", signout_path, class: "lead" %></li>

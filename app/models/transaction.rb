@@ -14,14 +14,17 @@
 #
 
 class Transaction < ActiveRecord::Base
-  attr_accessible :description, :date, :amount, :is_debit
+  attr_accessible :description, :date, :amount, :is_debit, :category
   belongs_to :user
   belongs_to :category
   
   validates :description, presence: true, length: { maximum: 255 }
   validates :date, presence: true
   validates :amount, presence: true
-  validates :is_debit, presence: true
+  validates_numericality_of :amount
+  validates_inclusion_of :is_debit, in: [true, false]
   validates :category_id, presence: true
   validates :user_id, presence: true
+  
+  default_scope order: 'date DESC' 
 end

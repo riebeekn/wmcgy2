@@ -44,6 +44,7 @@ describe "Static pages" do
       it { should have_link("Home") }
       it { should have_link("Sign in") }
       it { should have_link("Sign up") }
+      it { should_not have_link("Transactions")}
       it { should_not have_link("Categories") }
       it { should_not have_link("Sign out") }
       it { should_not have_content("Signed in as") }
@@ -55,6 +56,7 @@ describe "Static pages" do
         sign_in user 
       end
       it { should have_link("Home") }
+      it { should have_link("Transactions")}
       it { should have_link("Categories") }
       it { should have_link("Sign out") }
       it { should have_content("Signed in as #{user.email}") }
@@ -63,6 +65,8 @@ describe "Static pages" do
       
       it "should navigate to the correct page when header links are clicked" do
         visit root_path
+        click_link "Transactions"
+        page.should have_selector("title", text: full_title("Transactions"))
         click_link "Categories"
         page.should have_selector("title", text: full_title("Categories"))
         click_link "Home"

@@ -1,5 +1,7 @@
 Wmcgy::Application.routes.draw do
 
+  #get "transactions/index"
+
   #get "password_resets/new"
   match '/about',   to: 'static_pages#about'
   match '/contact', to: 'static_pages#contact'
@@ -9,6 +11,7 @@ Wmcgy::Application.routes.draw do
   resources :sessions,          only: [:new, :create, :destroy]
   resources :password_resets,   only: [:new, :create, :edit, :update]
   resources :categories,        only: [:create, :destroy, :update]
+  resources :transactions,      only: [:index]
   
   match '/signup',                  to: 'users#new'
   match '/signin',                  to: 'sessions#new'
@@ -27,6 +30,8 @@ Wmcgy::Application.routes.draw do
      to: 'user_activations#new', as: :account_activation_required
      
   match '/categories', to: "categories#index"
+  
+  match '/transactions', to: "transactions#index"
   
   root to: 'static_pages#home'
 end
