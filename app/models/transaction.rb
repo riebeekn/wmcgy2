@@ -25,6 +25,4 @@ class Transaction < ActiveRecord::Base
   validates_inclusion_of :is_debit, in: [true, false]
   validates :category_id, presence: true
   validates :user_id, presence: true
-  
-  default_scope order: 'date DESC' 
 end

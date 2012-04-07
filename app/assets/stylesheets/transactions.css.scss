@@ -3,6 +3,17 @@
 // You can use Sass (SCSS) here: http://sass-lang.com/
 .transactions {
 	table {
-		@extend .table, .table-striped;
+		@extend .table, .table-striped;	
+		th {
+			.current {
+				font-size: 150%;
+				padding-right: 12px;
+			  background-repeat: no-repeat;
+			  background-position: right center;
+			}
+			.asc { background-image: url(up_arrow.gif); }
+			.desc { background-image: url(down_arrow.gif); }
+		}
 	}
 }
+

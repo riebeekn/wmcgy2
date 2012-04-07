@@ -1,10 +1,13 @@
 module TransactionsHelper
   
   def display_amount(transaction)
-    if transaction.is_debit?
-      "-#{number_to_currency(transaction.amount)}"
-    else
-      number_to_currency(transaction.amount) 
-    end
+    number_to_currency(transaction.amount) 
+  end
+  
+  def sortable(column, title = nil)
+    title ||= column.titleize
+    css_class = column == sort_column ? "current #{sort_direction}" : nil
+    direction = column == sort_column && sort_direction == "asc" ? "desc" : "asc"
+    link_to title, { sort: column, direction: direction }, { class: css_class }
   end
 end

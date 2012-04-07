@@ -30,9 +30,9 @@ def make_transactions
   100.times do |n|
     description  = Faker::Lorem.sentence
     date = rand(100.days).ago
-    amount = (rand * (1 - 200) + 200).round(2)
     category = categories.sample
-    is_debit = (category.name != "Pay") #[true, false].sample
+    is_debit = (category.name != "Pay")
+    amount = is_debit ? -(rand * (1 - 200) + 200).round(2) : (rand * (1 - 200) + 200).round(2)
     user.transactions.create!(description: description,
                         date: date,
                         amount: amount,
