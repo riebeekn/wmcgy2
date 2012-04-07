@@ -204,8 +204,8 @@ describe User do
           user: @user_1, date: 1.hour.ago)
     end
     
-    it "should have the right transactions in the right order" do
-      @user_1.transactions.should == [@trans_2, @trans_1]
+    it "should have the right transactions" do
+      @user_1.transactions.should =~ [@trans_2, @trans_1]
     end
     
     it "should destroy associated transactions when user is destroyed" do
