@@ -4,7 +4,7 @@
 		<h1>Transactions</h1>
 	</div>
 	<% if @transactions.any? %>
-		<%= will_paginate :renderer => BootstrapPagination::Rails %>
+		<%= will_paginate renderer: BootstrapPagination::Rails %>
 		<table>
 			<thead>
 				<tr>
@@ -18,6 +18,6 @@
 				<%= render @transactions %>
 			</tbody>
 		</table>
-		<%= will_paginate :renderer => BootstrapPagination::Rails %>
+		<%= will_paginate renderer: BootstrapPagination::Rails %>
 	<% end %>
 </div>

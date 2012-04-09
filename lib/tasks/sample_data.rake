@@ -27,7 +27,7 @@ end
 def make_transactions
   user = User.first
   categories = Category.all
-  100.times do |n|
+  1000.times do |n|
     description  = Faker::Lorem.sentence
     date = rand(100.days).ago
     category = categories.sample

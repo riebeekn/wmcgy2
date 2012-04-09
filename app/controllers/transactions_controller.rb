@@ -10,6 +10,19 @@ class TransactionsController < ApplicationController
     end
   end
   
+  def new
+    @transaction = Transaction.new
+  end
+  
+  def create
+    @transaction = Transaction.new(params[:transaction])
+    if @transaction.save
+      redirect_to transactions_path
+    else
+      render 'new'
+    end
+  end
+  
   private
   
     def sort
