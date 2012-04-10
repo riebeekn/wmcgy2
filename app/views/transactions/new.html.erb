@@ -6,9 +6,9 @@
 	<%= simple_form_for @transaction, html: { class: "form-horizontal" }  do |f| %>
 		<fieldset>
 			<%= f.input :is_debit, as: :radio_buttons, label: '',
-				collection: [[:Expense, true], [:Income, false]] %>
+				collection: [[:Expense, 1], [:Income, 0]], checked: 1 %>
 			<%= f.input :date, required: false %>
-			<%= f.association :category, required: false %>
+			<%= f.input :category_id, required: false, collection: @categories %>
 			<%= f.input :description, required: false %>
 			<%= f.input :amount, required: false %>
 			<div class="control-group">

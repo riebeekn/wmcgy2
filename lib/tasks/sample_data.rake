@@ -37,6 +37,6 @@ def make_transactions
                         date: date,
                         amount: amount,
                         is_debit: is_debit,
-                        category: category)
+                        category_id: category.id)
   end
 end

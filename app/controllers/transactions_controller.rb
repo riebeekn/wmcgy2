@@ -11,11 +11,12 @@ class TransactionsController < ApplicationController
   end
   
   def new
+    @categories = current_user.categories
     @transaction = Transaction.new
   end
   
   def create
-    @transaction = Transaction.new(params[:transaction])
+    @transaction = build_transaction
     if @transaction.save
       redirect_to transactions_path
     else
@@ -25,6 +26,16 @@ class TransactionsController < ApplicationController
   
   private
   
+    def build_transaction
+      @transaction = current_user.transactions.build(params[:transaction])
+      if @transaction.is_debit?
+        @transaction.amount = @transaction.amount.abs * -1
+      else
+        @transaction.amount = @transaction.amount.abs
+      end
+      @transaction
+    end
+    
     def sort
       current_user.transactions.order("#{sort_column} #{sort_direction}").page(params[:page])
     end

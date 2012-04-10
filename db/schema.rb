@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120401202039) do
+ActiveRecord::Schema.define(:version => 20120410161309) do
 
   create_table "categories", :force => true do |t|
     t.string   "name"
@@ -24,7 +24,7 @@ ActiveRecord::Schema.define(:version => 20120401202039) do
 
   create_table "transactions", :force => true do |t|
     t.string   "description"
-    t.date     "date"
+    t.datetime "date"
     t.decimal  "amount",      :precision => 10, :scale => 2, :default => 0.0
     t.boolean  "is_debit"
     t.integer  "category_id"

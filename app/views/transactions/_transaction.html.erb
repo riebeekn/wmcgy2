@@ -1,5 +1,5 @@
 <tr>
-	<td><%= transaction.date.to_s(:rfc822) %></td>
+	<td><%= transaction.date.strftime('%d %b %Y') %></td>
 	<td><%= transaction.category.name %>
 	<td><%= transaction.description %></td>
 	<td><%= display_amount(transaction) %></td>

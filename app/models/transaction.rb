@@ -14,7 +14,7 @@
 #
 
 class Transaction < ActiveRecord::Base
-  attr_accessible :description, :date, :amount, :is_debit, :category, :category_id
+  attr_accessible :description, :date, :amount, :is_debit, :category_id
   belongs_to :user
   belongs_to :category
   
