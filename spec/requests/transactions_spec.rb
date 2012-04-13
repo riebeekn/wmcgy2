@@ -354,7 +354,7 @@ describe "Transactions" do
         it { should have_unchecked_field('Expense') }
         it { should have_checked_field('Income') }
         it { should have_button("Edit transaction") }
-        it { should have_button("Cancel")}
+        it { should have_link("Cancel")}
       
         it "should display the description" do
           document = Nokogiri::HTML(page.body)
