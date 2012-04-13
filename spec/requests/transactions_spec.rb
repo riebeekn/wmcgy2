@@ -5,7 +5,7 @@ describe "Transactions" do
   
   before do 
     sign_in user 
-    @category = FactoryGirl.create(:category, user: user, name: "a category") 
+    @category = FactoryGirl.create(:category, user: user, name: "a category")
   end
   
   subject { page }
@@ -186,8 +186,6 @@ describe "Transactions" do
       it { should have_field('Description') }
       it { should have_field('Amount') }
       it { should have_button('Add transaction') }
-      
-      it "should default date to locale time"
     end
     
     describe "with invalid information" do
@@ -200,6 +198,7 @@ describe "Transactions" do
     describe "with valid information" do
       before do
         choose  "Expense"
+        fill_in "Date", with: '11 Apr 2012'
         select "a category", from: "Category"
         fill_in "Description", with: "a description of the transaction"
         fill_in "Amount",      with: "34.56"
@@ -240,10 +239,171 @@ describe "Transactions" do
         end
       end 
     end
+  end
+
+  describe "update" do
+    before(:all) {
+      @category = FactoryGirl.create(:category, user: user, name: 'test category')
+      @transaction = FactoryGirl.create(:transaction, date: 1.day.ago, 
+        description: 'A transaction', amount: -234.57, is_debit: true, user: user, 
+        category: @category)
+      } 
+    after(:all) { User.destroy_all }
     
-    # need to fix:
-        # need to use date time instead of date
+    describe "with valid information" do
+      before do
+        visit transactions_path
+        click_link 'Edit'
+      end
+      
+      it "should update the transaction and re-direct to the index page" do
+        choose  "Income"
+        fill_in "Date", with: 2.days.ago
+        select "a category", from: "Category"
+        fill_in "Description", with: "updated description"
+        fill_in "Amount",      with: "22.33"
+        click_button "Edit transaction"
+        t = Transaction.find(@transaction.id)
+        t.is_debit.should eq false
+        t.date.should eq 2.days.ago.to_s
+        t.description.should eq 'updated description'
+        t.amount.should eq 22.33
+        page.should have_content 'Transaction updated'
+      end
+    end
     
-    # test that date displays local not UTC time by default
+    describe "with invalid information" do
+      before do
+        visit transactions_path
+        click_link 'Edit'
+        fill_in "Date", with: ''
+        select "a category", from: "Category"
+        fill_in "Description", with: ""
+        fill_in "Amount",      with: ""
+        click_button "Edit transaction"
+      end
+      
+      it "should re-populate the category" do
+        page.should have_content('test category')
+      end
+      
+      it "should contain an error message" do
+        page.should have_content("can't be blank")
+      end
+      
+      it "should not update the transaction" do
+        t = Transaction.find(@transaction.id)
+        t.is_debit.should eq true
+        t.date.to_date.to_s.should eq 1.day.ago.to_date.to_s
+        t.description.should eq 'A transaction'
+        t.amount.should eq -234.57
+      end
+    end
+  end
+  
+  describe "edit" do
+    describe "expense transaction" do
+      before(:all) {
+        @category = FactoryGirl.create(:category, user: user, name: 'test category')
+        @transaction = FactoryGirl.create(:transaction, date: 1.day.ago, 
+          description: 'A transaction', amount: -234.57, is_debit: true, user: user, 
+          category: @category)
+        } 
+      after(:all) { User.destroy_all }
+      
+      describe "items that should be on the page" do
+        before do
+          visit transactions_path
+          click_link 'Edit'
+        end
+      
+        it { should have_checked_field('Expense') }
+        it { should have_unchecked_field('Income') }
+      
+        it "should have a positive amount" do
+          # saved as neg. in the DB but should show as positive in the edit form
+          document = Nokogiri::HTML(page.body)
+          amt = document.xpath('//*[@id="transaction_amount"]/@value')
+          amt.inner_html.should eq ('234.57')
+        end
+      end
+    end
+    
+    describe "income transaction" do
+      before(:all) {
+        @category = FactoryGirl.create(:category, user: user, name: 'test category')
+        @transaction = FactoryGirl.create(:transaction, date: 1.day.ago, 
+          description: 'A transaction', amount: 654.56, is_debit: false, user: user, 
+          category: @category)
+        } 
+      after(:all) { User.destroy_all }
+    
+      it "should have an edit link" do
+        visit transactions_path
+        should have_link('Edit', href: "/transactions/#{@transaction.id}/edit")
+      end
+    
+      describe "items that should be present on the page" do
+        before do
+          visit transactions_path
+          click_link 'Edit'
+        end
+      
+        it { should have_selector('title', text: full_title("Edit Transaction")) }
+        it { should have_selector('h1', text: "Edit Transaction") }
+        it { should have_unchecked_field('Expense') }
+        it { should have_checked_field('Income') }
+        it { should have_button("Edit transaction") }
+        it { should have_button("Cancel")}
+      
+        it "should display the description" do
+          document = Nokogiri::HTML(page.body)
+          desc = document.xpath('//*[@id="transaction_description"]/@value')
+          desc.inner_html.should eq ('A transaction')
+        end
+      
+        it "should display the date" do
+          document = Nokogiri::HTML(page.body)
+          date = document.xpath('//*[@id="transaction_date"]/@value')
+          date.inner_html.should eq (1.day.ago.strftime('%d %b %Y'))
+        end
+      
+        it "should display the category" do
+          cat = find_field('Category').find('option[selected]').text
+          cat.should eq('test category')
+        end
+      
+        it "should display the amount" do
+          document = Nokogiri::HTML(page.body)
+          amt = document.xpath('//*[@id="transaction_amount"]/@value')
+          amt.inner_html.should eq ('654.56')
+        end
+      end
+    end
+  
+    describe "updates" do
+      
+    end
+  end
+  
+  describe "delete" do
+    before(:all) {
+      @category = FactoryGirl.create(:category, user: user)
+      @transaction = FactoryGirl.create(:transaction, date: 1.day.ago, 
+        description: 'Some transaction', amount: 654.56, is_debit: true, user: user, 
+        category: @category)
+    } 
+    after(:all) { User.destroy_all }
+    
+    it "should have a delete link" do
+      visit transactions_path
+      should have_link('Delete', href: "/transactions/#{@transaction.id}")
+    end
+    
+    it "should delete the transaction" do
+      visit transactions_path
+      expect { click_link('Delete') }.to change(Transaction, :count).by(-1)
+      page.should have_content('Transaction deleted')
+    end
   end
 end

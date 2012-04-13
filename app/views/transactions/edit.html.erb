@@ -1,14 +1,15 @@
-<% provide(:title, 'Add Transaction') %>
+<% provide(:title, 'Edit Transaction') %>
 <div class="transactions">
 	<div class="page-header">
-		<h1>Add Transaction</h1>
+		<h1>Edit Transaction</h1>
 	</div>
 	<%= simple_form_for @transaction, html: { class: "form-horizontal" }  do |f| %>
 		<fieldset>
 			<%= render 'fields', f: f %>
 			<div class="control-group">
 				<div class="controls">
-					<%= f.submit "Add transaction", class: "btn" %>
+					<%= f.submit "Edit transaction", class: "btn" %>
+					<%= link_to "Cancel", transactions_path, class: "btn" %>
 				</div>
 			</div>
 		</fieldset>

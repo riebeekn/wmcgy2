@@ -16,13 +16,9 @@ Wmcgy::Application.routes.draw do
   match '/signup/complete',         to: 'static_pages#signup_complete'
   
   match '/account/:id/activate',    to: 'user_activations#update',  as: :account_activate
-  
   match '/account/forgot_password', to: 'password_resets#new',      as: :forgot_password
-  
   match '/account/:id/reset_password', to: 'password_resets#edit', as: :reset_password
-  
   match '/account/:id/update_password', to: 'password_resets#update', as: :update_password
-  
   match '/account/account_activation_required', 
      to: 'user_activations#new', as: :account_activation_required
   

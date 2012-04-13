@@ -25,4 +25,13 @@ class Transaction < ActiveRecord::Base
   validates_inclusion_of :is_debit, in: [true, false]
   validates :category_id, presence: true
   validates :user_id, presence: true
+  
+  # if a user delete's a category for which transactions exist do:
+  def category
+    if super.nil?
+      Category.new(name: "Uncategorized")
+    else
+      super()
+    end
+  end
 end

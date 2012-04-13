@@ -30,6 +30,14 @@ describe Transaction do
   it { should respond_to(:category_id) }
   it { should be_valid }
   
+  describe "when category is nil" do
+    before { @transaction.category = nil }
+    
+    it "should have a category name of 'Uncategorized'" do
+      @transaction.category.name.should eq 'Uncategorized'
+    end
+  end
+  
   describe "validations" do
     describe "with blank description" do
       before { @transaction.description = '   ' }
