@@ -11,19 +11,7 @@
 	<% if @categories.any? %>
 		<table>
 			<tbody>
-				<% @categories.each do |category| %>
-				<tr>
-					<td>
-						<%= best_in_place category, :name, activator: "##{category.id}" %>
-					</td>
-					<td>
-						<a id="<%= "#{category.id}" %>" href="#">Edit</a>
-					</td>
-					<td>
-						<%= link_to "Delete", category, method: :delete %>
-					</td>
-				</tr>
-				<% end %>
+				<%= render @categories %>
 			</tbody>
 		</table>
 	<% else %>

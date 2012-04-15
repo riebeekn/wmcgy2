@@ -83,7 +83,8 @@ class TransactionsController < ApplicationController
     
     # --- SORTING ---
     def sort
-      current_user.transactions.order("#{sort_column} #{sort_direction}").page(params[:page])
+      current_user.transactions.paginate(page: params[:page], include: :category,
+                                         order: "#{sort_column} #{sort_direction}")
     end
     
     def sort_by_category
