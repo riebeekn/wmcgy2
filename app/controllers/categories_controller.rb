@@ -3,7 +3,7 @@ class CategoriesController < ApplicationController
   respond_to :html, :json
   
   def index
-    @category = Category.new
+    @category = Category.newa
     @categories = current_user.categories
   end
   
