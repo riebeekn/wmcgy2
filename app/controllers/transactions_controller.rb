@@ -12,7 +12,7 @@ class TransactionsController < ApplicationController
   
   def new
     @categories = current_user.categories
-    @transaction = Transaction.new(amount: nil)
+    @transaction = Transaction.new(amount: nil, is_debit: true)
   end
   
   def create

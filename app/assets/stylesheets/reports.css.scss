@@ -1,0 +1,19 @@
+// Place all the styles related to the Reports controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+.reports {
+	.inline {
+		div, label, select {
+			@include inline-block;
+		}
+	
+		#incomeExpenseChart, #expensesChart {
+			padding-right: 75px;
+		}
+		
+		label {
+			font-size: 110%;
+			padding: 0px 5px 5px 0px;
+		}
+	}
+}

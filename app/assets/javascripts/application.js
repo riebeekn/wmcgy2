@@ -28,4 +28,7 @@
 //= require bootstrap-collapse
 //= require bootstrap-carousel
 //= require bootstrap-typeahead
+//= require bluff/js-class
+//= require bluff/excanvas
+//= require bluff/bluff-min
 //= require_tree .

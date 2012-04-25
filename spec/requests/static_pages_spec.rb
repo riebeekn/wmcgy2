@@ -56,8 +56,9 @@ describe "Static pages" do
         sign_in user 
       end
       it { should have_link("Home") }
-      it { should have_link("Transactions")}
+      it { should have_link("Transactions") }
       it { should have_link("Categories") }
+      it { should have_link("Reports") }
       it { should have_link("Sign out") }
       it { should have_content("Signed in as #{user.email}") }
       it { should_not have_link("Sign in") }
@@ -71,6 +72,8 @@ describe "Static pages" do
         page.should have_selector("title", text: full_title("Categories"))
         click_link "Home"
         page.should have_selector("title", text: full_title("Home"))
+        click_link "Reports"
+        page.should have_selector("title", text: full_title("Reports"))
       end
     end
   end

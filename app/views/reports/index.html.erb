@@ -1,0 +1,39 @@
+<% provide(:title, 'Reports') %>
+<div class="reports">
+	<div class="page-header">
+		<h1>Reports</h1>
+	</div>
+	
+	<div class="well">
+		<div class="inline">
+			<label>Show:</label>
+			<select id="topChartsRange">
+				<option value="month">month to date</option>
+				<option value="year">year to date</option>
+				<option value="all">all</option>
+			</select>
+		</div>
+		<div id="topCharts" class="inline chart-section">
+			<div id="expensesChart" data-chart="/reports/expenses" 
+				style="width: 525px; height: 300px;"></div>
+			<div id="incomeChart" data-chart="/reports/income" 
+				style="width: 525px; height: 300px;"></div>
+		</div>
+	</div>
+	
+	<div class="well">
+		<div class="inline">
+			<label>Show:</label>
+			<select id="bottomChartsRange">
+				<option value="year">year to date</option>
+				<option value="all">all</option>
+			</select>
+		</div>
+		<div id="btmCharts" class="inline">
+			<div id="incomeExpenseChart" data-chart="/reports/income_and_expense" 
+				style="width: 525px; height: 300px;"></div>
+			<div id="profitLossChart" data-chart="/reports/profit_loss" 
+			style="width: 525px; height: 300px;"></div>
+		</div>
+	</div>
+</div>
