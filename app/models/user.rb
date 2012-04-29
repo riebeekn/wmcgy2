@@ -51,6 +51,62 @@ class User < ActiveRecord::Base
     save!
   end
   
+  def expenses_by_category_and_date_range(range)
+    where_clause = "is_debit=true"
+    if (range != 'all')
+      where_clause += " AND DATE_TRUNC('#{range}', date) = DATE_TRUNC('#{range}', now())"
+    end
+    transactions.
+      select("name, SUM(amount)").
+      joins("LEFT JOIN categories on categories.id = transactions.category_id").
+      where(where_clause).
+      group("name")
+  end
+  
+  def expenses_by_year
+    transactions.
+      select("extract(year from date) as period, sum(amount)").
+      where("is_debit = true").
+      group(1).
+      order(1)
+  end
+  
+  def expenses_by_month_for_current_year
+    transactions.
+      select("extract(month from date) as period, sum(amount)").
+      where("date_trunc('year', date) = date_trunc('year', now()) AND is_debit = true").
+      group(1).
+      order(1)
+  end
+  
+  def income_by_category_and_date_range(range)
+    where_clause = "is_debit=false"
+    if (range != 'all')
+      where_clause += " AND DATE_TRUNC('#{range}', date) = DATE_TRUNC('#{range}', now())"
+    end
+    transactions.
+      select("name, SUM(amount)").
+      joins("LEFT JOIN categories on categories.id = transactions.category_id").
+      where(where_clause).
+      group("name")
+  end
+  
+  def income_by_year
+    transactions.
+      select("extract(year from date) as period, sum(amount)").
+      where("is_debit = false").
+      group(1).
+      order(1)
+  end
+  
+  def income_by_month_for_current_year
+    transactions.
+      select("extract(month from date) as period, sum(amount)").
+      where("date_trunc('year', date) = date_trunc('year', now()) AND is_debit = false").
+      group(1).
+      order(1)
+  end
+  
   private
   
     def generate_token(column)

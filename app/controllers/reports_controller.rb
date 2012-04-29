@@ -8,7 +8,8 @@ class ReportsController < ApplicationController
     render :json => {
       type: 'PieChart',
       cols: [['string', 'Category'], ['number', 'Amount']],
-      rows: (expenses_by_category top_chart_range),
+      rows: current_user.expenses_by_category_and_date_range(mtd_ytd_or_all).
+              collect { |r| [r.name == nil ? "Uncategorized" : r.name, r.sum.to_f.abs] },
       options: { 
         backgroundColor: { fill:'#F5F5F5'},
         title: 'Expenses', is3D: true, titleTextStyle: { fontSize: 18} },
@@ -20,7 +21,8 @@ class ReportsController < ApplicationController
     render :json => {
       type: 'PieChart',
       cols: [['string', 'Category'], ['number', 'Amount']],
-      rows: (income_by_category top_chart_range),
+      rows: current_user.income_by_category_and_date_range(mtd_ytd_or_all).
+              collect { |r| [r.name == nil ? "Uncategorized": r.name, r.sum.to_f] },
       options: { 
         backgroundColor: { fill:'#F5F5F5'},
         title: 'Income', is3D: true, titleTextStyle: { fontSize: 18} },
@@ -32,7 +34,7 @@ class ReportsController < ApplicationController
     render :json => {
       type: 'LineChart',
       cols: [['string', 'Month'], ['number', 'Income'], ['number', 'Expenses']],
-      rows: (calculate_income_expenses bottom_chart_range),
+      rows: calculate_income_expenses(ytd_or_all),
       options: { 
         backgroundColor: { fill:'#F5F5F5'},
         title: 'Overall income and expenses', 
@@ -45,10 +47,10 @@ class ReportsController < ApplicationController
     render :json => {
       type: 'ColumnChart',
       cols: [['string', 'Month'], ['number', 'Profit'], ['number', 'Loss']],
-      rows: (calculate_profit_loss bottom_chart_range),
+      rows: calculate_profit_loss(ytd_or_all),
       options: { 
         backgroundColor: { fill:'#F5F5F5'},
-        title: 'Overall profit / Loss', isStacked: true,
+        title: 'Overall profit / loss', isStacked: true,
         titleTextStyle: { fontSize: 18} },
       format_cols: [1,2]
     }
@@ -56,11 +58,11 @@ class ReportsController < ApplicationController
   
   private
   
-    def top_chart_range
+    def mtd_ytd_or_all
       %w[month year all].include?(params[:range]) ? params[:range] : "month"
     end
     
-    def bottom_chart_range
+    def ytd_or_all
       %w[year all].include?(params[:range]) ? params[:range] : "year"
     end
 
@@ -72,46 +74,20 @@ class ReportsController < ApplicationController
       end
     end
   
-    def expenses_by_category(range)
-      if range == 'all'
-        current_user.transactions.
-            select("name, SUM(amount)").
-            joins("LEFT JOIN categories on categories.id = transactions.category_id").
-            where("is_debit=true").
-            group("name").collect { |r| [r.name == nil ? "Uncategorized" : r.name, r.sum.to_f.abs] }
-      else
-        current_user.transactions.
-          select("name, SUM(amount)").
-          joins("LEFT JOIN categories on categories.id = transactions.category_id").
-          where("DATE_TRUNC('#{range}', date) = DATE_TRUNC('#{range}', now()) AND is_debit=true").
-          group("name").collect { |r| [r.name == nil ? "Uncategorized" : r.name, r.sum.to_f.abs] }
-      end
-    end
-    
-    def income_by_category(range)
-      if range == 'all'
-        current_user.transactions.
-          select("name, SUM(amount)").
-          joins("LEFT JOIN categories on categories.id = transactions.category_id").
-          where("is_debit=false").
-          group("name").collect { |r| [r.name == nil ? "Uncategorized": r.name, r.sum.to_f] }
-      else
-        current_user.transactions.
-          select("name, SUM(amount)").
-          joins("LEFT JOIN categories on categories.id = transactions.category_id").
-          where("DATE_TRUNC('#{range}', date) = DATE_TRUNC('#{range}', now()) AND is_debit=false").
-          group("name").collect { |r| [r.name == nil ? "Uncategorized": r.name, r.sum.to_f] }
-      end
-    end
-    
     def calculate_income_expenses(range)
-      expenses = expenses_query range
-      income =   income_query range
+      if range == "all"
+        expenses = current_user.expenses_by_year
+        income = current_user.income_by_year
+      else
+        expenses = current_user.expenses_by_month_for_current_year
+        income = current_user.income_by_month_for_current_year
+      end
       
       results = []
       expenses.each do |exp|
         income.each do |inc|
           if exp.period == inc.period
+            logger.debug "found"
             results <<  [period_value(range, exp.period),
                         inc.sum.to_f,
                         exp.sum.to_f.abs]
@@ -123,8 +99,13 @@ class ReportsController < ApplicationController
     end
     
     def calculate_profit_loss(range)
-      expenses = expenses_query range
-      income =   income_query range
+      if range == "all"
+        expenses = current_user.expenses_by_year
+        income = current_user.income_by_year
+      else
+        expenses = current_user.expenses_by_month_for_current_year
+        income = current_user.income_by_month_for_current_year
+      end
       
       results = []
       expenses.each do |exp|
@@ -139,37 +120,5 @@ class ReportsController < ApplicationController
       end
       
       results
-    end
-    
-    def expenses_query(range)
-      if range == 'all'
-        current_user.transactions.
-          select("extract(year from date) as period, sum(amount)").
-          where("is_debit = true").
-          group(1).
-          order(1)
-      else
-        current_user.transactions.
-          select("extract(month from date) as period, sum(amount)").
-          where("date_trunc('#{range}', date) = date_trunc('#{range}', now()) AND is_debit = true").
-          group(1).
-          order(1)
-      end
-    end
-    
-    def income_query(range)
-      if range == 'all'
-        current_user.transactions.
-          select("extract(year from date) as period, sum(amount)").
-          where("is_debit = false").
-          group(1).
-          order(1)
-      else
-        current_user.transactions.
-          select("extract(month from date) as period, sum(amount)").
-          where("date_trunc('#{range}', date) = date_trunc('#{range}', now()) AND is_debit = false").
-          group(1).
-          order(1)
-      end
     end
 end

@@ -216,4 +216,136 @@ describe User do
       end
     end
   end
+
+  describe "reports" do
+    before do
+      @user = FactoryGirl.create(:user, active: true) 
+      @cat_pay = FactoryGirl.create(:category, user: @user, name: 'Pay')
+      @cat_other = FactoryGirl.create(:category, user: @user, name: 'Other')
+      @cat_ent = FactoryGirl.create(:category, user: @user, name: 'Entertainment')
+      @cat_gro = FactoryGirl.create(:category, user: @user, name: 'Groceries')
+      # income
+      FactoryGirl.create(:transaction, date: 1.day.ago, 
+        description: 'A transaction', amount: 50, is_debit: false, user: @user, 
+        category: @cat_pay)
+      FactoryGirl.create(:transaction, date: 1.day.ago, 
+        description: 'A transaction', amount: 25, is_debit: false, user: @user, 
+        category: @cat_pay)
+      FactoryGirl.create(:transaction, date: 2.months.ago, 
+        description: 'A transaction', amount: 25, is_debit: false, user: @user, 
+        category: @cat_pay)
+      FactoryGirl.create(:transaction, date: 1.day.ago, 
+        description: 'A transaction', amount: 25, is_debit: false, user: @user, 
+        category: @cat_other)
+      FactoryGirl.create(:transaction, date: 2.years.ago, 
+        description: 'A transaction', amount: 25, is_debit: false, user: @user, 
+        category: @cat_other)
+      # expenses
+      FactoryGirl.create(:transaction, date: 1.day.ago,
+        description: 'A transaction', amount: 1000, is_debit: true, user: @user,
+        category: @cat_ent)
+      FactoryGirl.create(:transaction, date: 1.day.ago,
+        description: 'A transaction', amount: 2000, is_debit: true, user: @user,
+        category: @cat_gro)
+      FactoryGirl.create(:transaction, date: 2.months.ago,
+        description: 'A transaction', amount: 4000, is_debit: true, user: @user,
+        category: @cat_gro)
+      FactoryGirl.create(:transaction, date: 2.years.ago,
+        description: 'A transaction', amount: 1000, is_debit: true, user: @user,
+        category: @cat_gro)
+    end
+    
+    describe "income by category and date range" do
+      it "should have the correct income when range is all" do
+        income = @user.income_by_category_and_date_range('all')
+        income[0]["name"].should eq("Pay")
+        income[0]["sum"].should eq("100.00")
+        income[1]["name"].should eq("Other")
+        income[1]["sum"].should eq("50.00")
+      end
+      
+      it "should display the correct items when range is month" do
+        income = @user.income_by_category_and_date_range('month')
+        income[0]["name"].should eq("Pay")
+        income[0]["sum"].should eq("75.00")
+        income[1]["name"].should eq("Other")
+        income[1]["sum"].should eq("25.00")
+      end
+      
+      it "should display the correct items when range is year" do
+        income = @user.income_by_category_and_date_range('year')
+        income[0]["name"].should eq("Pay")
+        income[0]["sum"].should eq("100.00")
+        income[1]["name"].should eq("Other")
+        income[1]["sum"].should eq("25.00")
+      end
+    end
+      
+    describe "expenses by category and date range" do
+      it "should have the correct expenses when range is all" do
+        expense = @user.expenses_by_category_and_date_range('all')
+        expense[0]["name"].should eq("Groceries")
+        expense[0]["sum"].should eq("7000.00")
+        expense[1]["name"].should eq("Entertainment")
+        expense[1]["sum"].should eq("1000.00")
+      end
+      
+      it "should display the correct items when range is month" do
+        expense = @user.expenses_by_category_and_date_range('month')
+        expense[0]["name"].should eq("Groceries")
+        expense[0]["sum"].should eq("2000.00")
+        expense[1]["name"].should eq("Entertainment")
+        expense[1]["sum"].should eq("1000.00")
+      end
+      
+      it "should display the correct items when range is year" do
+        expense = @user.expenses_by_category_and_date_range('year')
+        expense[0]["name"].should eq("Groceries")
+        expense[0]["sum"].should eq("6000.00")
+        expense[1]["name"].should eq("Entertainment")
+        expense[1]["sum"].should eq("1000.00")
+      end
+    end
+  
+    describe "income by year" do
+      it "should display the correct items" do
+        income = @user.income_by_year
+        income[0]["period"].should eq("2010")
+        income[0]["sum"].should eq("25.00")
+        income[1]["period"].should eq("2012")
+        income[1]["sum"].should eq("125.00")
+      end
+    end
+    
+    describe "income by month for current year" do
+      it "should display the correct items" do
+        income = @user.income_by_month_for_current_year
+        income[0]["period"].should eq("2") # month is Feb
+        income[0]["sum"].should eq("25.00")
+        income[1]["period"].should eq("4") # month is Apr
+        income[1]["sum"].should eq("100.00")
+      end
+    end
+    
+    describe "expenses by year" do
+      it "should display the correct items" do
+        expenses = @user.expenses_by_year
+        expenses[0]["period"].should eq("2010")
+        expenses[0]["sum"].should eq("1000.00")
+        expenses[1]["period"].should eq("2012")
+        expenses[1]["sum"].should eq("7000.00")
+      end
+    end
+    
+    describe "expenses by month for current year" do
+      it "should display the correct items" do
+        expenses = @user.expenses_by_month_for_current_year
+        expenses[0]["period"].should eq("2") # month is Feb
+        expenses[0]["sum"].should eq("4000.00")
+        expenses[1]["period"].should eq("4") # month is Apr
+        expenses[1]["sum"].should eq("3000.00")
+      end
+    end
+  end
 end
+     
