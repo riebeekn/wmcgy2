@@ -18,7 +18,7 @@
 	
 	label {
 		&.radio {
-			@include inline-block;	
+			display: inline-block;	
 			vertical-align: text-bottom;
 			margin-right: 10px;
 	  }

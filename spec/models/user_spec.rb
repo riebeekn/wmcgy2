@@ -284,26 +284,26 @@ describe User do
     describe "expenses by category and date range" do
       it "should have the correct expenses when range is all" do
         expense = @user.expenses_by_category_and_date_range('all')
-        expense[0]["name"].should eq("Groceries")
-        expense[0]["sum"].should eq("7000.00")
-        expense[1]["name"].should eq("Entertainment")
-        expense[1]["sum"].should eq("1000.00")
+        expense[0]["name"].should eq("Entertainment")
+        expense[0]["sum"].should eq("1000.00")
+        expense[1]["name"].should eq("Groceries")
+        expense[1]["sum"].should eq("7000.00")
       end
       
       it "should display the correct items when range is month" do
         expense = @user.expenses_by_category_and_date_range('month')
-        expense[0]["name"].should eq("Groceries")
-        expense[0]["sum"].should eq("2000.00")
-        expense[1]["name"].should eq("Entertainment")
-        expense[1]["sum"].should eq("1000.00")
+        expense[0]["name"].should eq("Entertainment")
+        expense[0]["sum"].should eq("1000.00")
+        expense[1]["name"].should eq("Groceries")
+        expense[1]["sum"].should eq("2000.00")
       end
       
       it "should display the correct items when range is year" do
         expense = @user.expenses_by_category_and_date_range('year')
-        expense[0]["name"].should eq("Groceries")
-        expense[0]["sum"].should eq("6000.00")
-        expense[1]["name"].should eq("Entertainment")
-        expense[1]["sum"].should eq("1000.00")
+        expense[0]["name"].should eq("Entertainment")
+        expense[0]["sum"].should eq("1000.00")
+        expense[1]["name"].should eq("Groceries")
+        expense[1]["sum"].should eq("6000.00")
       end
     end
   

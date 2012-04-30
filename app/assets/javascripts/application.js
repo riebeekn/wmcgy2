@@ -28,7 +28,5 @@
 //= require bootstrap-collapse
 //= require bootstrap-carousel
 //= require bootstrap-typeahead
-//= require bluff/js-class
-//= require bluff/excanvas
-//= require bluff/bluff-min
+//= require format_currency/jquery.formatCurrency-1.4.0.min.js
 //= require_tree .

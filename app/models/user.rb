@@ -60,7 +60,8 @@ class User < ActiveRecord::Base
       select("name, SUM(amount)").
       joins("LEFT JOIN categories on categories.id = transactions.category_id").
       where(where_clause).
-      group("name")
+      group("name").
+      order("name")
   end
   
   def expenses_by_year

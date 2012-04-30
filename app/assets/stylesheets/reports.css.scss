@@ -4,16 +4,24 @@
 .reports {
 	.inline {
 		div, label, select {
-			@include inline-block;
+			display: inline-block;
 		}
 	
 		#incomeExpenseChart, #expensesChart {
 			padding-right: 75px;
 		}
 		
+		a { margin-bottom: 10px; }
+		
 		label {
 			font-size: 110%;
 			padding: 0px 5px 5px 0px;
 		}
 	}
+	table {
+		max-width: 70%;
+		@extend .table, .table-striped;
+	}
 }
+
+

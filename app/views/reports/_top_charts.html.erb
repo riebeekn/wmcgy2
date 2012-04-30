@@ -1,0 +1,15 @@
+<!-- controls -->
+<div class="inline">
+	<label>Show:</label>
+	<select id="topChartsRange">
+		<option value="month">month to date</option>
+		<option value="year">year to date</option>
+		<option value="all">all</option>
+	</select>
+	<%= link_to 'Show / hide details', '#', id:'toggle_top_details', class:'btn'%>
+</div>
+<!-- top charts and data -->
+<div id="topCharts" class="inline">
+	<%= render 'expenses' %>
+	<%= render 'income' %>
+</div>

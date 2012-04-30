@@ -1,0 +1,14 @@
+<!-- controls -->
+<div class="inline">
+	<label>Show:</label>
+	<select id="bottomChartsRange">
+		<option value="year">year to date</option>
+		<option value="all">all</option>
+	</select>
+	<%= link_to 'Show / hide details', '#', id:'toggle_btm_details', class:'btn'%>
+</div>
+<!-- charts and data -->
+<div id="btmCharts" class="inline">
+	<%= render 'income_expense' %>
+	<%= render 'profit_loss' %>
+</div>
