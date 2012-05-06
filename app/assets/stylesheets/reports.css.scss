@@ -22,6 +22,11 @@
 		max-width: 70%;
 		@extend .table, .table-striped;
 	}
+	
+	.chart {
+		width: 525px;
+		height: 300px;
+	}
 }
 
 

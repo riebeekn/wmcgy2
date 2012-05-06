@@ -310,9 +310,11 @@ describe User do
     describe "income by year" do
       it "should display the correct items" do
         income = @user.income_by_year
-        income[0]["period"].should eq("2010")
+        year_as_number_for_first_record = 2.years.ago.year.to_s
+        income[0]["period"].should eq(year_as_number_for_first_record)
         income[0]["sum"].should eq("25.00")
-        income[1]["period"].should eq("2012")
+        year_as_number_for_second_record = 1.day.ago.year.to_s
+        income[1]["period"].should eq(year_as_number_for_second_record)
         income[1]["sum"].should eq("125.00")
       end
     end
@@ -320,9 +322,11 @@ describe User do
     describe "income by month for current year" do
       it "should display the correct items" do
         income = @user.income_by_month_for_current_year
-        income[0]["period"].should eq("2") # month is Feb
+        month_as_number_for_first_record = 2.months.ago.month.to_s
+        income[0]["period"].should eq(month_as_number_for_first_record)
         income[0]["sum"].should eq("25.00")
-        income[1]["period"].should eq("4") # month is Apr
+        month_as_number_for_second_record = 1.day.ago.month.to_s
+        income[1]["period"].should eq(month_as_number_for_second_record)
         income[1]["sum"].should eq("100.00")
       end
     end
@@ -330,9 +334,11 @@ describe User do
     describe "expenses by year" do
       it "should display the correct items" do
         expenses = @user.expenses_by_year
-        expenses[0]["period"].should eq("2010")
+        year_as_number_for_first_record = 2.years.ago.year.to_s
+        expenses[0]["period"].should eq(year_as_number_for_first_record)
         expenses[0]["sum"].should eq("1000.00")
-        expenses[1]["period"].should eq("2012")
+        year_as_number_for_second_record = 1.day.ago.year.to_s
+        expenses[1]["period"].should eq(year_as_number_for_second_record)
         expenses[1]["sum"].should eq("7000.00")
       end
     end
@@ -340,9 +346,11 @@ describe User do
     describe "expenses by month for current year" do
       it "should display the correct items" do
         expenses = @user.expenses_by_month_for_current_year
-        expenses[0]["period"].should eq("2") # month is Feb
+        month_as_number_for_first_record = 2.months.ago.month.to_s
+        expenses[0]["period"].should eq(month_as_number_for_first_record)
         expenses[0]["sum"].should eq("4000.00")
-        expenses[1]["period"].should eq("4") # month is Apr
+        month_as_number_for_second_record = 1.day.ago.month.to_s
+        expenses[1]["period"].should eq(month_as_number_for_second_record)
         expenses[1]["sum"].should eq("3000.00")
       end
     end
