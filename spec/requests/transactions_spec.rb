@@ -199,7 +199,7 @@ describe "Transactions" do
       before do
         choose  "Expense"
         fill_in "Date", with: '11 Apr 2012'
-        select "a category", from: "Category"
+        fill_in "Category", with: "a category"
         fill_in "Description", with: "a description of the transaction"
         fill_in "Amount",      with: "34.56"
       end

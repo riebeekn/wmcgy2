@@ -1,6 +1,10 @@
 <%= f.input :is_debit, as: :radio_buttons, label: '',
 	collection: [[:Expense, 1], [:Income, 0]], checked: @transaction.is_debit ? 1 : 0 %>
 <%= f.input :date, as: :string, required: false %>
-<%= f.input :category_id, required: false, collection: @categories %>
+<% if @transaction.id == nil %>
+	<%= f.input :category_name %>
+<% else %>
+	<%= f.association :category, required: false %>
+<% end %>
 <%= f.input :description, required: false %>
 <%= f.input :amount, required: false %>

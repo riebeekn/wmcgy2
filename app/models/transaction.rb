@@ -14,7 +14,7 @@
 #
 
 class Transaction < ActiveRecord::Base
-  attr_accessible :description, :date, :amount, :is_debit, :category_id
+  attr_accessible :description, :date, :amount, :is_debit, :category_id, :category_name
   belongs_to :user
   belongs_to :category
   
@@ -25,6 +25,18 @@ class Transaction < ActiveRecord::Base
   validates_inclusion_of :is_debit, in: [true, false]
   validates :category_id, presence: true
   validates :user_id, presence: true
+  
+ def category_name
+   if category.name == 'Uncategorized'
+     nil
+   else
+     category.name
+   end
+ end
+  
+  def category_name=(name)
+    # category set in controller
+  end
   
   # if a user delete's a category for which transactions exist do:
   def category

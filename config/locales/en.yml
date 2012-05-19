@@ -5,6 +5,8 @@ en:
         password_digest: "Password"
       category:
         name: "Category"
+      transaction:
+        category_name: "Category"
     errors:
       models:
         category:

@@ -12,11 +12,17 @@ class TransactionsController < ApplicationController
   
   def new
     @categories = current_user.categories
+    @category_names = @categories.map do |c| 
+                        c.name + ':::'
+                      end
+      
     @transaction = Transaction.new(amount: nil, is_debit: true)
   end
   
   def create
     @transaction = build_transaction_for_create
+    @transaction.category = current_user.categories.find_or_create_by_name(
+          params[:transaction][:category_name].strip)
     if @transaction.save
       redirect_to transactions_path
     else
@@ -31,7 +37,8 @@ class TransactionsController < ApplicationController
   end
   
   def update
-    if build_transaction_for_update.update_attributes(params[:transaction])
+    @transaction = build_transaction_for_update
+    if @transaction.update_attributes(params[:transaction])
       redirect_to transactions_path, notice: "Transaction updated"
     else
       @categories = current_user.categories
