@@ -2,6 +2,13 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 .sign-in {
-	.control-label { input[type="checkbox"] { vertical-align: text-top; } }
+	.remember { 
+		margin-top: 10px;
+		input[type="checkbox"] { vertical-align: text-bottom; } 
+	}
+	.btn-wide { width: 120px; }
+	.checkbox {  }
+}
+.sign-up {
 	.btn-wide { width: 120px; }
 }

@@ -36,8 +36,6 @@ describe "Static pages" do
   describe "should have the right links on the header" do
     describe "when not signed in" do
       before { visit root_path }
-      it { should have_link("Sign in") }
-      it { should have_link("Sign up") }
       it { should_not have_link("Transactions")}
       it { should_not have_link("Categories") }
       it { should_not have_link("Sign out") }

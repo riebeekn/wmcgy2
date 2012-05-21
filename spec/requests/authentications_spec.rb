@@ -32,11 +32,7 @@ describe "Authentications" do
     before { visit signin_path }
     
     describe "page contents" do
-      it { should have_field("Email") }
-      it { should have_field("Password") }
-      it { should have_unchecked_field("Remember me") }
       it { should have_button("Sign in") }
-      it { should have_link("sign up now!") }
       it { should have_link("Forgot password?") }
       it { should have_selector("title", text: full_title("Sign in")) }
     end
@@ -46,7 +42,6 @@ describe "Authentications" do
       
       describe "with bad user and bad password" do
         it { should have_content("Invalid email/password combination") }
-        it { should have_link("Sign in") }
         it { should_not have_link("Sign out") }
       
         it "should stay on sign in page" do
@@ -64,7 +59,6 @@ describe "Authentications" do
         end
         
         it { should have_content("Invalid email/password combination") }
-        it { should have_link("Sign in") }
         it { should_not have_link("Sign out") }
         
         it "should stay on sign in page" do
@@ -79,7 +73,6 @@ describe "Authentications" do
         end
         
         it { should have_content("Please activate your account") }
-        it { should have_link("Sign in") }
         it { should_not have_link("Sign out") }
         
         it "should redirect to account activation page" do
@@ -113,7 +106,6 @@ describe "Authentications" do
     end
     
     it { should have_content("Signed out") }
-    it { should have_link("Sign in") }
     it { should_not have_link("Sign out") }
     
     it "should redirect to the sign in page" do

@@ -1,29 +1,42 @@
 <% provide(:title, 'Sign in') %>
-<div class="sign-in hero-unit">
-	<div class="page-header">
-		<h1>
-			Sign in
-			<small>don't have an account?<%= link_to " ...sign up now!", signup_path %></small>
-		</h1>
-	</div>
-	<%= simple_form_for @session, html: { class: "form-horizontal" } do |f| %>
-		<fieldset>
-			<%= f.input :email, hint: "what does this do?", placeholder: "example@example.com" %>
-			<%= f.input :password %>
-		
-			<div class="control-group">
-				<label class="control-label">
-					Remember me
-					<%= f.check_box :remember_me %>
-				</label>
-				<div class="controls">
-					<%= f.submit "Sign in", class: "btn btn-primary btn-wide" %>
-				</div>
+<div class="row">
+	<div class="span4 offset2">
+		<div class="sign-in well">
+			<div class="page-header">
+				<h1>Sign in</h1>
 			</div>
-		</fieldset>
-	<% end %>
-
-	<p>
-		<%= link_to "Forgot password?", forgot_password_path %>
-	</p>
+			<%= simple_form_for @session, html: { class: "form-vertical" } do |f| %>
+				<fieldset>
+					<%= f.input :email, placeholder: "Email", label: false %>
+					<%= f.input :password, placeholder: "Password", label: false %>
+					<%= f.submit "Sign in", class: "btn btn-success btn-wide" %>
+					<div class="remember">
+						<%= f.check_box :remember_me %>&nbsp;Remember me<br/>
+						<%= link_to "Forgot password?", forgot_password_path %>
+					</div>
+				</fieldset>
+			<% end %>
+		</div>
+	</div>
+	<div class="span4">
+		<div class="sign-up well">
+			<div class="page-header">
+				<h1>
+					<small>No account? Sign up now!</small><br/>
+				</h1>
+			</div>
+			<%= simple_form_for @user, html: { class: "form-vertical" }  do |f| %>
+			  <fieldset>
+					<%= f.input :email, required: false, label: false, placeholder: "Email" %>
+					<%= f.input :password, label: false, placeholder: "Password" %>
+					<%= f.input :password_confirmation, label: false, placeholder: "Confirm password" %>
+					<div class="control-group">
+						<div class="controls">
+							<%= f.submit "Sign up", class: "btn btn-success btn-wide" %>
+						</div>
+					</div>
+				</fieldset>
+			<% end %>
+		</div>
+	</div>
 </div>
