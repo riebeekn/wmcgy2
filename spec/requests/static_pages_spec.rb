@@ -9,11 +9,6 @@ describe "Static pages" do
     it { should have_selector('title', text: full_title(page_title)) }  
   end
   
-  describe "Home page" do
-    before { visit root_path }
-    let(:page_title) { "Home" }
-  end
-  
   describe "About page" do
     before { visit about_path }
     let(:heading) { 'About Us' }
@@ -41,7 +36,6 @@ describe "Static pages" do
   describe "should have the right links on the header" do
     describe "when not signed in" do
       before { visit root_path }
-      it { should have_link("Home") }
       it { should have_link("Sign in") }
       it { should have_link("Sign up") }
       it { should_not have_link("Transactions")}
@@ -55,7 +49,6 @@ describe "Static pages" do
       before do 
         sign_in user 
       end
-      it { should have_link("Home") }
       it { should have_link("Transactions") }
       it { should have_link("Categories") }
       it { should have_link("Reports") }
@@ -70,8 +63,6 @@ describe "Static pages" do
         page.should have_selector("title", text: full_title("Transactions"))
         click_link "Categories"
         page.should have_selector("title", text: full_title("Categories"))
-        click_link "Home"
-        page.should have_selector("title", text: full_title("Home"))
         click_link "Reports"
         page.should have_selector("title", text: full_title("Reports"))
       end

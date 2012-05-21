@@ -2,6 +2,12 @@ header {
 	li { padding-top: 15px; }
 	.divider-vertical { height: 70px !important; }	
 	.current-user { color: #FEFFF7; }
+	.pull-right {
+		a { 
+			color: #FEFFF7 !important; 
+			&:hover { color: #999 !important; }
+		}
+	}
 }
 
 footer {

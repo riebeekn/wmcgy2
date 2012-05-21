@@ -30,5 +30,5 @@ Wmcgy::Application.routes.draw do
   match '/reports/income_and_expense', to: 'reports#income_and_expense'
   match '/reports/profit_loss', to: 'reports#profit_loss'
   
-  root to: 'static_pages#home'
+  root to: 'transactions#index'
 end

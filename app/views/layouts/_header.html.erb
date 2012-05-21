@@ -11,20 +11,17 @@
  				<div class="nav-collapse">
     			<ul class="nav">
 						<li class="divider-vertical"></li>
-      			<li><%= link_to "Home", root_path, class: "lead" %></li>
-						<li class="divider-vertical"></li>
 						<% if current_user %>
-							<li><%= link_to "Transactions", transactions_path, class: "lead" %></li>
+							<li><%= link_to "Transactions", root_path, class: "lead" %></li>
 							<li class="divider-vertical"></li>	
 							<li><%= link_to "Categories", categories_path, class: "lead" %></li>
 							<li class="divider-vertical"></li>
 							<li><%= link_to "Reports", reports_path, class: "lead" %></li>
 							<li class="divider-vertical"></li>
-							<li><%= link_to "Sign out", signout_path, class: "lead" %></li>
-							<li class="divider-vertical"></li>
 					</ul>
 					<ul class="nav pull-right">
 						<li class="current-user">Signed in as <%= current_user.email %></li>
+						<li>&nbsp;&nbsp;&nbsp;<u><%= link_to "Sign out", signout_path %></u></li>
 					</ul>
 						<% else %>
 							<li><%= link_to "Sign up", signup_path, class: "lead" %></li>
