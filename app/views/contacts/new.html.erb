@@ -1,0 +1,14 @@
+<% provide(:title, 'Contact') %>
+<div class="contact">
+	<div class="page-header">
+		<h1>Contact</h1>
+	</div>
+	<%= simple_form_for @message, url: contacts_path, html: { class: "form-horizontal" } do |f| %>
+		<fieldset>
+			<%= f.input :name, required: false %>
+			<%= f.input :email %>
+			<%= f.input :content, as: :text, required: false %>
+			<%= f.submit "Send", class: "btn btn-success btn-wide" %>
+		</fieldset>
+	<% end %>
+</div>

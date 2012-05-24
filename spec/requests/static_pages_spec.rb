@@ -17,16 +17,8 @@ describe "Static pages" do
     it_should_behave_like "all static pages"
   end
   
-  describe "Contact page" do
-    before { visit contact_path }
-    let(:heading) { 'Contact' }
-    let(:page_title) { 'Contact' }
-    
-    it_should_behave_like "all static pages"
-  end
-  
   it "should have the right links on the footer" do
-    visit contact_path
+    visit root_path
     click_link "About"
     page.should have_selector 'title', text: full_title('About')
     click_link "Contact"

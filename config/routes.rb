@@ -8,9 +8,11 @@ Wmcgy::Application.routes.draw do
   resources :transactions
   resources :charts,            only: [:index]
   resources :reports,           only: [:index]
+  resources :contacts,          only: [:new, :create]
   
   match '/about',   to: 'static_pages#about'
-  match '/contact', to: 'static_pages#contact'
+  
+  match '/contact', to: 'contacts#new', as: :new_contact
   
   match '/signup',                  to: 'users#new'
   match '/signin',                  to: 'sessions#new'
