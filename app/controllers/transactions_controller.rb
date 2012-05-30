@@ -37,8 +37,8 @@ class TransactionsController < ApplicationController
   end
   
   def update
-    @transaction = build_transaction_for_update
-    if @transaction.update_attributes(params[:transaction])
+    @transaction = build_transaction_for_edit
+    if @transaction.save
       redirect_to transactions_path, notice: "Transaction updated"
     else
       @categories = current_user.categories
@@ -60,21 +60,33 @@ class TransactionsController < ApplicationController
       @transaction
     end
     
-    def build_transaction_for_update
-      @transaction = current_user.transactions.find(params[:id])
-      normalize_amount @transaction
-    end
-    
     def build_transaction_for_create
       @transaction = current_user.transactions.build(params[:transaction])
-      if @transaction.amount != nil
-        if @transaction.is_debit?
-          @transaction.amount = @transaction.amount.abs * -1
-        else
-          @transaction.amount = @transaction.amount.abs
-        end
+      @transaction.date = add_time_to_date(@transaction.date, DateTime.now)
+      normalize_amount(@transaction)
+    end
+    
+    def build_transaction_for_edit
+      @transaction = current_user.transactions.find(params[:id])
+      origDate = @transaction.date
+      @transaction.attributes = { 
+        is_debit: params[:transaction][:is_debit],
+        date: params[:transaction][:date],
+        category_id: params[:transaction][:category_id],
+        description: params[:transaction][:description],
+        amount: params[:transaction][:amount]
+      }
+      #@transaction.date = add_time_to_date(@transaction.date, origDate)
+      logger.debug "************ #{@transaction.date} ************"
+      normalize_amount(@transaction)
+    end
+    
+    def add_time_to_date(date_to_add_time_to, time_to_add)
+      if date_to_add_time_to != nil
+        date_to_add_time_to + (time_to_add.hour).hour +
+                              (time_to_add.min).minute +
+                              (time_to_add.sec).second
       end
-      @transaction
     end
     
     def normalize_amount(transaction)

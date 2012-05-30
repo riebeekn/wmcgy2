@@ -87,7 +87,6 @@ class ReportsController < ApplicationController
       expenses.each do |exp|
         income.each do |inc|
           if exp.period == inc.period
-            logger.debug "found"
             results <<  [period_value(range, exp.period),
                         inc.sum.to_f,
                         exp.sum.to_f.abs]

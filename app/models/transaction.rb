@@ -24,6 +24,7 @@ class Transaction < ActiveRecord::Base
   validates_numericality_of :amount
   validates_inclusion_of :is_debit, in: [true, false]
   validates :category_id, presence: true
+  validates :category_name, presence: true
   validates :user_id, presence: true
   
  def category_name

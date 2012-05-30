@@ -258,7 +258,7 @@ describe "Transactions" do
       
       it "should update the transaction and re-direct to the index page" do
         choose  "Income"
-        fill_in "Date", with: 2.days.ago
+        fill_in "Date", with: 2.days.ago.to_s
         select "a category", from: "Category"
         fill_in "Description", with: "updated description"
         fill_in "Amount",      with: "22.33"
