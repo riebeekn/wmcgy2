@@ -10,9 +10,12 @@ jQuery ->
 	if $('#transaction_date').val() is ''
 		$('#transaction_date').datepicker('setDate', new Date())
 		
+	# load up categories in the in place editor for the new transactions page
 	categories = $('#category_names')
-	categories = $('#category_names').val().split ":::"
-	$('#transaction_category_name').autocomplete
-		source: categories
-		delay: 0
+	alert('cattyies')
+	if categories.val()?
+		categories = categories.val().split ":::"
+		$('#transaction_category_name').autocomplete
+			source: categories
+			delay: 0
 	

@@ -2,7 +2,7 @@
 	collection: [[:Expense, 1], [:Income, 0]], checked: @transaction.is_debit ? 1 : 0 %>
 <%= f.input :date, as: :string, required: false %>
 <% if @transaction.id == nil %>
-	<%= f.input :category_name %>
+	<%= f.input :category_name, required: false %>
 <% else %>
 	<%= f.association :category, required: false %>
 <% end %>
