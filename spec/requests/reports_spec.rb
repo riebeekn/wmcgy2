@@ -106,4 +106,73 @@ describe "Reports" do
       end
     end
   end
+
+  describe "when no income entries" do
+    before do
+      groceries = FactoryGirl.create(:category, name: "Groceries", user: user)
+      order_in_food = FactoryGirl.create(:category, name: "Order in food", user: user)
+      FactoryGirl.create(:transaction, amount: -23, category: groceries, is_debit: true, user: user,
+                                       date: 1.hour.ago)
+      FactoryGirl.create(:transaction, amount: -40, category: groceries, is_debit: true, user: user,
+                                       date: 2.hours.ago)
+      FactoryGirl.create(:transaction, amount: -40, category: order_in_food, is_debit: true, user: user,
+                                       date: 3.hours.ago)
+      FactoryGirl.create(:transaction, amount: -456.54, category: groceries, is_debit: true, user: user,
+                                        date: 1.month.ago)
+    end
+    
+    describe "income and expense" do
+      before { visit '/reports/income_and_expense' }
+      
+      it "should show data for income expense even though only expense entries exist" do
+        month = Date::MONTHNAMES[1.hour.ago.month][0..2]
+        page.should have_content('"' + month + '",0.0,103.0')
+        month = Date::MONTHNAMES[1.month.ago.month][0..2]
+        page.should have_content('"' + month + '",0.0,456.54')
+      end
+    end
+    
+    describe "profit loss" do
+      before { visit '/reports/profit_loss'}
+      
+      it "should show data for profit loss even though only expense entries exist" do
+        month = Date::MONTHNAMES[1.hour.ago.month][0..2]
+        page.should have_content('"' + month + '",0,-103.0')
+        month = Date::MONTHNAMES[1.month.ago.month][0..2]
+        page.should have_content('"' + month + '",0,-456.54')
+      end
+    end
+  end
+  
+  describe "when no expense entries" do
+    before do
+      pay = FactoryGirl.create(:category, name: "Pay", user: user)
+      FactoryGirl.create(:transaction, amount: 440, category: pay, is_debit: false, user: user,
+                                       date: 4.hours.ago)
+      FactoryGirl.create(:transaction, amount: 660, category: pay, is_debit: false, user: user,
+                                       date: 1.month.ago)
+    end
+    
+    describe "income and expense" do
+      before { visit '/reports/income_and_expense' }
+      
+      it "should show data for income expense even though only income entries exist" do
+        month = Date::MONTHNAMES[1.hour.ago.month][0..2]
+        page.should have_content('"' + month + '",440.0,0.0')
+        month = Date::MONTHNAMES[1.month.ago.month][0..2]
+        page.should have_content('"' + month + '",660.0,0.0')
+      end
+    end
+    
+    describe "profit loss" do
+      before { visit '/reports/profit_loss'}
+      
+      it "should show data for profit loss even though only income entries exist" do
+        month = Date::MONTHNAMES[1.hour.ago.month][0..2]
+        page.should have_content('"' + month + '",440.0,0')
+        month = Date::MONTHNAMES[1.month.ago.month][0..2]
+        page.should have_content('"' + month + '",660.0,0')
+      end
+    end
+  end
 end

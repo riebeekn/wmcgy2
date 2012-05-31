@@ -70,7 +70,7 @@ class ReportsController < ApplicationController
       if range == 'year'
         Date::MONTHNAMES[period.to_i][0..2]
       else
-        period
+        period.to_s
       end
     end
   
@@ -83,15 +83,14 @@ class ReportsController < ApplicationController
         income = current_user.income_by_month_for_current_year
       end
       
+      periods = calculate_period(expenses, income, range)
       results = []
-      expenses.each do |exp|
-        income.each do |inc|
-          if exp.period == inc.period
-            results <<  [period_value(range, exp.period),
-                        inc.sum.to_f,
-                        exp.sum.to_f.abs]
-          end
-        end
+      periods.each do |period|
+        exp_value = get_value_for_period(expenses, period)
+        inc_value = get_value_for_period(income, period)
+        results << [period_value(range, period),
+                            inc_value.to_f,
+                            exp_value.to_f.abs]
       end
       
       results
@@ -106,18 +105,41 @@ class ReportsController < ApplicationController
         income = current_user.income_by_month_for_current_year
       end
       
+      periods = calculate_period(expenses, income, range)
       results = []
-      expenses.each do |exp|
-        income.each do |inc|
-          if exp.period == inc.period
-            profit_loss = inc.sum.to_f + exp.sum.to_f
-            results <<  [period_value(range, exp.period),
-                        profit_loss > 0 ? profit_loss : 0,
-                        profit_loss < 0 ? profit_loss : 0]
-          end
-        end
+      periods.each do |period|
+        exp_value = get_value_for_period(expenses, period)
+        inc_value = get_value_for_period(income, period)
+        profit_loss = exp_value.to_f + inc_value.to_f
+        results <<  [period_value(range, period),
+                    profit_loss > 0 ? profit_loss : 0,
+                    profit_loss < 0 ? profit_loss : 0]
       end
       
       results
+    end
+    
+    def calculate_period(expenses, income, range)
+      if range == "all"
+        start = Time.now.year
+        if !expenses[0].nil?
+          start = expenses[0].period.to_i
+        end
+        if !income[0].nil?
+          start = income[0].period.to_i unless income[0].period.to_i > start
+        end
+        (start..Time.now.year).to_a
+      else
+        (1..Time.now.month).to_a
+      end
+    end
+
+    def get_value_for_period(values, period)
+      values.each do |item|
+        if item.period == period.to_s
+          return item.sum
+        end
+      end
+      return 0
     end
 end
