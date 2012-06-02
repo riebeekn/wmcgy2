@@ -12,7 +12,6 @@ jQuery ->
 		
 	# load up categories in the in place editor for the new transactions page
 	categories = $('#category_names')
-	alert('cattyies')
 	if categories.val()?
 		categories = categories.val().split ":::"
 		$('#transaction_category_name').autocomplete

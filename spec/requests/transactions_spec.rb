@@ -5,7 +5,8 @@ describe "Transactions" do
   
   before do 
     sign_in user 
-    @category = FactoryGirl.create(:category, user: user, name: "a category")
+    @category = FactoryGirl.create(:category, user: user, name: "a category for the user")
+    @category2 = FactoryGirl.create(:category, user: user, name: "a second category for the user")
   end
   
   subject { page }
@@ -186,6 +187,25 @@ describe "Transactions" do
       it { should have_field('Description') }
       it { should have_field('Amount') }
       it { should have_button('Add transaction') }
+    end
+    
+    describe "pre-loaded categories" do
+      it "should load the user's categories when new transaction page is loaded" do
+        document = Nokogiri::HTML(page.body)
+        cat = document.xpath('//*[@id="category_names"]/@value')
+        # categories are seperated with ':::' for parsing in the js
+        cat.inner_html.should have_content @category.name
+        cat.inner_html.should have_content @category2.name
+      end
+      
+      it "should load the user's categories after an invalid transaction add attempt" do
+        click_button "Add transaction"
+        document = Nokogiri::HTML(page.body)
+        cat = document.xpath('//*[@id="category_names"]/@value')
+        # categories are seperated with ':::' for parsing in the js
+        cat.inner_html.should have_content @category.name
+        cat.inner_html.should have_content @category2.name
+      end
     end
     
     describe "with invalid information" do

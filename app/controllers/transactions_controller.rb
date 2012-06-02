@@ -11,11 +11,7 @@ class TransactionsController < ApplicationController
   end
   
   def new
-    @categories = current_user.categories
-    @category_names = @categories.map do |c| 
-                        c.name + ':::'
-                      end
-      
+    populate_category_names  
     @transaction = Transaction.new(amount: nil, is_debit: true)
   end
   
@@ -26,7 +22,7 @@ class TransactionsController < ApplicationController
     if @transaction.save
       redirect_to transactions_path
     else
-      @categories = current_user.categories
+      populate_category_names
       render 'new'
     end
   end
@@ -53,6 +49,13 @@ class TransactionsController < ApplicationController
   
   private
   
+    def populate_category_names
+      @categories = current_user.categories
+      @category_names = @categories.map do |c| 
+                          c.name + ':::'
+                        end
+    end
+    
     def get_transaction_for_edit
       @transaction = current_user.transactions.find(params[:id])
       @transaction.amount = @transaction.amount.abs
@@ -76,8 +79,7 @@ class TransactionsController < ApplicationController
         description: params[:transaction][:description],
         amount: params[:transaction][:amount]
       }
-      #@transaction.date = add_time_to_date(@transaction.date, origDate)
-      logger.debug "************ #{@transaction.date} ************"
+      
       normalize_amount(@transaction)
     end
     
