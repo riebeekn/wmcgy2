@@ -59,6 +59,11 @@ describe Transaction do
       it { should_not be_valid }
     end
     
+    describe "with amount of zero" do
+      before { @transaction.amount = 0 }
+      it { should_not be_valid }
+    end
+    
     describe "with non numeric amount" do
       before { @transaction.amount = 'foobar' }
       it { should_not be_valid }

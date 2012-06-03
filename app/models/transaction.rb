@@ -22,6 +22,7 @@ class Transaction < ActiveRecord::Base
   validates :date, presence: true
   validates :amount, presence: true
   validates_numericality_of :amount
+  validate :amount_is_not_zero
   validates_inclusion_of :is_debit, in: [true, false]
   validates :category_id, presence: true
   validates :category_name, presence: true
@@ -47,4 +48,11 @@ class Transaction < ActiveRecord::Base
       super()
     end
   end
+  
+  private
+  
+    def amount_is_not_zero
+      self.errors.add(:amount, 'Amount must be a number and non-zero.') if self.amount == 0
+    end
+    
 end

@@ -24,6 +24,7 @@ class TransactionsController < ApplicationController
     else
       populate_category_names
       @transaction.date = params[:transaction][:date]
+      @transaction.amount = ''
       render 'new'
     end
   end
@@ -39,6 +40,7 @@ class TransactionsController < ApplicationController
       redirect_to transactions_path, notice: "Transaction updated"
     else
       @categories = current_user.categories
+      @transaction.amount = ''
       render 'edit'
     end
   end
@@ -67,6 +69,7 @@ class TransactionsController < ApplicationController
     def build_transaction_for_create
       @transaction = current_user.transactions.build(params[:transaction])
       @transaction.date = add_time_to_date(@transaction.date, DateTime.now)
+      @transaction.amount = params[:transaction][:amount].gsub("$", "")
       normalize_amount(@transaction)
     end
     
@@ -78,7 +81,7 @@ class TransactionsController < ApplicationController
         date: params[:transaction][:date],
         category_id: params[:transaction][:category_id],
         description: params[:transaction][:description],
-        amount: params[:transaction][:amount]
+        amount: params[:transaction][:amount].gsub("$", "")
       }
       
       normalize_amount(@transaction)
