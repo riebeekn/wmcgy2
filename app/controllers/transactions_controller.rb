@@ -23,6 +23,7 @@ class TransactionsController < ApplicationController
       redirect_to transactions_path
     else
       populate_category_names
+      @transaction.date = params[:transaction][:date]
       render 'new'
     end
   end
