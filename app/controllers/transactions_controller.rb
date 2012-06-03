@@ -1,4 +1,5 @@
 class TransactionsController < ApplicationController
+  include ActionView::Helpers::NumberHelper
   before_filter :signed_in_user
   helper_method :sort_column, :sort_direction 
   
@@ -61,7 +62,7 @@ class TransactionsController < ApplicationController
     
     def get_transaction_for_edit
       @transaction = current_user.transactions.find(params[:id])
-      @transaction.amount = @transaction.amount.abs
+      @transaction.amount = number_to_currency(@transaction.amount.abs).gsub("$", "").gsub(",","")
       @transaction.date = @transaction.date.strftime('%d %b %Y')
       @transaction
     end

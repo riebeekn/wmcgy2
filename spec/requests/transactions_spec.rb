@@ -326,7 +326,7 @@ describe "Transactions" do
       before(:all) {
         @category = FactoryGirl.create(:category, user: user, name: 'test category')
         @transaction = FactoryGirl.create(:transaction, date: 1.day.ago, 
-          description: 'A transaction', amount: -234.57, is_debit: true, user: user, 
+          description: 'A transaction', amount: -234, is_debit: true, user: user, 
           category: @category)
         } 
       after(:all) { User.destroy_all }
@@ -340,11 +340,11 @@ describe "Transactions" do
         it { should have_checked_field('Expense') }
         it { should have_unchecked_field('Income') }
       
-        it "should have a positive amount" do
+        it "should have a positive amount and two decimal places" do
           # saved as neg. in the DB but should show as positive in the edit form
           document = Nokogiri::HTML(page.body)
           amt = document.xpath('//*[@id="transaction_amount"]/@value')
-          amt.inner_html.should eq ('234.57')
+          amt.inner_html.should eq ('234.00')
         end
       end
     end
