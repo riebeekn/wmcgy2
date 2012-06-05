@@ -1,47 +1,43 @@
 class TransactionsController < ApplicationController
-  include ActionView::Helpers::NumberHelper
   before_filter :signed_in_user
   helper_method :sort_column, :sort_direction 
   
   def index
-    if params[:sort] == "category"
-      @transactions = sort_by_category
-    else
-      @transactions = sort
-    end
+    @transactions = sort
   end
   
   def new
-    populate_category_names  
+    @category_names = populate_category_names  
     @transaction = Transaction.new(amount: nil, is_debit: true)
   end
   
   def create
-    @transaction = build_transaction_for_create
+    @transaction = build_transaction_for_create(params[:transaction][:amount])
     @transaction.category = current_user.categories.find_or_create_by_name(
           params[:transaction][:category_name].strip)
     if @transaction.save
       redirect_to transactions_path
     else
-      populate_category_names
+      @category_names = populate_category_names
       @transaction.date = params[:transaction][:date]
-      @transaction.amount = ''
+      @transaction.amount = sprintf("%.2f", params[:transaction][:amount].gsub("$", "").to_f)
       render 'new'
     end
   end
   
   def edit
     @categories = current_user.categories
-    @transaction = get_transaction_for_edit
+    @transaction = get_transaction_for_edit(params[:id])
   end
   
   def update
-    @transaction = build_transaction_for_edit
-    if @transaction.save
+    @transaction = current_user.transactions.find(params[:id])
+    params[:transaction][:amount].gsub!("$", "") # switch this to callback on model?
+    if @transaction.update_attributes(params[:transaction])
       redirect_to transactions_path, notice: "Transaction updated"
     else
       @categories = current_user.categories
-      @transaction.amount = ''
+      @transaction.amount = sprintf("%.2f", params[:transaction][:amount].gsub("$", "").to_f)
       render 'edit'
     end
   end
@@ -54,38 +50,24 @@ class TransactionsController < ApplicationController
   private
   
     def populate_category_names
-      @categories = current_user.categories
-      @category_names = @categories.map do |c| 
-                          c.name + ':::'
-                        end
+      # categories are seperated with ':::' for parsing in the js
+      current_user.categories.map do |c| 
+        c.name + ':::'
+      end
     end
     
-    def get_transaction_for_edit
-      @transaction = current_user.transactions.find(params[:id])
-      @transaction.amount = number_to_currency(@transaction.amount.abs).gsub("$", "").gsub(",","")
-      @transaction.date = @transaction.date.strftime('%d %b %Y')
-      @transaction
+    def get_transaction_for_edit(transaction_id)
+      transaction = current_user.transactions.find(transaction_id)
+      transaction.amount = sprintf("%.2f", transaction.amount.abs)
+      transaction.date = transaction.date.strftime('%d %b %Y')
+      transaction
     end
     
-    def build_transaction_for_create
-      @transaction = current_user.transactions.build(params[:transaction])
-      @transaction.date = add_time_to_date(@transaction.date, DateTime.now)
-      @transaction.amount = params[:transaction][:amount].gsub("$", "")
-      normalize_amount(@transaction)
-    end
-    
-    def build_transaction_for_edit
-      @transaction = current_user.transactions.find(params[:id])
-      origDate = @transaction.date
-      @transaction.attributes = { 
-        is_debit: params[:transaction][:is_debit],
-        date: params[:transaction][:date],
-        category_id: params[:transaction][:category_id],
-        description: params[:transaction][:description],
-        amount: params[:transaction][:amount].gsub("$", "")
-      }
-      
-      normalize_amount(@transaction)
+    def build_transaction_for_create(amount)
+      transaction = current_user.transactions.build(params[:transaction])
+      transaction.date = add_time_to_date(transaction.date, DateTime.now)
+      transaction.amount = amount.gsub("$", "")
+      normalize_amount(transaction)
     end
     
     def add_time_to_date(date_to_add_time_to, time_to_add)
@@ -109,19 +91,12 @@ class TransactionsController < ApplicationController
     
     # --- SORTING ---
     def sort
+      sort_string = params[:sort] == "category" ? "categories.name" : sort_column
       current_user.transactions.paginate(page: params[:page], include: :category,
-                                         order: "#{sort_column} #{sort_direction}")
-    end
-    
-    def sort_by_category
-      current_user.transactions.paginate(page: params[:page], include: :category, 
-                                         order: "categories.name #{sort_direction}")
+                                         order: "#{sort_string} #{sort_direction}")
     end
   
     def sort_column
-      #Transaction.column_names.include?(params[:sort]) ? params[:sort] : "date"
-      # NOTE: above allows user to sort on other columns, which is probably ok but
-      #       I think the below is better
       %w[date category description amount].include?(params[:sort]) ? params[:sort] : "date"
     end
   

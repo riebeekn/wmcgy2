@@ -24,10 +24,11 @@ describe Transaction do
   it { should respond_to(:date) }
   it { should respond_to(:amount) }
   it { should respond_to(:is_debit) }
+  it { should respond_to(:category_id) }
+  it { should respond_to(:category_name) }
   it { should respond_to(:user) }
   it { should respond_to(:user_id) }
   it { should respond_to(:category) }
-  it { should respond_to(:category_id) }
   it { should be_valid }
   
   describe "when category is nil" do

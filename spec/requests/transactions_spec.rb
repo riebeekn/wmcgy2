@@ -36,6 +36,11 @@ describe "Transactions" do
       }
       after(:all) { User.destroy_all }
       
+      it "should have an edit link" do
+        visit transactions_path
+        should have_link('Edit', href: "/transactions/#{@debit.id}/edit")
+      end
+      
       it "should format the credit transaction correctly" do
         page.should have_selector('td', text: 1.day.ago.strftime('%d %b %Y'))
         page.should have_selector('td', text: 'income')
@@ -174,7 +179,7 @@ describe "Transactions" do
     end
   end
   
-  describe "create" do
+  describe "new" do
     before { visit new_transaction_path }
     
     describe "items that should be present on the page" do
@@ -193,7 +198,6 @@ describe "Transactions" do
       it "should load the user's categories when new transaction page is loaded" do
         document = Nokogiri::HTML(page.body)
         cat = document.xpath('//*[@id="category_names"]/@value')
-        # categories are seperated with ':::' for parsing in the js
         cat.inner_html.should have_content @category.name
         cat.inner_html.should have_content @category2.name
       end
@@ -202,16 +206,55 @@ describe "Transactions" do
         click_button "Add transaction"
         document = Nokogiri::HTML(page.body)
         cat = document.xpath('//*[@id="category_names"]/@value')
-        # categories are seperated with ':::' for parsing in the js
         cat.inner_html.should have_content @category.name
         cat.inner_html.should have_content @category2.name
       end
     end
+  end
+  
+  describe "create" do
+    before { visit new_transaction_path }
     
     describe "with invalid information" do
       it "should not create a transaction" do
         expect { click_button "Add transaction" }.not_to change(Transaction, :count)
         page.should have_content("can't be blank")
+      end
+      
+      it "should re-populate the categories" do
+        click_button "Add transaction"
+        document = Nokogiri::HTML(page.body)
+        categories = document.xpath('//*[@id="category_names"]/@value')
+        categories.should have_content ("a category for the user")
+        categories.should have_content("a second category for the user")
+      end
+      
+      it "should re-populate the date with date selected by the user" do
+        fill_in "Date", with: 1.day.ago
+        click_button "Add transaction"
+        document = Nokogiri::HTML(page.body)
+        date = document.xpath('//*[@id="transaction_date"]/@value')
+        date.inner_html[0,4].should eq (1.day.ago.strftime('%Y'))
+        date.inner_html[5,2].should eq (1.day.ago.strftime('%m'))
+        date.inner_html[8,2].should eq (1.day.ago.strftime('%d'))
+      end
+      
+      it "should re-populate the amount with the amount entered by the user, with no sign symbol" do
+        choose 'Expense'
+        fill_in "Amount", with: "35.4"
+        click_button "Add transaction"
+        document = Nokogiri::HTML(page.body)
+        amt = document.xpath('//*[@id="transaction_amount"]/@value')
+        amt.inner_html.should eq ('35.40')
+      end
+      
+      it "should handle amounts with dollar signs by stripping the dollar sign" do
+        choose 'Expense'
+        fill_in "Amount", with: "$35.4"
+        click_button "Add transaction"
+        document = Nokogiri::HTML(page.body)
+        amt = document.xpath('//*[@id="transaction_amount"]/@value')
+        amt.inner_html.should eq ('35.40')
       end
     end
     
@@ -243,6 +286,12 @@ describe "Transactions" do
           click_button "Add transaction"
           Transaction.last.amount.should eq 33
         end
+        
+        it "should handle dollar signs" do
+          fill_in "Amount", with: "$33"
+          click_button "Add transaction"
+          Transaction.last.amount.should eq 33
+        end
       end
       
       describe "expense transactions" do
@@ -262,13 +311,13 @@ describe "Transactions" do
   end
 
   describe "update" do
-    before(:all) {
+    before do
       @category = FactoryGirl.create(:category, user: user, name: 'test category')
       @transaction = FactoryGirl.create(:transaction, date: 1.day.ago, 
         description: 'A transaction', amount: -234.57, is_debit: true, user: user, 
         category: @category)
-      } 
-    after(:all) { User.destroy_all }
+    end
+    after { User.destroy_all }
     
     describe "with valid information" do
       before do
@@ -278,14 +327,14 @@ describe "Transactions" do
       
       it "should update the transaction and re-direct to the index page" do
         choose  "Income"
-        fill_in "Date", with: 2.days.ago.to_s
+        fill_in "Date", with: 2.days.ago
         select "a category", from: "Category"
         fill_in "Description", with: "updated description"
-        fill_in "Amount",      with: "22.33"
+        fill_in "Amount",      with: "$22.33"
         click_button "Edit transaction"
         t = Transaction.find(@transaction.id)
         t.is_debit.should eq false
-        t.date.should eq 2.days.ago.to_s
+        t.date.strftime('%d %b %Y %H %M').should eq 2.days.ago.strftime('%d %b %Y %H %M')
         t.description.should eq 'updated description'
         t.amount.should eq 22.33
         page.should have_content 'Transaction updated'
@@ -300,18 +349,28 @@ describe "Transactions" do
         select "a category", from: "Category"
         fill_in "Description", with: ""
         fill_in "Amount",      with: ""
-        click_button "Edit transaction"
       end
       
       it "should re-populate the category" do
+        click_button "Edit transaction"
         page.should have_content('test category')
       end
       
+      it "should re-populate the amount entered by the user" do
+        fill_in "Amount", with: 23.4
+        click_button "Edit transaction"
+        document = Nokogiri::HTML(page.body)
+        amt = document.xpath('//*[@id="transaction_amount"]/@value')
+        amt.inner_html.should eq ('23.40')
+      end
+      
       it "should contain an error message" do
+        click_button "Edit transaction"
         page.should have_content("can't be blank")
       end
       
       it "should not update the transaction" do
+        click_button "Edit transaction"
         t = Transaction.find(@transaction.id)
         t.is_debit.should eq true
         t.date.to_date.to_s.should eq 1.day.ago.to_date.to_s
@@ -323,81 +382,111 @@ describe "Transactions" do
   
   describe "edit" do
     describe "expense transaction" do
-      before(:all) {
+      before do
         @category = FactoryGirl.create(:category, user: user, name: 'test category')
         @transaction = FactoryGirl.create(:transaction, date: 1.day.ago, 
-          description: 'A transaction', amount: -234, is_debit: true, user: user, 
+          description: 'A transaction', amount: -2343, is_debit: true, user: user, 
           category: @category)
-        } 
-      after(:all) { User.destroy_all }
+        visit transactions_path
+        click_link 'Edit'
+      end 
+      after { User.destroy_all }
       
-      describe "items that should be on the page" do
-        before do
-          visit transactions_path
-          click_link 'Edit'
-        end
+      it { should have_checked_field('Expense') }
+      it { should have_unchecked_field('Income') }
       
-        it { should have_checked_field('Expense') }
-        it { should have_unchecked_field('Income') }
-      
-        it "should have a positive amount and two decimal places" do
-          # saved as neg. in the DB but should show as positive in the edit form
-          document = Nokogiri::HTML(page.body)
-          amt = document.xpath('//*[@id="transaction_amount"]/@value')
-          amt.inner_html.should eq ('234.00')
-        end
+      it "should have a positive amount and two decimal places" do
+        # saved as neg. in the DB but should show as positive in the edit form
+        document = Nokogiri::HTML(page.body)
+        amt = document.xpath('//*[@id="transaction_amount"]/@value')
+        amt.inner_html.should eq ('2343.00')
       end
     end
     
     describe "income transaction" do
-      before(:all) {
+      before do
         @category = FactoryGirl.create(:category, user: user, name: 'test category')
         @transaction = FactoryGirl.create(:transaction, date: 1.day.ago, 
           description: 'A transaction', amount: 654.56, is_debit: false, user: user, 
           category: @category)
-        } 
-      after(:all) { User.destroy_all }
-    
-      it "should have an edit link" do
         visit transactions_path
-        should have_link('Edit', href: "/transactions/#{@transaction.id}/edit")
+        click_link 'Edit'
       end
+      after { User.destroy_all }
+      
+      it { should have_unchecked_field('Expense') }
+      it { should have_checked_field('Income') }
+      
+      it "should have a positive amount and two decimal places" do
+        document = Nokogiri::HTML(page.body)
+        amt = document.xpath('//*[@id="transaction_amount"]/@value')
+        amt.inner_html.should eq ('654.56')
+      end
+    end
+
+    describe "format of output" do
+      before do
+        @category = FactoryGirl.create(:category, user: user, name: 'test category')
+        @transaction = FactoryGirl.create(:transaction, date: 1.day.ago, 
+          description: 'A transaction', amount: 654, is_debit: false, user: user, 
+          category: @category)
+        visit transactions_path
+        click_link 'Edit'
+      end
+      after { User.destroy_all }
+      
+      it "should display amount with 2 decimal places" do
+        document = Nokogiri::HTML(page.body)
+        amt = document.xpath('//*[@id="transaction_amount"]/@value')
+        amt.inner_html.should eq ('654.00')
+      end
+      
+      it "should display the date in d mmm yyyy format" do
+        document = Nokogiri::HTML(page.body)
+        date = document.xpath('//*[@id="transaction_date"]/@value')
+        date.inner_html.should eq (1.day.ago.strftime('%d %b %Y'))
+      end
+    end
     
-      describe "items that should be present on the page" do
-        before do
-          visit transactions_path
-          click_link 'Edit'
-        end
+    describe "items that should be present on the page" do
+      before do
+        @category = FactoryGirl.create(:category, user: user, name: 'test category')
+        @transaction = FactoryGirl.create(:transaction, date: 1.day.ago, 
+          description: 'A transaction', amount: 654.56, is_debit: false, user: user, 
+          category: @category)
+        visit transactions_path
+        click_link 'Edit'
+      end
+      after { User.destroy_all }
+    
+      it { should have_selector('title', text: full_title("Edit Transaction")) }
+      it { should have_selector('h1', text: "Edit Transaction") }
+      it { should have_unchecked_field('Expense') }
+      it { should have_checked_field('Income') }
+      it { should have_button("Edit transaction") }
+      it { should have_link("Cancel")}
       
-        it { should have_selector('title', text: full_title("Edit Transaction")) }
-        it { should have_selector('h1', text: "Edit Transaction") }
-        it { should have_unchecked_field('Expense') }
-        it { should have_checked_field('Income') }
-        it { should have_button("Edit transaction") }
-        it { should have_link("Cancel")}
+      it "should display the description" do
+        document = Nokogiri::HTML(page.body)
+        desc = document.xpath('//*[@id="transaction_description"]/@value')
+        desc.inner_html.should eq ('A transaction')
+      end
       
-        it "should display the description" do
-          document = Nokogiri::HTML(page.body)
-          desc = document.xpath('//*[@id="transaction_description"]/@value')
-          desc.inner_html.should eq ('A transaction')
-        end
+      it "should display the date" do
+        document = Nokogiri::HTML(page.body)
+        date = document.xpath('//*[@id="transaction_date"]/@value')
+        date.inner_html.should eq (1.day.ago.strftime('%d %b %Y'))
+      end
       
-        it "should display the date" do
-          document = Nokogiri::HTML(page.body)
-          date = document.xpath('//*[@id="transaction_date"]/@value')
-          date.inner_html.should eq (1.day.ago.strftime('%d %b %Y'))
-        end
+      it "should display the category" do
+        cat = find_field('Category').find('option[selected]').text
+        cat.should eq('test category')
+      end
       
-        it "should display the category" do
-          cat = find_field('Category').find('option[selected]').text
-          cat.should eq('test category')
-        end
-      
-        it "should display the amount" do
-          document = Nokogiri::HTML(page.body)
-          amt = document.xpath('//*[@id="transaction_amount"]/@value')
-          amt.inner_html.should eq ('654.56')
-        end
+      it "should display the amount" do
+        document = Nokogiri::HTML(page.body)
+        amt = document.xpath('//*[@id="transaction_amount"]/@value')
+        amt.inner_html.should eq ('654.56')
       end
     end
   
