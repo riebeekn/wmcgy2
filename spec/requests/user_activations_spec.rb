@@ -1,14 +1,17 @@
 require 'spec_helper'
 
 describe "UserActivations" do
+  # this page appears when user tries to login with an un-activated user
+  before { visit account_activation_required_path }
   
   subject { page }
   
   describe "Items on account activation page" do
-    before { visit account_activation_required_path }
+    
     
     it { should have_field("Email") }
-    it { should have_selector("title", text: full_title("Account activation required"))}
+    it { should have_selector("title", text: full_title("Account activation required")) }
+    it { should have_content("Please activate your account") }
   end
   
   describe "Account activation" do
@@ -48,28 +51,38 @@ describe "UserActivations" do
   end
   
   describe "Resend activation email" do
-    
-    describe "When email is found" do
-      it "should send an email" do
-        @user = Factory(:user)
-        visit account_activation_required_path
-        fill_in "Email", with: @user.email
+    describe "With invalid email format" do
+      it "should display an error and not send an email" do
         click_button "Resend activation email"
-        page.should have_content("Email sent")
-        last_email.should_not be_nil
-        last_email.to.should include (@user.email)
-        current_path.should == signin_path
+        page.should have_content("invalid")
+        last_email.should be_nil
       end
     end
     
-    describe "When email is not found" do
-      it "does not send an email" do
-        visit account_activation_required_path
-        fill_in "Email", with: "someemail@example.com"
-        click_button "Resend activation email"
+    describe "With valid email format" do
+      before do
+        @user = Factory(:user)
+      end
+      after do
         page.should have_content("Email sent")
-        last_email.should be_nil
         current_path.should == signin_path
+      end
+    
+      describe "When email is found" do
+        it "should send an email" do
+          fill_in "Email", with: @user.email
+          click_button "Resend activation email"
+          last_email.should_not be_nil
+          last_email.to.should include (@user.email)
+        end
+      end
+    
+      describe "When email is not found" do
+        it "does not send an email" do
+          fill_in "Email", with: "someemail@example.com"
+          click_button "Resend activation email"
+          last_email.should be_nil
+        end
       end
     end
   end

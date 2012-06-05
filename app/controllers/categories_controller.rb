@@ -13,7 +13,7 @@ class CategoriesController < ApplicationController
     if @category.valid? && @category.save
       redirect_to categories_path
     else
-      @categories = current_user.categories.reload
+      @categories = current_user.categories
       render :index
     end
   end

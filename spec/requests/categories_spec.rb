@@ -131,7 +131,13 @@ describe "Categories" do
       fill_in "category[name]", with: "an updated category"
       click_button "Add" # click the add btn to change focus and save the edit
       page.should have_selector("tr", text: "an updated category")
-      
+    end
+    
+    it "should not update the category name if the name is changed to blank" do
+      click_link "Edit"
+      fill_in "category[name]", with: "   "
+      click_button "Add" # click the add btn to change focus and save the edit
+      page.should have_selector("tr", text: "a new category")
     end
   end
 end
