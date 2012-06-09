@@ -19,7 +19,6 @@ describe "Users" do
     describe "with invalid information" do
       it "should not create a user" do
         expect { click_button "Sign up" }.not_to change(User, :count)
-        # would be nice to maintain path as signup but too much of a pain
         current_path.should == "/users" 
       end
     end

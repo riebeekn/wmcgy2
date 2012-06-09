@@ -143,6 +143,33 @@ describe User do
     end
   end
   
+  describe "send password reset email" do
+    let(:user) { FactoryGirl.create(:user) }
+    
+    it "delivers email to user" do
+      user.send_password_reset_email
+      last_email.should_not be_nil
+      last_email.to.should include(user.email)
+    end
+    
+    it "generates a password_reset_token" do
+      user.send_password_reset_email
+      user.password_reset_token.should_not be_nil
+    end
+    
+    it "generates a unique password reset token each time" do
+      user.send_password_reset_email
+      last_token = user.password_reset_token
+      user.send_password_reset_email
+      user.password_reset_token.should_not eq(last_token)
+    end
+    
+    it "saves the time the password reset token was sent" do
+      user.send_password_reset_email
+      user.reload.password_reset_sent_at.should be_present
+    end
+  end
+  
   describe "activate" do
     let(:user) { FactoryGirl.create(:user) }
     
@@ -279,6 +306,10 @@ describe User do
         income[1]["name"].should eq("Other")
         income[1]["sum"].should eq("25.00")
       end
+      
+      it "should raise exception on invalid range" do
+        expect { @user.income_by_category_and_date_range('foobar') }.to raise_error
+      end
     end
       
     describe "expenses by category and date range" do
@@ -304,6 +335,10 @@ describe User do
         expense[0]["sum"].should eq("-1000.00")
         expense[1]["name"].should eq("Groceries")
         expense[1]["sum"].should eq("-6000.00")
+      end
+      
+      it "should raise exception on invalid range" do
+        expect { @user.expenses_by_category_and_date_range('foobar') }.to raise_error
       end
     end
   

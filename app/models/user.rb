@@ -52,6 +52,7 @@ class User < ActiveRecord::Base
   end
   
   def expenses_by_category_and_date_range(range)
+    validate_range(range)
     where_clause = "is_debit=true"
     if (range != 'all')
       where_clause += " AND DATE_TRUNC('#{range}', date) = DATE_TRUNC('#{range}', now())"
@@ -81,6 +82,7 @@ class User < ActiveRecord::Base
   end
   
   def income_by_category_and_date_range(range)
+    validate_range(range)
     where_clause = "is_debit=false"
     if (range != 'all')
       where_clause += " AND DATE_TRUNC('#{range}', date) = DATE_TRUNC('#{range}', now())"
@@ -110,6 +112,10 @@ class User < ActiveRecord::Base
   
   private
   
+    def validate_range(range)
+      raise ArgumentError("Invalid Range") unless %w[all year month].include?(range)
+    end
+    
     def generate_token(column)
       begin 
         self[column] =  SecureRandom.urlsafe_base64

@@ -5,8 +5,8 @@ class UsersController < ApplicationController
   
   def create
     @user = User.new(params[:user])
-    @existing_user = User.find_by_email(@user.email)
-    if @existing_user && !@existing_user.active?
+    
+    if user_exists_and_is_not_activated(@user.email)
       redirect_to account_activation_required_path, 
                   notice: "Email already exists #{t(:activate_account, scope: 'flash_messages').downcase}" 
     elsif @user.save
@@ -16,4 +16,11 @@ class UsersController < ApplicationController
       render 'new'
     end
   end
+  
+  private
+  
+    def user_exists_and_is_not_activated(email)
+      existing_user = User.find_by_email(email)
+      existing_user && !existing_user.active?
+    end
 end
