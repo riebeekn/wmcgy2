@@ -285,25 +285,25 @@ describe User do
       it "should have the correct expenses when range is all" do
         expense = @user.expenses_by_category_and_date_range('all')
         expense[0]["name"].should eq("Entertainment")
-        expense[0]["sum"].should eq("1000.00")
+        expense[0]["sum"].should eq("-1000.00")
         expense[1]["name"].should eq("Groceries")
-        expense[1]["sum"].should eq("7000.00")
+        expense[1]["sum"].should eq("-7000.00")
       end
       
       it "should display the correct items when range is month" do
         expense = @user.expenses_by_category_and_date_range('month')
         expense[0]["name"].should eq("Entertainment")
-        expense[0]["sum"].should eq("1000.00")
+        expense[0]["sum"].should eq("-1000.00")
         expense[1]["name"].should eq("Groceries")
-        expense[1]["sum"].should eq("2000.00")
+        expense[1]["sum"].should eq("-2000.00")
       end
       
       it "should display the correct items when range is year" do
         expense = @user.expenses_by_category_and_date_range('year')
         expense[0]["name"].should eq("Entertainment")
-        expense[0]["sum"].should eq("1000.00")
+        expense[0]["sum"].should eq("-1000.00")
         expense[1]["name"].should eq("Groceries")
-        expense[1]["sum"].should eq("6000.00")
+        expense[1]["sum"].should eq("-6000.00")
       end
     end
   
@@ -336,10 +336,10 @@ describe User do
         expenses = @user.expenses_by_year
         year_as_number_for_first_record = 2.years.ago.year.to_s
         expenses[0]["period"].should eq(year_as_number_for_first_record)
-        expenses[0]["sum"].should eq("1000.00")
+        expenses[0]["sum"].should eq("-1000.00")
         year_as_number_for_second_record = 1.day.ago.year.to_s
         expenses[1]["period"].should eq(year_as_number_for_second_record)
-        expenses[1]["sum"].should eq("7000.00")
+        expenses[1]["sum"].should eq("-7000.00")
       end
     end
     
@@ -348,10 +348,10 @@ describe User do
         expenses = @user.expenses_by_month_for_current_year
         month_as_number_for_first_record = 2.months.ago.month.to_s
         expenses[0]["period"].should eq(month_as_number_for_first_record)
-        expenses[0]["sum"].should eq("4000.00")
+        expenses[0]["sum"].should eq("-4000.00")
         month_as_number_for_second_record = 1.day.ago.month.to_s
         expenses[1]["period"].should eq(month_as_number_for_second_record)
-        expenses[1]["sum"].should eq("3000.00")
+        expenses[1]["sum"].should eq("-3000.00")
       end
     end
   end

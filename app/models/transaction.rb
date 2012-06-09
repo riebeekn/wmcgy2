@@ -17,6 +17,7 @@ class Transaction < ActiveRecord::Base
   attr_accessible :description, :date, :amount, :is_debit, :category_id, :category_name
   belongs_to :user
   belongs_to :category
+  before_save :format_amount, :add_time_to_date
   
   validates :description, presence: true, length: { maximum: 255 }
   validates :date, presence: true
@@ -51,6 +52,25 @@ class Transaction < ActiveRecord::Base
   
   private
   
+    def format_amount
+      if self.amount != nil
+        if self.is_debit?
+          self.amount = self.amount.abs * -1
+        else
+          self.amount = self.amount.abs
+        end
+      end
+    end
+    
+    def add_time_to_date
+      if self.date != nil
+        now = Time.now
+        self.date = self.date + (now.hour).hour +
+                                (now.min).minute +
+                                (now.sec).second
+      end
+    end
+    
     def amount_is_not_zero
       self.errors.add(:amount, 'Amount must be a number and non-zero.') if self.amount == 0
     end

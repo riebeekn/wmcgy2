@@ -12,7 +12,8 @@ class TransactionsController < ApplicationController
   end
   
   def create
-    @transaction = build_transaction_for_create(params[:transaction][:amount])
+    numeralize_amount(params[:transaction][:amount])
+    @transaction = current_user.transactions.build(params[:transaction])
     @transaction.category = current_user.categories.find_or_create_by_name(
           params[:transaction][:category_name].strip)
     if @transaction.save
@@ -20,24 +21,26 @@ class TransactionsController < ApplicationController
     else
       @category_names = populate_category_names
       @transaction.date = params[:transaction][:date]
-      @transaction.amount = sprintf("%.2f", params[:transaction][:amount].gsub("$", "").to_f)
+      @transaction.amount = stringify_amount(params[:transaction][:amount])
       render 'new'
     end
   end
   
   def edit
     @categories = current_user.categories
-    @transaction = get_transaction_for_edit(params[:id])
+    @transaction = current_user.transactions.find(params[:id])
+    @transaction.amount = stringify_amount(@transaction.amount)
+    @transaction.date = @transaction.date.strftime('%d %b %Y')
   end
   
   def update
+    numeralize_amount(params[:transaction][:amount])
     @transaction = current_user.transactions.find(params[:id])
-    params[:transaction][:amount].gsub!("$", "") # switch this to callback on model?
     if @transaction.update_attributes(params[:transaction])
       redirect_to transactions_path, notice: "Transaction updated"
     else
       @categories = current_user.categories
-      @transaction.amount = sprintf("%.2f", params[:transaction][:amount].gsub("$", "").to_f)
+      @transaction.amount = stringify_amount(params[:transaction][:amount])
       render 'edit'
     end
   end
@@ -49,46 +52,21 @@ class TransactionsController < ApplicationController
   
   private
   
+    def numeralize_amount(amount)
+      amount.gsub!("$", "")
+    end
+    
+    def stringify_amount(amount)
+      sprintf("%.2f", amount.to_f.abs)
+    end
+    
     def populate_category_names
       # categories are seperated with ':::' for parsing in the js
       current_user.categories.map do |c| 
         c.name + ':::'
       end
     end
-    
-    def get_transaction_for_edit(transaction_id)
-      transaction = current_user.transactions.find(transaction_id)
-      transaction.amount = sprintf("%.2f", transaction.amount.abs)
-      transaction.date = transaction.date.strftime('%d %b %Y')
-      transaction
-    end
-    
-    def build_transaction_for_create(amount)
-      transaction = current_user.transactions.build(params[:transaction])
-      transaction.date = add_time_to_date(transaction.date, DateTime.now)
-      transaction.amount = amount.gsub("$", "")
-      normalize_amount(transaction)
-    end
-    
-    def add_time_to_date(date_to_add_time_to, time_to_add)
-      if date_to_add_time_to != nil
-        date_to_add_time_to + (time_to_add.hour).hour +
-                              (time_to_add.min).minute +
-                              (time_to_add.sec).second
-      end
-    end
-    
-    def normalize_amount(transaction)
-      if transaction.amount != nil
-        if transaction.is_debit?
-          transaction.amount = transaction.amount.abs * -1
-        else
-          transaction.amount = transaction.amount.abs
-        end
-      end
-      transaction
-    end
-    
+        
     # --- SORTING ---
     def sort
       sort_string = params[:sort] == "category" ? "categories.name" : sort_column

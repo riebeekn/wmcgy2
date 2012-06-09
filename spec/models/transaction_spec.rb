@@ -39,6 +39,28 @@ describe Transaction do
     end
   end
   
+  describe "save filters" do
+    it "should negate amount for debit transactions" do
+      @transaction.is_debit = true
+      @transaction.amount = "23.45"
+      @transaction.save
+      Transaction.last.amount.should eq -23.45
+    end
+    
+    it "should positive amount for income transactions" do
+      @transaction.is_debit = false
+      @transaction.amount = "-23.45"
+      @transaction.save
+      Transaction.last.amount.should eq 23.45
+    end
+    
+    it "should add time to supplied date" do
+      @transaction.date = '11 Apr 2012'
+      @transaction.save
+      Transaction.last.date.strftime("%H %M").should eq Time.now.strftime("%H %M")
+    end
+  end
+  
   describe "validations" do
     describe "with blank description" do
       before { @transaction.description = '   ' }

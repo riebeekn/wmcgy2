@@ -23,15 +23,15 @@ describe "Transactions" do
       before(:all) {
         @income_category = FactoryGirl.create(:category, user: user, name: "income")  
         @expense_category = FactoryGirl.create(:category, user: user, name: "expense")  
-        @credit = FactoryGirl.create(:transaction, date: 1.day.ago, 
+        @credit = FactoryGirl.create(:transaction, date: '07 Jun 2012', 
           description: 'Pay', amount: 745.6, is_debit: false, user: user, 
           category: @income_category) 
-        @debit = FactoryGirl.create(:transaction, date: 2.days.ago, 
+        @debit = FactoryGirl.create(:transaction, date: '06 Jun 2012', 
           description: 'Groceries', amount: -45.76, is_debit: true, user: user,
           category: @expense_category)
-        @oldest_record = FactoryGirl.create(:transaction, date: 74.hours.ago,
+        @oldest_record = FactoryGirl.create(:transaction, date: '04 Jun 2012',
           user: user, description: "the oldest record")
-        @older_record = FactoryGirl.create(:transaction, date: 73.hours.ago, user: user,
+        @older_record = FactoryGirl.create(:transaction, date: '05 Jun 2012', user: user,
           description: "almost the oldest record") 
       }
       after(:all) { User.destroy_all }
@@ -42,14 +42,14 @@ describe "Transactions" do
       end
       
       it "should format the credit transaction correctly" do
-        page.should have_selector('td', text: 1.day.ago.strftime('%d %b %Y'))
+        page.should have_selector('td', text: '07 Jun 2012')
         page.should have_selector('td', text: 'income')
         page.should have_selector('td', text: 'Pay')
         page.should have_selector('td', text: '$745.60')
       end
       
       it "should format the debit transaction correctly" do
-        page.should have_selector('td', text: 2.days.ago.strftime('%d %b %Y'))
+        page.should have_selector('td', text: '06 Jun 2012')
         page.should have_selector('td', text: 'expense')
         page.should have_selector('td', text: 'Groceries')
         page.should have_selector('td', text: '-$45.76')
@@ -62,11 +62,11 @@ describe "Transactions" do
       it "should order the posts in reverse chronological order" do
         document = Nokogiri::HTML(page.body)
         rows = document.xpath('//table//tbody//tr').collect { |row| row.xpath('.//th|td') }
-        rows[0][0].text.should eq(1.days.ago.strftime('%d %b %Y'))
-        rows[1][0].text.should eq(2.days.ago.strftime('%d %b %Y'))
-        rows[2][0].text.should eq(73.hours.ago.strftime('%d %b %Y'))
+        rows[0][0].text.should eq '07 Jun 2012'
+        rows[1][0].text.should eq '06 Jun 2012'
+        rows[2][0].text.should eq '05 Jun 2012'
         rows[2][2].text.should eq 'almost the oldest record'
-        rows[3][0].text.should eq(74.hours.ago.strftime('%d %b %Y'))
+        rows[3][0].text.should eq '04 Jun 2012'
         rows[3][2].text.should eq 'the oldest record'
       end
             
@@ -272,6 +272,12 @@ describe "Transactions" do
         page.should have_selector('title', text: full_title("Transaction"))
       end
       
+      it "should add a time to the date so that transactions are ordered correctly" do
+        click_button "Add transaction"
+        transaction_date = Transaction.last.date
+        transaction_date.strftime("%H %M").should eq Time.now.strftime("%H %M")
+      end
+      
       describe "income transactions" do
         before { choose "Income" }
         
@@ -313,7 +319,7 @@ describe "Transactions" do
   describe "update" do
     before do
       @category = FactoryGirl.create(:category, user: user, name: 'test category')
-      @transaction = FactoryGirl.create(:transaction, date: 1.day.ago, 
+      @transaction = FactoryGirl.create(:transaction, date: '07 Jun 2012', 
         description: 'A transaction', amount: -234.57, is_debit: true, user: user, 
         category: @category)
     end
@@ -327,14 +333,14 @@ describe "Transactions" do
       
       it "should update the transaction and re-direct to the index page" do
         choose  "Income"
-        fill_in "Date", with: 2.days.ago
+        fill_in "Date", with: '6 Jun 2012'
         select "a category", from: "Category"
         fill_in "Description", with: "updated description"
         fill_in "Amount",      with: "$22.33"
         click_button "Edit transaction"
         t = Transaction.find(@transaction.id)
         t.is_debit.should eq false
-        t.date.strftime('%d %b %Y %H %M').should eq 2.days.ago.strftime('%d %b %Y %H %M')
+        t.date.strftime('%d %b %Y').should eq '06 Jun 2012'
         t.description.should eq 'updated description'
         t.amount.should eq 22.33
         page.should have_content 'Transaction updated'
@@ -373,7 +379,7 @@ describe "Transactions" do
         click_button "Edit transaction"
         t = Transaction.find(@transaction.id)
         t.is_debit.should eq true
-        t.date.to_date.to_s.should eq 1.day.ago.to_date.to_s
+        t.date.to_date.strftime('%d %b %Y').should eq '07 Jun 2012'
         t.description.should eq 'A transaction'
         t.amount.should eq -234.57
       end
@@ -427,7 +433,7 @@ describe "Transactions" do
     describe "format of output" do
       before do
         @category = FactoryGirl.create(:category, user: user, name: 'test category')
-        @transaction = FactoryGirl.create(:transaction, date: 1.day.ago, 
+        @transaction = FactoryGirl.create(:transaction, date: '07 Jun 2012', 
           description: 'A transaction', amount: 654, is_debit: false, user: user, 
           category: @category)
         visit transactions_path
@@ -444,14 +450,14 @@ describe "Transactions" do
       it "should display the date in d mmm yyyy format" do
         document = Nokogiri::HTML(page.body)
         date = document.xpath('//*[@id="transaction_date"]/@value')
-        date.inner_html.should eq (1.day.ago.strftime('%d %b %Y'))
+        date.inner_html.should eq '07 Jun 2012'
       end
     end
     
     describe "items that should be present on the page" do
       before do
         @category = FactoryGirl.create(:category, user: user, name: 'test category')
-        @transaction = FactoryGirl.create(:transaction, date: 1.day.ago, 
+        @transaction = FactoryGirl.create(:transaction, date: '07 Jun 2012', 
           description: 'A transaction', amount: 654.56, is_debit: false, user: user, 
           category: @category)
         visit transactions_path
@@ -475,7 +481,7 @@ describe "Transactions" do
       it "should display the date" do
         document = Nokogiri::HTML(page.body)
         date = document.xpath('//*[@id="transaction_date"]/@value')
-        date.inner_html.should eq (1.day.ago.strftime('%d %b %Y'))
+        date.inner_html.should eq '07 Jun 2012'
       end
       
       it "should display the category" do
