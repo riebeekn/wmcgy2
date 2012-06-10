@@ -1,4 +1,6 @@
 class SessionsController < ApplicationController
+  skip_before_filter :signed_in_user
+  
   def new
     @session = Session.new
     @user = User.new

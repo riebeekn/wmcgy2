@@ -4,30 +4,6 @@ describe "Authentications" do
   
   subject { page }
   
-  # add to this as more secured pages are added to the application
-  describe "secured pages redirect the user to sign in when not logged in" do
-    
-    describe "home page" do
-      before { visit root_path }
-
-      it "should redirect when attempting to access home page" do
-        current_path.should == signin_path
-      end
-    
-      it { should have_content("Please sign in") }
-    end
-    
-    describe "categories" do
-      before { visit categories_path }
-      
-      it "should redirect when attempting to access categories page" do
-        current_path.should == signin_path
-      end
-    
-      it { should have_content("Please sign in") }
-    end
-  end
-  
   describe "sign in" do
     before { visit signin_path }
     

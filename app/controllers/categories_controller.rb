@@ -1,5 +1,4 @@
 class CategoriesController < ApplicationController
-  before_filter :signed_in_user
   respond_to :html, :json
   
   def index
