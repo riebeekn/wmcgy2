@@ -8,7 +8,7 @@ describe "Contacts" do
     visit new_contact_path
     fill_in "Name", with: @email_address_name
     fill_in "Email", with: @email_address_from
-    fill_in "Content", with: @email_address_body
+    fill_in "Message", with: @email_address_body
   end
    
   subject { page }
@@ -16,7 +16,7 @@ describe "Contacts" do
   describe "items on page" do
     it { should have_field("Name") }
     it { should have_field("Email") }
-    it { should have_field("Content") }
+    it { should have_field("Message") }
     it { should have_button("Send") }
   end
    
@@ -34,14 +34,14 @@ describe "Contacts" do
       page.should have_content("is invalid")
     end
      
-    it "should display error message when content is blank" do
-      fill_in "Content", with: " "
+    it "should display error message when message is blank" do
+      fill_in "Message", with: " "
       click_button "Send"
       page.should have_content("can't be blank")
     end
      
-    it "should display error message when content is too long" do
-      fill_in "Content", with: "a" * 501
+    it "should display error message when message is too long" do
+      fill_in "Message", with: "a" * 501
       click_button "Send"
       page.should have_content("is too long")
     end

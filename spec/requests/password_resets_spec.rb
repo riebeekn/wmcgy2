@@ -37,14 +37,14 @@ describe "PasswordResets" do
         visit reset_password_path("psToken")
       end
 
-      it { should have_field("Password") }
+      it { should have_field("New password") }
       it { should have_field("Confirmation") }
       it { should have_button("Update Password") }
       
       describe "validations" do
         describe "when password and password confirmation do not match" do
         before do
-          fill_in "Password", with: "new_pass"
+          fill_in "New password", with: "new_pass"
           fill_in "Confirmation", with: "mismatch"
           click_button "Update Password"
         end
@@ -61,7 +61,7 @@ describe "PasswordResets" do
       
         describe "when password and password confirmation are too short" do
         before do
-          fill_in "Password", with: "pwd"
+          fill_in "New password", with: "pwd"
           fill_in "Confirmation", with: "pwd"
           click_button "Update Password"
         end
@@ -77,7 +77,7 @@ describe "PasswordResets" do
       
         describe "when password and password confirmation are empty" do
         before do
-          fill_in "Password", with: ""
+          fill_in "New password", with: ""
           fill_in "Confirmation", with: ""
           click_button "Update Password"
         end
@@ -100,7 +100,7 @@ describe "PasswordResets" do
                                password_reset_sent_at: 2.hours.ago)
         @user.save!
         visit reset_password_path("pswdToken")
-        fill_in "Password", with: "new password"
+        fill_in "New password", with: "new password"
         fill_in "Confirmation", with: "new password"
         
       end
@@ -171,7 +171,7 @@ describe "PasswordResets" do
       end
       
       it "displays an email sent message" do
-        page.should have_content("Email sent")
+        page.should have_content("Check your email for instructions on how to reset your password.")
       end
     end
     
