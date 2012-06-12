@@ -20,7 +20,7 @@ class UserActivationsController < ApplicationController
     @user = User.find_by_activation_token(params[:id])
     if @user
       @user.activate
-      redirect_to signin_path, notice: "Account has been activated"
+      redirect_to signin_path, notice: "Account has been activated... please sign in to continue"
     else
       redirect_to account_activation_required_path, 
         alert: "Error occured when activating account, invalid account token"

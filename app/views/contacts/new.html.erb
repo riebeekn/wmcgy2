@@ -10,7 +10,7 @@
 		<fieldset>
 			<%= f.input :name, required: false %>
 			<%= f.input :email %>
-			<%= f.input :content, as: :text, required: false %>
+			<%= f.input :content, as: :text, required: false, label: "Message" %>
 			<div class="control-group">
 				<div class="controls">
 					<%= f.submit "Send", class: "btn btn-success btn-wide" %>
