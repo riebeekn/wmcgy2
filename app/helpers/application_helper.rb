@@ -1,7 +1,7 @@
 module ApplicationHelper
   
   def logo
-    image_tag("logo.png", alt: "Where'd my cash go?")
+    image_tag("logo.png", alt: "Where did my cash go yo?")
   end
   
   # Returns the full title on per-page basis.

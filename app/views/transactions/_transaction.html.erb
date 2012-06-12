@@ -4,5 +4,5 @@
 	<td><%= transaction.description %></td>
 	<td><%= display_amount(transaction) %></td>
 	<td><%= link_to "Edit", edit_transaction_path(transaction) %></td>
- 	<td><%= link_to "Delete", transaction, method: :delete, confirm: "You sure?" %></td>
+ 	<td><%= link_to "Delete", transaction, method: :delete, confirm: "Are you sure you want to delete this transaction?" %></td>
 </tr>

@@ -13,6 +13,9 @@ header {
 		filter:alpha(opacity=70);
 		filter: “alpha(opacity=70)”;
 	}
+	a.header_link {
+		font-size: 36px;
+	}
 }
 
 footer {
@@ -27,5 +30,10 @@ footer {
 
 // shared/error messages
 #error_explanation { @include no-bullets; }
+
+.alert {
+	font-size: 24px;
+	text-align: center;
+}
 
 .test-css-class-on-about-page { color: blue; display:none; }

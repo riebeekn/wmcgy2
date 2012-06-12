@@ -6,9 +6,9 @@ describe UserMailer do
     let(:mail) { UserMailer.activation(user) }
 
     it "sends the activation email" do
-      mail.subject.should eq("Activate your website_name account")
+      mail.subject.should eq("Welcome to where did my cash go yo!")
       mail.to.should eq([user.email])
-      mail.from.should eq(["from@example.com"])
+      mail.from.should eq(["noReply@wheredidmycashgoyo.com"])
       mail.body.encoded.should match("http://localhost:3000/account/the_activate_token/activate")
     end
   end
@@ -18,9 +18,9 @@ describe UserMailer do
     let(:mail) { UserMailer.password_reset(user) }
     
     it "sends the password reset email" do
-      mail.subject.should eq("Password reset")
+      mail.subject.should eq("Password reset for where did my cash go yo")
       mail.to.should eq([user.email])
-      mail.from.should eq(["from@example.com"])
+      mail.from.should eq(["noReply@wheredidmycashgoyo.com"])
       mail.body.encoded.should match("http://localhost:3000/account/the_password_token/reset_password")
     end
   end

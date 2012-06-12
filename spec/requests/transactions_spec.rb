@@ -256,6 +256,13 @@ describe "Transactions" do
         amt = document.xpath('//*[@id="transaction_amount"]/@value')
         amt.inner_html.should eq ('35.40')
       end
+      
+      it "should leave the amount field blank when the user has not yet entered an amount" do
+        click_button "Add transaction"
+        document = Nokogiri::HTML(page.body)
+        amt = document.xpath('//*[@id="transaction_amount"]/@value')
+        amt.inner_html.should eq ('')
+      end
     end
     
     describe "with valid information" do
@@ -368,6 +375,13 @@ describe "Transactions" do
         document = Nokogiri::HTML(page.body)
         amt = document.xpath('//*[@id="transaction_amount"]/@value')
         amt.inner_html.should eq ('23.40')
+      end
+      
+      it "should leave the amount field blank when the user has not yet entered an amount" do
+        click_button "Edit transaction"
+        document = Nokogiri::HTML(page.body)
+        amt = document.xpath('//*[@id="transaction_amount"]/@value')
+        amt.inner_html.should eq ('')
       end
       
       it "should contain an error message" do

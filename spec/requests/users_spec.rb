@@ -8,7 +8,7 @@ describe "Users" do
     before { visit signup_path }
     
     describe "items that should be present on sign up page" do
-      it { should have_selector('h1', text: 'Sign up') }
+      it { should have_selector('h1', text: 'No account?') }
       it { should have_field("Email") }
       it { should have_field("Password") }
       it { should have_field("Confirmation") }
@@ -102,7 +102,7 @@ describe "Users" do
     describe "error messages" do
       before { click_button "Sign up" }
       
-      it { should have_selector('h1', text: 'Sign up') }
+      it { should have_selector('h1', text: 'No account?') }
       it { should have_content("can't be blank") }
       it { should have_content("is too short") }
     end

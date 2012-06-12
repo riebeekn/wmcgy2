@@ -6,7 +6,7 @@
 	<%= form_for @category do |f| %>
 		<%= render 'shared/error_messages', object: f.object %>
 		<%= f.text_field :name, placeholder: "Enter a new category" %>
-		<%= f.submit "Add" %>
+		<%= f.submit "Add", class: "btn btn-primary" %>
 	<% end %>
 	<% if @categories.any? %>
 		<table>

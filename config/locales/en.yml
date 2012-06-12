@@ -18,4 +18,4 @@ en:
     password_resets:
       email_sent: "Email sent with password reset instructions."
       invalid_token: "Invalid password reset token, please try again."
-  app_base_title: "Where'd my cash go yo?"
+  app_base_title: "Where did my cash go yo?"

@@ -56,7 +56,7 @@ class TransactionsController < ApplicationController
     end
     
     def stringify_amount(amount)
-      sprintf("%.2f", amount.to_f.abs)
+      sprintf("%.2f", amount.to_f.abs) unless amount == ''
     end
     
     def populate_category_names

@@ -35,7 +35,7 @@ class SessionsController < ApplicationController
     end
     
     def set_auth_cookie(user, session)
-      if session.remember_me
+      if session.remember_me?
         cookies.permanent[:auth_token] = user.auth_token
       else
         cookies[:auth_token] = user.auth_token

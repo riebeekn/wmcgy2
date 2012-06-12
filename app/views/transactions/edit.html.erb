@@ -8,10 +8,10 @@
 			<%= render 'fields', f: f %>
 			<div class="control-group">
 				<div class="controls">
-					<%= f.submit "Edit transaction", class: "btn" %>
-					<%= link_to "Cancel", transactions_path, class: "btn" %>
+					<%= f.submit "Edit transaction", class: "btn btn-primary" %>
 				</div>
 			</div>
 		</fieldset>
+		<%= link_to "Cancel and return to transactions", transactions_path %>
 	<% end %>
 </div>

@@ -8,6 +8,9 @@
 		@extend .table, .table-striped;
 	}
 	.field_with_errors { display: inline-block; }
+	#category_name { 
+		margin-top: 10px;
+	}
 }
 
 // hide any errors from the edit in place control

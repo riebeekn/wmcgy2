@@ -10,8 +10,8 @@
   			<%= link_to logo, root_path, class: "brand" %>
  				<div class="nav-collapse">
     			<ul class="nav">
-						<li class="divider-vertical"></li>
 						<% if current_user %>
+							<li class="divider-vertical"></li>
 							<li><%= link_to "Transactions", root_path, class: "lead" %></li>
 							<li class="divider-vertical"></li>	
 							<li><%= link_to "Categories", categories_path, class: "lead" %></li>
@@ -23,6 +23,8 @@
 						<li class="current-user">Signed in as <%= current_user.email %></li>
 						<li>&nbsp;&nbsp;&nbsp;<u><%= link_to "Sign out", signout_path %></u></li>
 					</ul>
+						<% else %>
+							<li><%= link_to "Where did my cash go yo?", root_path, class: "header_link" %></li>
 						<% end %>	
 				</div>
 			</div>
