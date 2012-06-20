@@ -46,6 +46,17 @@ describe User do
     it { should be_active }
   end
   
+  describe "filters" do
+    it "should down-case email on save" do
+      email = "JoeJimple@example.com"
+      @user.email = email
+      @user.save!
+       u = User.find_by_email(email.downcase)
+       u.should_not be_nil
+       u.email.should eq 'joejimple@example.com'
+    end
+  end
+  
   describe "validations" do
     
     describe "when email is not present" do

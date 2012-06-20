@@ -31,6 +31,7 @@ class User < ActiveRecord::Base
   validates :password, length: { within: 6..40 }, if: :should_validate_password
   
   before_create { generate_token(:auth_token) }
+  before_save { |user| user.email = user.email.downcase }
   
   def send_activation_email
     generate_token(:activation_token)

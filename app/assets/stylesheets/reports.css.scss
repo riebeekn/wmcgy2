@@ -8,7 +8,7 @@
 		}
 	
 		#incomeExpenseChart, #expensesChart {
-			padding-right: 75px;
+			padding-right: 5px;
 		}
 		
 		a { margin-bottom: 10px; }
@@ -16,6 +16,7 @@
 		label {
 			font-size: 110%;
 			padding: 0px 5px 5px 0px;
+			margin-left: 15px;
 		}
 	}
 	table {
@@ -24,8 +25,12 @@
 	}
 	
 	.chart {
-		width: 525px;
+		width: 455px;
 		height: 300px;
+	}
+	
+	.well {
+		padding: 10px 5px 10px 5px;
 	}
 }
 

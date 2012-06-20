@@ -9,7 +9,7 @@ class SessionsController < ApplicationController
   def create
     @user = User.new
     @session = Session.new(params[:session])
-    user = User.find_by_email(@session.email)
+    user = User.find_by_email(@session.email.downcase)
     if user && user.authenticate(@session.password)
       sign_in_if_active user, @session
     else

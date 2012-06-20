@@ -71,6 +71,15 @@ describe "Authentications" do
       it "should redirect to home page" do
         current_path.should == root_path
       end
+      
+      it "should ignore email case" do
+        visit signin_path
+        fill_in "session_email",    with: user.email.swapcase
+        fill_in "session_password", with: user.password
+        click_button "Sign in"
+        page.should_not have_content("Invalid email/password combination")
+        current_path.should == root_path
+      end
     end
   end
   
