@@ -6,6 +6,6 @@
 		<a id="<%= "#{category.id}" %>" href="#">Edit</a>
 	</td>
 	<td>
-		<%= link_to "Delete", category, method: :delete, confirm: "Are you sure you want to delete this category?" %>
+		<%= link_to "Delete", category, method: :delete, data: { confirm: "Are you sure you want to delete this category?" } %>
 	</td>
 </tr>
