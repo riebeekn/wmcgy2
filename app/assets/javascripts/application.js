@@ -29,4 +29,5 @@
 //= require bootstrap-carousel
 //= require bootstrap-typeahead
 //= require format_currency/jquery.formatCurrency-1.4.0.min.js
+//= require jquery_placeholder/jquery.placeholder.min.js
 //= require_tree .
