@@ -111,5 +111,11 @@ describe Transaction do
       before { @transaction.category_id = nil }
       it { should_not be_valid }
     end
+    
+    it "should skip category validations when skip_category_validation is true" do
+      @transaction.skip_category_validation = true
+      @transaction.category_id = nil
+      @transaction.should be_valid
+    end
   end
 end

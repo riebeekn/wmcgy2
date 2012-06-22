@@ -263,6 +263,20 @@ describe "Transactions" do
         amt = document.xpath('//*[@id="transaction_amount"]/@value')
         amt.inner_html.should eq ('')
       end
+      
+      it "should blank out the amount field when the user has selected and invalid number" do
+        fill_in "Amount", with: "foobar"
+        click_button "Add transaction"
+        document = Nokogiri::HTML(page.body)
+        amt = document.xpath('//*[@id="transaction_amount"]/@value')
+        amt.inner_html.should eq ('')
+      end
+      
+      it "should not create a new category record" do
+        fill_in "Category", with: "a new category for invalid record"
+        click_button "Add transaction"
+        Category.find_by_name("a new category for invalid record").should be_nil
+      end
     end
     
     describe "with valid information" do
@@ -341,7 +355,7 @@ describe "Transactions" do
       it "should update the transaction and re-direct to the index page" do
         choose  "Income"
         fill_in "Date", with: '6 Jun 2012'
-        select "a category", from: "Category"
+        select "a category", from: "transaction_category_id"
         fill_in "Description", with: "updated description"
         fill_in "Amount",      with: "$22.33"
         click_button "Edit transaction"
@@ -359,7 +373,7 @@ describe "Transactions" do
         visit transactions_path
         click_link 'Edit'
         fill_in "Date", with: ''
-        select "a category", from: "Category"
+        select "a category", from: "transaction_category_id"
         fill_in "Description", with: ""
         fill_in "Amount",      with: ""
       end
@@ -474,6 +488,8 @@ describe "Transactions" do
         @transaction = FactoryGirl.create(:transaction, date: '07 Jun 2012', 
           description: 'A transaction', amount: 654.56, is_debit: false, user: user, 
           category: @category)
+        @user2 = FactoryGirl.create(:user)
+        @category_for_user_2 = FactoryGirl.create(:category, user: @user2, name: 'category for user 2')
         visit transactions_path
         click_link 'Edit'
       end
@@ -499,7 +515,7 @@ describe "Transactions" do
       end
       
       it "should display the category" do
-        cat = find_field('Category').find('option[selected]').text
+        cat = find_field('transaction_category_id').find('option[selected]').text
         cat.should eq('test category')
       end
       
@@ -508,11 +524,13 @@ describe "Transactions" do
         amt = document.xpath('//*[@id="transaction_amount"]/@value')
         amt.inner_html.should eq ('654.56')
       end
-    end
-  
-    describe "updates" do
       
+      it "should only display the categories for the current user" do
+        page.has_select?('transaction_category_id', options: [@category.name]).should eq true
+        page.has_select?('transaction_category_id', options: [@category_for_user_2.name]).should eq false
+      end
     end
+
   end
   
   describe "delete" do

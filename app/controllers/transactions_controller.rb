@@ -11,16 +11,15 @@ class TransactionsController < ApplicationController
   end
   
   def create
-    numeralize_amount(params[:transaction][:amount])
-    @transaction = current_user.transactions.build(params[:transaction])
-    @transaction.category = current_user.categories.find_or_create_by_name(
-          params[:transaction][:category_name].strip)
+    @transaction = build_transaction(params[:transaction], params[:transaction][:amount],
+                                      params[:transaction][:category_name])
     if @transaction.save
       redirect_to transactions_path
     else
       @category_names = populate_category_names
       @transaction.date = params[:transaction][:date]
       @transaction.amount = stringify_amount(params[:transaction][:amount])
+      @transaction.category.name = params[:transaction][:category_name]
       render 'new'
     end
   end
@@ -30,6 +29,8 @@ class TransactionsController < ApplicationController
     @transaction = current_user.transactions.find(params[:id])
     @transaction.amount = stringify_amount(@transaction.amount)
     @transaction.date = @transaction.date.strftime('%d %b %Y')
+    @category_class = get_category_css_class(@transaction.category_name)
+    @category_span = get_category_span(@transaction.category_name)
   end
   
   def update
@@ -38,6 +39,8 @@ class TransactionsController < ApplicationController
     if @transaction.update_attributes(params[:transaction])
       redirect_to transactions_path, notice: "Transaction updated"
     else
+      @category_class = get_category_css_class(params[:transaction][:category_name])
+      @category_span = get_category_span(params[:transaction][:category_name])
       @categories = current_user.categories
       @transaction.amount = stringify_amount(params[:transaction][:amount])
       render 'edit'
@@ -51,12 +54,32 @@ class TransactionsController < ApplicationController
   
   private
   
+    def get_category_css_class(category)
+      "error" if category.nil?
+    end
+    
+    def get_category_span(category)
+      "<span class='help-inline'>can't be blank</span>" if category.nil?
+    end
+    
+    def build_transaction(transaction, amount, category_name)
+      numeralize_amount(amount)
+      transaction = current_user.transactions.build(transaction)
+      transaction.skip_category_validation = true
+      if transaction.valid?
+        transaction.category = current_user.categories.find_or_create_by_name(
+              category_name.strip)
+      end
+      transaction.skip_category_validation = false
+      return transaction
+    end
+    
     def numeralize_amount(amount)
       amount.gsub!("$", "")
     end
     
     def stringify_amount(amount)
-      sprintf("%.2f", amount.to_f.abs) unless amount == ''
+      sprintf("%.2f", amount.to_f.abs) unless amount == '' or amount.to_f == 0
     end
     
     def populate_category_names

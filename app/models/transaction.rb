@@ -14,7 +14,8 @@
 #
 
 class Transaction < ActiveRecord::Base
-  attr_accessible :description, :date, :amount, :is_debit, :category_id, :category_name
+  attr_accessible :description, :date, :amount, :is_debit, :category_id, 
+                  :category_name, :skip_category_validation
   belongs_to :user
   belongs_to :category
   before_save :format_amount, :add_time_to_date
@@ -25,17 +26,25 @@ class Transaction < ActiveRecord::Base
   validates_numericality_of :amount
   validate :amount_is_not_zero
   validates_inclusion_of :is_debit, in: [true, false]
-  validates :category_id, presence: true
-  validates :category_name, presence: true
+  validates :category_id, presence: true, unless: :skip_category_validation
+  validates :category_name, presence: true, unless: :skip_category_validation
   validates :user_id, presence: true
   
- def category_name
+  def skip_category_validation
+    @skip_category_validation
+  end
+  
+  def skip_category_validation=(validation)
+    @skip_category_validation = validation
+  end
+  
+  def category_name
    if category.name == 'Uncategorized'
      nil
    else
      category.name
    end
- end
+  end
   
   def category_name=(name)
     # category set in controller

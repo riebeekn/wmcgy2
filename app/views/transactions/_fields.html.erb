@@ -4,7 +4,14 @@
 <% if @transaction.id == nil %>
 	<%= f.input :category_name, required: false %>
 <% else %>
-	<%= f.association :category, required: false %>
+	<div class="control-group <%= @category_class %>">
+		<%= f.label :category %>
+		<div class="controls">
+			<%= f.collection_select(:category_id, @categories, :id, :name, 
+															include_blank: true, selected: @transaction.category_id ) %>
+			<%= raw @category_span %>
+		</div>
+	</div>
 <% end %>
 <%= f.input :description, required: false %>
 <%= f.input :amount, required: false %>
