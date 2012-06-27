@@ -36,4 +36,41 @@ footer {
 	text-align: center;
 }
 
+// shared/mtd ytd
+.mtd-ytd {
+	float: right;
+	@extend .well;
+	padding: 10px;
+	header {
+		font-weight: bold;
+	}
+	label {
+		padding-right: 5px;
+	}
+	label.first {
+		float: left;
+		display: block;
+	}
+	label.last {
+		display: inline-block;
+	}
+	span.amount {
+		font-weight: bold;
+	}
+	span.debit {
+		color: #dc3912;
+	}
+	span.credit {
+		color: #333333;
+	}
+}
+
+.page-header {
+	padding-bottom: 30px;
+	margin: 0px 0 10px 0;
+	h1 {
+		padding-top: 12px;
+	}
+}
+
 .test-css-class-on-about-page { color: blue; display:none; }

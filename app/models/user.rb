@@ -52,6 +52,30 @@ class User < ActiveRecord::Base
     save!
   end
   
+  def mtd
+    credit = transactions.
+      select("SUM(amount)").
+      where("date_trunc('month', date) = date_trunc('month', now()) AND is_debit = true").
+      first.sum
+    debit = transactions.
+      select("SUM(amount)").
+      where("date_trunc('month', date) = date_trunc('month', now()) AND is_debit = false").
+      first.sum
+    credit.to_f + debit.to_f
+  end
+  
+  def ytd
+    credit = transactions.
+      select("SUM(amount)").
+      where("date_trunc('year', date) = date_trunc('year', now()) AND is_debit = true").
+      first.sum
+    debit = transactions.
+      select("SUM(amount)").
+      where("date_trunc('year', date) = date_trunc('year', now()) AND is_debit = false").
+      first.sum
+    credit.to_f + debit.to_f
+  end
+  
   def expenses_by_category_and_date_range(range)
     validate_range(range)
     where_clause = "is_debit=true"

@@ -10,13 +10,17 @@ describe "Transactions" do
   end
   
   subject { page }
-  
-  describe "index" do
+    
+  context "index" do
     before { visit transactions_path }
     
     describe "items that should be present on the page" do
       it { should have_selector('title', text: full_title("Transactions")) }
       it { should have_selector('h1', text: "Transactions")}
+    end
+    
+    context "mtd / ytd widget" do
+      it_behaves_like 'mtd / ytd widget'
     end
      
     describe "it should display the transactions" do
@@ -179,7 +183,7 @@ describe "Transactions" do
     end
   end
   
-  describe "new" do
+  context "new" do
     before { visit new_transaction_path }
     
     describe "items that should be present on the page" do
@@ -212,7 +216,7 @@ describe "Transactions" do
     end
   end
   
-  describe "create" do
+  context "create" do
     before { visit new_transaction_path }
     
     describe "with invalid information" do
@@ -337,7 +341,7 @@ describe "Transactions" do
     end
   end
 
-  describe "update" do
+  context "update" do
     before do
       @category = FactoryGirl.create(:category, user: user, name: 'test category')
       @transaction = FactoryGirl.create(:transaction, date: '07 Jun 2012', 
@@ -414,7 +418,7 @@ describe "Transactions" do
     end
   end
   
-  describe "edit" do
+  context "edit" do
     describe "expense transaction" do
       before do
         @category = FactoryGirl.create(:category, user: user, name: 'test category')
@@ -533,7 +537,7 @@ describe "Transactions" do
 
   end
   
-  describe "delete" do
+  context "delete" do
     before(:all) {
       @category = FactoryGirl.create(:category, user: user)
       @transaction = FactoryGirl.create(:transaction, date: 1.day.ago, 

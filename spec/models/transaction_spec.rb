@@ -39,7 +39,7 @@ describe Transaction do
     end
   end
   
-  describe "save filters" do
+  context "save filters" do
     it "should negate amount for debit transactions" do
       @transaction.is_debit = true
       @transaction.amount = "23.45"
@@ -61,7 +61,7 @@ describe Transaction do
     end
   end
   
-  describe "validations" do
+  context "validations" do
     describe "with blank description" do
       before { @transaction.description = '   ' }
       it { should_not be_valid }

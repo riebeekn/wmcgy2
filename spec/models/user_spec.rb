@@ -255,6 +255,61 @@ describe User do
     end
   end
 
+  describe "mtd / ytd" do
+    before do
+      @user = FactoryGirl.create(:user, active: true) 
+    end
+    
+    describe "mtd" do
+      context "with no transaction" do
+        it "should return 0" do
+          @user.mtd.should eq 0
+        end
+      end
+      
+      context "with transactions" do
+        before do
+          @cat_pay = FactoryGirl.create(:category, user: @user, name: 'Pay')
+          @cat_gro = FactoryGirl.create(:category, user: @user, name: 'Groceries')
+          FactoryGirl.create(:transaction, date: 1.day.ago, 
+            description: 'A transaction', amount: 50, is_debit: false, user: @user, 
+            category: @cat_pay)
+          FactoryGirl.create(:transaction, date: 1.day.ago,
+            description: 'A transaction', amount: 40, is_debit: true, user: @user,
+            category: @cat_gro)
+        end
+        it "should have the correct mtd value" do
+          @user.mtd.should eq 10
+        end
+      end
+    end
+  
+    describe "ytd" do
+      context "with no transactions" do
+        it "should return 0" do
+          @user.ytd.should eq 0
+        end
+      end
+      
+      context "with transactions" do
+        before do
+          @cat_pay = FactoryGirl.create(:category, user: @user, name: 'Pay')
+          @cat_gro = FactoryGirl.create(:category, user: @user, name: 'Groceries')
+          FactoryGirl.create(:transaction, date: DateTime.now.beginning_of_year, 
+            description: 'A transaction', amount: 50000, is_debit: false, user: @user, 
+            category: @cat_pay)
+          FactoryGirl.create(:transaction, date: DateTime.now.beginning_of_year,
+            description: 'A transaction', amount: 45000, is_debit: true, user: @user,
+            category: @cat_gro)
+        end
+        
+        it "should have the correct ytd value" do
+          @user.ytd.should eq 5000
+        end
+      end
+    end
+  end
+  
   describe "reports" do
     before do
       @user = FactoryGirl.create(:user, active: true) 

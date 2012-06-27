@@ -16,6 +16,11 @@ describe "Categories" do
       it { should have_field("category[name]") }
     end
     
+    context "mtd / ytd widget" do
+      before { visit categories_path }
+      it_behaves_like 'mtd / ytd widget'
+    end
+    
     describe "when no categories have been created" do
       before { visit categories_path }
       it { should have_content("Use this page to") }

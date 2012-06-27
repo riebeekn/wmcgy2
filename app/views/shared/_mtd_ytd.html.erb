@@ -1,0 +1,14 @@
+<% user ||= current_user %>
+<% mtd = user.mtd %>
+<% ytd = user.ytd %>
+<section class="mtd-ytd">
+	<header>Current income versus expenses</header>
+	<label class="first">MTD</label>
+	<span class="amount <%= mtd > 0 ? 'credit' : 'debit'%>">
+		<%= number_to_currency(mtd) %>
+	</span>
+	<label class="last">YTD</label>
+	<span class="amount <%= ytd > 0 ? 'credit' : 'debit'%>">
+		<%= number_to_currency(ytd) %>
+	</span>
+</section>

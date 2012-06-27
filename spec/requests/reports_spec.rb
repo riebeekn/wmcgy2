@@ -7,10 +7,15 @@ describe "Reports" do
   subject { page }
   
   describe "index" do
+    before { visit reports_path }
+    
     describe "items that should be present on the page" do
-      before { visit reports_path }
       it { should have_selector("title", text: full_title("Reports")) }
       it { should have_selector("h1", text: "Reports") }
+    end
+    
+    context "mtd / ytd widget" do
+      it_behaves_like 'mtd / ytd widget'
     end
   end
 
