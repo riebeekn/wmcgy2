@@ -42,8 +42,9 @@ describe "Static pages" do
       it { should have_link("Transactions") }
       it { should have_link("Categories") }
       it { should have_link("Reports") }
+      it { should have_link("Account") }
       it { should have_link("Sign out") }
-      it { should have_content("Signed in as #{user.email}") }
+      it { should have_link("Signed in as #{user.email}") }
       it { should_not have_link("Sign in") }
       it { should_not have_link("Sign up") }
       
@@ -55,6 +56,11 @@ describe "Static pages" do
         page.should have_selector("title", text: full_title("Categories"))
         click_link "Reports"
         page.should have_selector("title", text: full_title("Reports"))
+        click_link "Account"
+        page.should have_selector("title", text: full_title("Account Settings"))
+        visit root_path
+        click_link "Signed in as #{user.email}"
+        page.should have_selector("title", text: full_title("Account Settings"))
       end
     end
   end

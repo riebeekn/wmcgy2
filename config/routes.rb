@@ -1,6 +1,6 @@
 Wmcgy::Application.routes.draw do
 
-  resources :users,             only: [:new, :create]
+  resources :users,             only: [:new, :create, :edit, :destroy]
   resources :user_activations,  only: [:new, :create, :update]
   resources :sessions,          only: [:new, :create, :destroy]
   resources :password_resets,   only: [:new, :create, :edit, :update]
@@ -19,6 +19,9 @@ Wmcgy::Application.routes.draw do
   match '/signout',                 to: 'sessions#destroy'
   match '/signup/complete',         to: 'static_pages#signup_complete'
   
+  match '/account/change_email', to: 'users#update_email', as: :update_email
+  match '/account/change_password', to: 'users#change_password', as: :change_password
+  match '/account', to: 'users#edit', as: :account
   match '/account/:id/activate',    to: 'user_activations#update',  as: :account_activate
   match '/account/forgot_password', to: 'password_resets#new',      as: :forgot_password
   match '/account/:id/reset_password', to: 'password_resets#edit', as: :reset_password

@@ -1,0 +1,13 @@
+<section>
+	<header>Change email</header>
+	<%= simple_form_for @user, url: :update_email, html: { class: "form-horizontal" }  do |f| %>
+  	<fieldset>
+			<%= f.input :email, required: false %>
+			<div class="control-group">
+				<div class="controls">
+					<%= f.submit "Update email", class: "btn btn-success" %>
+				</div>
+			</div>
+		</fieldset>
+	<% end %>
+</section>

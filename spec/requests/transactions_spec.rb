@@ -198,6 +198,10 @@ describe "Transactions" do
       it { should have_button('Add transaction') }
     end
     
+    context "mtd / ytd widget" do
+      it_behaves_like 'mtd / ytd widget'
+    end
+    
     describe "pre-loaded categories" do
       it "should load the user's categories when new transaction page is loaded" do
         document = Nokogiri::HTML(page.body)

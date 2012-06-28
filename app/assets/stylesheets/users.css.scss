@@ -1,3 +1,19 @@
 // Place all the styles related to the users controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+.account {
+	header { 
+		font-size: 18px;
+		margin: 15px 0 10px 20px; 
+		color: #999999; 
+		}
+	section {
+		border-bottom: 1px solid #EEEEEE
+	}	
+	p { 
+		font-weight: bold; 
+		margin-left: 50px;
+	}
+	.delete { color: #dc3912; }
+	.btn-danger { margin-left: 50px; }
+}

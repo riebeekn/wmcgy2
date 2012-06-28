@@ -6,8 +6,10 @@
 	<li class="divider-vertical"></li>
 	<li><%= link_to "Reports", reports_path, class: "lead" %></li>
 	<li class="divider-vertical"></li>
+	<li><%= link_to "Account", account_path, class: "lead" %></li>
+	<li class="divider-vertical"></li>
 </ul>
 <ul class="nav pull-right">
-	<li class="current-user">Signed in as <%= current_user.email %></li>
-	<li>&nbsp;&nbsp;&nbsp;<u><%= link_to "Sign out", signout_path %></u></li>
+	<li class="current-user"><%= link_to "Signed in as #{current_user.email}", account_path %></li>
+	<li><%= link_to "Sign out", signout_path %></li>
 </ul>

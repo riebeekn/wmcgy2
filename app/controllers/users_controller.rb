@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  skip_before_filter :signed_in_user
+  skip_before_filter :signed_in_user, only: [:new, :create]
   
   def new
     @user = User.new
@@ -17,6 +17,43 @@ class UsersController < ApplicationController
     else
       render 'new'
     end
+  end
+  
+  def edit
+    @user = current_user
+  end
+  
+  def change_password
+    @user = current_user
+    @user.should_validate_password = true
+   
+    if @user.authenticate(params[:old_password]) == false
+      @old_pswd_class = "error"
+      @old_pswd_span = "<span class='help-inline'>incorrect old password</span>"
+      render 'edit'
+      return
+    end 
+    
+    if @user.update_attributes(params[:user]) == true
+      redirect_to account_path, notice: "Password updated"
+    else
+      render 'edit'
+    end
+  end
+  
+  def update_email
+    @user = User.find(current_user)
+    
+    if @user.update_attributes(params[:user])
+      redirect_to account_path, notice: "Email updated"
+    else
+      render 'edit'
+    end
+  end
+  
+  def destroy
+    current_user.destroy
+    redirect_to signin_path, notice: "Account closed!"
   end
   
   private
