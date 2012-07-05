@@ -28,8 +28,13 @@ class SessionsController < ApplicationController
     else
       # omniauth login
       user = User.from_omniauth(env["omniauth.auth"])
-      set_auth_cookie user, @session
-      redirect_to root_path
+      if user.valid?
+        set_auth_cookie user, @session
+        redirect_to root_path
+      else
+        flash.alert = user.errors.full_messages.join(', ')
+        render 'new'
+      end
     end
   end
 
