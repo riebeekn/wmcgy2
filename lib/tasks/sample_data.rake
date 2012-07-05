@@ -15,6 +15,8 @@ def make_users
                password: "foobar",
                password_confirmation: "foobar")
   user.toggle!(:active)
+  user.name = "example@example.com"
+  user.save!
 end
 
 def make_categories

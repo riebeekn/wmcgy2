@@ -1,0 +1,10 @@
+M	Gemfile
+M	Gemfile.lock
+M	app/controllers/sessions_controller.rb
+M	app/views/layouts/_signed_in_header.html.erb
+M	app/views/sessions/new.html.erb
+A	config/initializers/omniauth.rb
+M	config/routes.rb
+A	db/migrate/20120702192718_add_provide_and_uid_to_users.rb
+A	db/migrate/20120702193635_add_name_to_users.rb
+M	db/schema.rb

@@ -13,6 +13,9 @@
 #  active                 :boolean
 #  created_at             :datetime        not null
 #  updated_at             :datetime        not null
+#  name                   :string(255)
+#  provider               :string(255)
+#  uid                    :string(255)
 #
 
 class User < ActiveRecord::Base
@@ -31,6 +34,7 @@ class User < ActiveRecord::Base
   validates :password, length: { within: 6..40 }, if: :should_validate_password
   
   before_create { generate_token(:auth_token) }
+  before_create { set_name_if_empty }
   before_save { |user| user.email = user.email.downcase }
   
   def send_activation_email
@@ -50,6 +54,10 @@ class User < ActiveRecord::Base
   def activate
     self.active = true
     save!
+  end
+  
+  def self.from_omniauth(auth)
+    User.find_by_provider_and_uid(auth["provider"], auth["uid"]) || create_with_omniauth(auth)
   end
   
   def mtd
@@ -146,5 +154,27 @@ class User < ActiveRecord::Base
         self[column] =  SecureRandom.urlsafe_base64
       end while User.exists?(column => self[column])
     end
+    
+    def set_name_if_empty
+      if name.nil?
+        self.name = email
+      end
+    end
+    
+    def self.create_with_omniauth(auth)
+      User.create! do |user|
+        user.provider = auth["provider"]
+        user.uid = auth["uid"]
+        user.name = auth["info"]["name"]
+        if user.provider == 'twitter'
+          # twitter does not provide the user's email
+          user.email = "#{user.uid}.no.email.for.twitter@example.com"
+        else
+          user.email = auth["info"]["email"]
+        end
+        user.password = 'nopasswordneeded'
+        user.password_confirmation = 'nopasswordneeded'
+        user.active = true
+      end
+    end
 end
-

@@ -176,7 +176,7 @@ describe "Users" do
       end
     end
   end
-  
+    
   describe "sign up" do
     before { visit signup_path }
     
@@ -269,6 +269,12 @@ describe "Users" do
         click_button "Sign up"
         last_email.should_not be_nil 
         last_email.to.should include("user@example.com")
+      end
+      
+      it "should use the email value for the name attribute" do
+        click_button "Sign up"
+        user = User.find_by_email("user@example.com")
+        user.name.should eq "user@example.com"
       end
     end
     

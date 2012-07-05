@@ -18,6 +18,8 @@ Wmcgy::Application.routes.draw do
   match '/signin',                  to: 'sessions#new'
   match '/signout',                 to: 'sessions#destroy'
   match '/signup/complete',         to: 'static_pages#signup_complete'
+  match 'auth/:provider/callback',  to: 'sessions#create'
+  match '/auth/failure',            to: 'sessions#failure'
   
   match '/account/change_email', to: 'users#update_email', as: :update_email
   match '/account/change_password', to: 'users#change_password', as: :change_password

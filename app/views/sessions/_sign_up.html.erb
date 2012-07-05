@@ -1,0 +1,21 @@
+<section class="span4">
+	<div class="sign-up well small-well">
+		<div class="page-header">
+			<h1>
+				<small>Don't have an account? Sign up now!</small><br/>
+			</h1>
+		</div>
+		<%= simple_form_for @user, html: { class: "form-vertical" }  do |f| %>
+		  <fieldset>
+				<%= f.input :email, required: false, label: false, placeholder: "Email", input_html: { tabindex: 4 } %>
+				<%= f.input :password, label: false, placeholder: "Password", input_html: { tabindex: 5 } %>
+				<%= f.input :password_confirmation, label: false, placeholder: "Confirm password", input_html: { tabindex: 6 } %>
+				<div class="control-group">
+					<div class="controls">
+						<%= f.submit "Sign up", class: "btn btn-success btn-wide", tabindex: 7 %>
+					</div>
+				</div>
+			</fieldset>
+		<% end %>
+	</div>
+</section>

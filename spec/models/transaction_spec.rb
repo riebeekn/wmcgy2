@@ -4,7 +4,7 @@
 #
 #  id          :integer         not null, primary key
 #  description :string(255)
-#  date        :date
+#  date        :datetime
 #  amount      :decimal(10, 2)  default(0.0)
 #  is_debit    :boolean
 #  category_id :integer

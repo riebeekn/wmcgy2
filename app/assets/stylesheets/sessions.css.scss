@@ -10,10 +10,29 @@
 }
 .sign-up {
 	.btn-wide { width: 120px; }
-
 }
 
 .small-well { 
 	min-width: 205px; 
 	max-width: 350px;
+}
+
+.auth-providers {
+  height: 90px;
+}
+
+.auth-provider-header {
+	font-size: 120%; 
+}
+
+.auth-provider {
+  float: left;
+  text-decoration: none;
+  margin-right: 20px;
+  text-align: center;
+  margin-bottom: 10px;
+  
+  img {
+    display: block;
+  }
 }

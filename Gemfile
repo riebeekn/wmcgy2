@@ -12,6 +12,8 @@ gem 'will_paginate', '~> 3.0.3'
 gem 'will_paginate-bootstrap'
 gem 'exception_notification'
 gem 'newrelic_rpm'
+gem 'omniauth-twitter'
+gem 'omniauth-google-oauth2'
 
 # Gems used only for assets and not required
 # in production environments by default.

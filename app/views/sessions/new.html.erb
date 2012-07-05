@@ -1,42 +1,8 @@
 <% provide(:title, 'Sign in') %>
 <div class="row">
-	<div class="span4 offset2">
-		<div class="sign-in well small-well">
-			<div class="page-header">
-				<h1>Sign in</h1>
-			</div>
-			<%= simple_form_for @session, html: { class: "form-vertical" } do |f| %>
-				<fieldset>
-					<%= f.input :email, placeholder: "Email", label: false, input_html: { tabindex: 1 } %>
-					<%= f.input :password, placeholder: "Password", label: false, input_html: { tabindex: 2 } %>
-					<%= f.submit "Sign in", class: "btn btn-success btn-wide", tabindex: 3 %>
-					<div class="remember">
-						<%= f.check_box :remember_me %>&nbsp;Remember me<br/>
-						<%= link_to "Forgot password?", forgot_password_path %>
-					</div>
-				</fieldset>
-			<% end %>
-		</div>
-	</div>
-	<div class="span4">
-		<div class="sign-up well small-well">
-			<div class="page-header">
-				<h1>
-					<small>Don't have an account? Sign up now!</small><br/>
-				</h1>
-			</div>
-			<%= simple_form_for @user, html: { class: "form-vertical" }  do |f| %>
-			  <fieldset>
-					<%= f.input :email, required: false, label: false, placeholder: "Email", input_html: { tabindex: 4 } %>
-					<%= f.input :password, label: false, placeholder: "Password", input_html: { tabindex: 5 } %>
-					<%= f.input :password_confirmation, label: false, placeholder: "Confirm password", input_html: { tabindex: 6 } %>
-					<div class="control-group">
-						<div class="controls">
-							<%= f.submit "Sign up", class: "btn btn-success btn-wide", tabindex: 7 %>
-						</div>
-					</div>
-				</fieldset>
-			<% end %>
-		</div>
-	</div>
+	<%= render 'sign_in' %>
+	<%= render 'sign_up' %>
+</div>
+<div class="row">
+	<%= render 'oauth_sign_in' %>
 </div>

@@ -1,0 +1,18 @@
+<section class="span4 offset2">
+	<div class="sign-in well small-well">
+		<div class="page-header">
+			<h1>Sign in</h1>
+		</div>
+		<%= simple_form_for @session, html: { class: "form-vertical" } do |f| %>
+			<fieldset>
+				<%= f.input :email, placeholder: "Email", label: false, input_html: { tabindex: 1 } %>
+				<%= f.input :password, placeholder: "Password", label: false, input_html: { tabindex: 2 } %>
+				<%= f.submit "Sign in", class: "btn btn-success btn-wide", tabindex: 3 %>
+				<div class="remember">
+					<%= f.check_box :remember_me %>&nbsp;Remember me<br/>
+					<%= link_to "Forgot password?", forgot_password_path %>
+				</div>
+			</fieldset>
+		<% end %>
+	</div>
+</section>

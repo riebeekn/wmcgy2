@@ -13,6 +13,9 @@
 #  active                 :boolean
 #  created_at             :datetime        not null
 #  updated_at             :datetime        not null
+#  name                   :string(255)
+#  provider               :string(255)
+#  uid                    :string(255)
 #
 
 require 'spec_helper'
@@ -37,6 +40,9 @@ describe User do
   it { should respond_to(:send_activation_email) }
   it { should respond_to(:categories) }
   it { should respond_to(:transactions) }
+  it { should respond_to(:name) }
+  it { should respond_to(:provider) }
+  it { should respond_to(:uid) }
   
   it { should be_valid }
   it { should_not be_active }
@@ -127,6 +133,80 @@ describe User do
     end
   end 
 
+  describe "omniauth" do
+    before do
+      User.destroy_all
+      @uid = "user_id_1"
+      @provider = "google_oauth2"
+      @name = "Bob"
+      @email = "bob@example.com"
+      @auth = Hash[
+        "provider", @provider,
+        "uid", @uid,
+        "info", Hash["name", @name, "email", @email]
+      ]
+    end
+    
+    context "Google" do  
+      it "should create a new user if and return it if user does not exist" do
+        expect do
+          @user = User.from_omniauth(@auth)
+        end.to change(User, :count).by(1)
+        @user.should_not be_nil
+        @user.email.should eq @email
+        @user.name.should eq @name
+        @user.uid.should eq @uid
+        @user.provider.should eq @provider
+        @user.should be_active
+      end
+      
+      it "should return the user if the user already exists and not create a new one" do
+        User.from_omniauth(@auth)
+        expect do
+          @user = User.from_omniauth(@auth)
+        end.to_not change(User, :count).by(1)
+        @user.should_not be_nil
+        @user.email.should eq @email
+        @user.name.should eq @name
+        @user.uid.should eq @uid
+        @user.provider.should eq @provider
+        @user.should be_active
+      end
+    end
+    
+    context "Twitter" do
+      before do
+        @provider = "twitter"
+        @auth["provider"] = @provider
+      end
+      
+      it "should create a new user if and return it if user does not exist" do
+        expect do
+          @user = User.from_omniauth(@auth)
+        end.to change(User, :count).by(1)
+        @user.should_not be_nil
+        @user.email.should eq "#{@uid}.no.email.for.twitter@example.com"
+        @user.name.should eq @name
+        @user.uid.should eq @uid
+        @user.provider.should eq @provider
+        @user.should be_active
+      end
+      
+      it "should return the user if the user already exists and not create a new one" do
+        User.from_omniauth(@auth)
+        expect do
+          @user = User.from_omniauth(@auth)
+        end.to_not change(User, :count).by(1)
+        @user.should_not be_nil
+        @user.email.should eq "#{@uid}.no.email.for.twitter@example.com"
+        @user.name.should eq @name
+        @user.uid.should eq @uid
+        @user.provider.should eq @provider
+        @user.should be_active
+      end
+    end
+  end
+  
   describe "send activation email" do
     let(:user) { FactoryGirl.create(:user) }
     
@@ -189,7 +269,7 @@ describe User do
       user.should be_active
     end
   end
-  
+
   describe "category associations" do
     before do 
       @user_1 = FactoryGirl.create(:user)
@@ -457,4 +537,4 @@ describe User do
     end
   end
 end
-     
+ 
