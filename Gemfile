@@ -28,8 +28,8 @@ end
 group :development do
   gem 'rspec-rails', '2.9.0'
 	gem 'annotate', '~> 2.4.1.beta'
-	#gem 'quiet_assets'
-	#gem 'thin'
+	gem 'quiet_assets'
+	gem 'thin'
 end
 
 group :test do

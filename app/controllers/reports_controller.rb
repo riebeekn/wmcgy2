@@ -4,6 +4,7 @@ class ReportsController < ApplicationController
   end
   
   def expenses
+    logger.debug "****** DATE RANGE IS: #{params[:range]}"
     render :json => {
       type: 'PieChart',
       cols: [['string', 'Category'], ['number', 'Amount']],
@@ -58,7 +59,8 @@ class ReportsController < ApplicationController
   private
   
     def mtd_ytd_or_all
-      %w[month year all].include?(params[:range]) ? params[:range] : "month"
+      #%w[month year all].include?(params[:range]) ? params[:range] : "month"
+      params[:range]
     end
     
     def ytd_or_all

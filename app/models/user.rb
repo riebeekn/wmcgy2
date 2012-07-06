@@ -85,11 +85,22 @@ class User < ActiveRecord::Base
   end
   
   def expenses_by_category_and_date_range(range)
-    validate_range(range)
+    
+    # **************** CHNAGED ****************
+    logger.debug "*** RANGE IN CLASS IS: #{range}"
+    
+    #validate_range(range) DELETE THIS PRIVATE METHOD IF DON'T RESTORE
     where_clause = "is_debit=true"
     if (range != 'all')
-      where_clause += " AND DATE_TRUNC('#{range}', date) = DATE_TRUNC('#{range}', now())"
+      if (range.include? ':TO:')
+        date_vals = range.split(':TO:')
+        where_clause += " AND date BETWEEN '#{date_vals[0]}' AND '#{date_vals[1]}'"
+      else
+        where_clause += " AND DATE_TRUNC('#{range}', date) = DATE_TRUNC('#{range}', now())"
+      end
     end
+    # **************** CHNAGED ****************
+    
     transactions.
       select("name, SUM(amount)").
       joins("LEFT JOIN categories on categories.id = transactions.category_id").

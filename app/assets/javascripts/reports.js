@@ -14,6 +14,18 @@ jQuery(function($) {
 		});
   }
 
+	$('#start_date').datepicker({
+		dateFormat: 'dd M yy', showAnim: 'slideDown' 
+	})
+	
+	$('#end_date').datepicker({
+		dateFormat: 'dd M yy', showAnim: 'slideDown' 
+	})
+	
+	$('#end_date').change(function() {
+		loadChart($('#expensesChart'), $('#start_date').val() + ':TO:' + $('#end_date').val())
+	});
+
 	// hide tables on page load
 	$('table#expensesTable,table#incomeTable,table#incomeExpenseTable,table#profitLossTable').hide();
 
