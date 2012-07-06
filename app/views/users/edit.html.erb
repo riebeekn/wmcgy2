@@ -4,7 +4,9 @@
 	<div class="page-header">
 		<h1>Account Settings</h1>
 	</div>
-	<%= render 'change_email' %>
-	<%= render 'change_password' %>
+	<% if @user.provider.nil? %>
+		<%= render 'change_email' %>
+		<%= render 'change_password' %>
+	<% end %>
 	<%= render 'delete_account' %>
 </div>

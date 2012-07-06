@@ -18,3 +18,5 @@
 /ssl-cert
 
 brakeman.html
+
+/config/heroku_env.rb

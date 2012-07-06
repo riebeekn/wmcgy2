@@ -17,6 +17,9 @@ end
 
 module Wmcgy
   class Application < Rails::Application
+    # Load heroku vars from local file
+    heroku_env = File.join(Rails.root, 'config', 'heroku_env.rb')
+    load(heroku_env) if Rails.env.development? && File.exists?(heroku_env)
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
