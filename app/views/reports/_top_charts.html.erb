@@ -1,22 +1,11 @@
 <!-- controls -->
 <div class="inline">
-	<label>Show:</label>
-	<select id="topChartsRange">
-		<option value="month">month to date</option>
-		<option value="year">year to date</option>
-		<option value="all">all</option>
-	</select>
-	<%= link_to 'Show / hide details', '#', id:'toggle_top_details', class:'btn'%>
+	<label class="left-label">Start date:</label>
+	<%=text_field_tag 'start_date', nil, class: 'date-picker' %>
+	<label class="right-label">End date:</label>
+	<%=text_field_tag 'end_date', nil, class: 'date-picker' %>
+	<%= link_to 'Show / hide details', '#', id:'toggle_top_details', class: 'btn'%>
 </div>
-<div class="inline">
-	<label>or select start</label>
-	<%=text_field_tag 'start_date', nil %>
-</div>
-<div class="inline">
-	<label>and end date</label>
-	<%=text_field_tag 'end_date', nil %>
-</div>
-
 <!-- top charts and data -->
 <div id="topCharts" class="inline">
 	<%= render 'expenses' %>

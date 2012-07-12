@@ -429,62 +429,59 @@ describe User do
     end
     
     describe "income by category and date range" do
-      it "should have the correct income when range is all" do
-        income = @user.income_by_category_and_date_range('all')
+      it "should show all transactions when range is empty" do
+        income = @user.income_by_category_and_date_range('')
         income[0]["name"].should eq("Pay")
         income[0]["sum"].should eq("100.00")
         income[1]["name"].should eq("Other")
         income[1]["sum"].should eq("50.00")
       end
       
-      it "should display the correct items when range is month" do
-        income = @user.income_by_category_and_date_range('month')
+      it "should display the correct items when range is one day ago" do
+        range = "#{1.day.ago.strftime('%d %b %Y')}:TO:#{1.day.ago.strftime('%d %b %Y')}"
+        income = @user.income_by_category_and_date_range(range)
         income[0]["name"].should eq("Pay")
         income[0]["sum"].should eq("75.00")
         income[1]["name"].should eq("Other")
         income[1]["sum"].should eq("25.00")
       end
       
-      it "should display the correct items when range is year" do
-        income = @user.income_by_category_and_date_range('year')
+      it "should display the correct items when range is one year ago" do
+        range = "#{1.year.ago.strftime('%d %b %Y')}:TO:#{1.day.ago.strftime('%d %b %Y')}"
+        income = @user.income_by_category_and_date_range(range)
         income[0]["name"].should eq("Pay")
         income[0]["sum"].should eq("100.00")
         income[1]["name"].should eq("Other")
         income[1]["sum"].should eq("25.00")
       end
       
-      it "should raise exception on invalid range" do
-        expect { @user.income_by_category_and_date_range('foobar') }.to raise_error
-      end
     end
       
     describe "expenses by category and date range" do
-      it "should have the correct expenses when range is all" do
-        expense = @user.expenses_by_category_and_date_range('all')
+      it "should show all transaction when range is empty" do
+        expense = @user.expenses_by_category_and_date_range('')
         expense[0]["name"].should eq("Entertainment")
         expense[0]["sum"].should eq("-1000.00")
         expense[1]["name"].should eq("Groceries")
         expense[1]["sum"].should eq("-7000.00")
       end
       
-      it "should display the correct items when range is month" do
-        expense = @user.expenses_by_category_and_date_range('month')
+      it "should display the correct items when range is one day ago" do
+        range = "#{1.day.ago.strftime('%d %b %Y')}:TO:#{1.day.ago.strftime('%d %b %Y')}"
+        expense = @user.expenses_by_category_and_date_range(range)
         expense[0]["name"].should eq("Entertainment")
         expense[0]["sum"].should eq("-1000.00")
         expense[1]["name"].should eq("Groceries")
         expense[1]["sum"].should eq("-2000.00")
       end
       
-      it "should display the correct items when range is year" do
-        expense = @user.expenses_by_category_and_date_range('year')
+      it "should display the correct items when range is one year" do
+        range = "#{1.year.ago.strftime('%d %b %Y')}:TO:#{1.day.ago.strftime('%d %b %Y')}"
+        expense = @user.expenses_by_category_and_date_range(range)
         expense[0]["name"].should eq("Entertainment")
         expense[0]["sum"].should eq("-1000.00")
         expense[1]["name"].should eq("Groceries")
         expense[1]["sum"].should eq("-6000.00")
-      end
-      
-      it "should raise exception on invalid range" do
-        expect { @user.expenses_by_category_and_date_range('foobar') }.to raise_error
       end
     end
   

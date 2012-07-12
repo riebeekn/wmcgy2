@@ -16,7 +16,6 @@
 		label {
 			font-size: 110%;
 			padding: 0px 5px 5px 0px;
-			margin-left: 15px;
 		}
 	}
 	table {
@@ -31,6 +30,17 @@
 	
 	.well {
 		padding: 10px 5px 10px 5px;
+	}
+	
+	.date-picker {
+		width: 100px;
+	}
+	
+	.left-label {
+		margin-left: 15px;
+	}
+	.right-label {
+		margin-left: 5px;
 	}
 }
 

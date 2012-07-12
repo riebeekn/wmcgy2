@@ -5,8 +5,8 @@ jQuery(function($) {
     	google.load("visualization", "1.0", { 
 				packages: ["corechart"], 
 				callback: function() {
-					loadChart($('#expensesChart'), $('#topChartsRange').val());
-					loadChart($('#incomeChart'), $('#topChartsRange').val());
+					loadChart($('#expensesChart'), getTopChartDateRange()); 
+					loadChart($('#incomeChart'), getTopChartDateRange()); 
 					loadChart($('#incomeExpenseChart'), $('#bottomChartsRange').val());
 					loadChart($('#profitLossChart'), $('#bottomChartsRange').val());
 				}
@@ -14,27 +14,35 @@ jQuery(function($) {
 		});
   }
 
+	// set up the start date picker (defaults to first of current month)
 	$('#start_date').datepicker({
 		dateFormat: 'dd M yy', showAnim: 'slideDown' 
 	})
+	if ($('#start_date').val() == '') {
+		var firstOfMonth = new Date();
+		firstOfMonth.setDate(1);
+		$('#start_date').datepicker('setDate', firstOfMonth);
+	}
+	$('#start_date').change(function() {
+		loadChart($('#incomeChart'), getTopChartDateRange());
+		loadChart($('#expensesChart'), getTopChartDateRange());
+	});
 	
+	// set up the end date picker (defaults to current day)
 	$('#end_date').datepicker({
 		dateFormat: 'dd M yy', showAnim: 'slideDown' 
 	})
-	
+	if ($('#end_date').val() == '') {
+		$('#end_date').datepicker('setDate', new Date());
+	}
 	$('#end_date').change(function() {
-		loadChart($('#expensesChart'), $('#start_date').val() + ':TO:' + $('#end_date').val())
+		loadChart($('#incomeChart'), getTopChartDateRange());
+		loadChart($('#expensesChart'), getTopChartDateRange());
 	});
 
 	// hide tables on page load
 	$('table#expensesTable,table#incomeTable,table#incomeExpenseTable,table#profitLossTable').hide();
 
-	// top charts date range selection event
-	$('#topChartsRange').change(function() {
-		loadChart($('#expensesChart'), $(this).val());
-		loadChart($('#incomeChart'), $(this).val());
-	});
-	
 	// bottom charts date range selection event
 	$('#bottomChartsRange').change(function() {
 		loadChart($('#incomeExpenseChart'), $(this).val());
@@ -53,6 +61,10 @@ jQuery(function($) {
 		$('table#incomeExpenseTable,table#profitLossTable').fadeToggle();
 	});
 });
+
+function getTopChartDateRange() {
+	return $('#start_date').val() + ':TO:' + $('#end_date').val();
+}
 
 function loadChart(div, range) {
 	var url = div.data("chart") + "?range=" + range

@@ -4,11 +4,10 @@ class ReportsController < ApplicationController
   end
   
   def expenses
-    logger.debug "****** DATE RANGE IS: #{params[:range]}"
     render :json => {
       type: 'PieChart',
       cols: [['string', 'Category'], ['number', 'Amount']],
-      rows: current_user.expenses_by_category_and_date_range(mtd_ytd_or_all).
+      rows: current_user.expenses_by_category_and_date_range(params[:range]).
               collect { |r| [r.name == nil ? "Uncategorized" : r.name, r.sum.to_f.abs] },
       options: { 
         backgroundColor: { fill:'#F5F5F5'},
@@ -21,7 +20,7 @@ class ReportsController < ApplicationController
     render :json => {
       type: 'PieChart',
       cols: [['string', 'Category'], ['number', 'Amount']],
-      rows: current_user.income_by_category_and_date_range(mtd_ytd_or_all).
+      rows: current_user.income_by_category_and_date_range(params[:range]).
               collect { |r| [r.name == nil ? "Uncategorized": r.name, r.sum.to_f] },
       options: { 
         backgroundColor: { fill:'#F5F5F5'},
@@ -58,11 +57,6 @@ class ReportsController < ApplicationController
   
   private
   
-    def mtd_ytd_or_all
-      #%w[month year all].include?(params[:range]) ? params[:range] : "month"
-      params[:range]
-    end
-    
     def ytd_or_all
       %w[year all].include?(params[:range]) ? params[:range] : "year"
     end

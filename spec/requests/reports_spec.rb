@@ -12,8 +12,8 @@ describe "Reports" do
     describe "items that should be present on the page" do
       it { should have_selector("title", text: full_title("Reports")) }
       it { should have_selector("h1", text: "Reports") }
-      it { should have_selector("select", text: "month to date") }
       it { should have_selector("select", text: "year to date") }
+      it { should have_selector("select", text: "all") }
       it { should have_selector('input#start_date') }
       it { should have_selector('input#end_date') }
     end

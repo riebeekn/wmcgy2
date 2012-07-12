@@ -85,26 +85,10 @@ class User < ActiveRecord::Base
   end
   
   def expenses_by_category_and_date_range(range)
-    
-    # **************** CHNAGED ****************
-    logger.debug "*** RANGE IN CLASS IS: #{range}"
-    
-    #validate_range(range) DELETE THIS PRIVATE METHOD IF DON'T RESTORE
-    where_clause = "is_debit=true"
-    if (range != 'all')
-      if (range.include? ':TO:')
-        date_vals = range.split(':TO:')
-        where_clause += " AND date BETWEEN '#{date_vals[0]}' AND '#{date_vals[1]}'"
-      else
-        where_clause += " AND DATE_TRUNC('#{range}', date) = DATE_TRUNC('#{range}', now())"
-      end
-    end
-    # **************** CHNAGED ****************
-    
     transactions.
       select("name, SUM(amount)").
       joins("LEFT JOIN categories on categories.id = transactions.category_id").
-      where(where_clause).
+      where(where_clause_for_transactions_by_date_and_category(true, range)).
       group("name").
       order("name")
   end
@@ -126,15 +110,10 @@ class User < ActiveRecord::Base
   end
   
   def income_by_category_and_date_range(range)
-    validate_range(range)
-    where_clause = "is_debit=false"
-    if (range != 'all')
-      where_clause += " AND DATE_TRUNC('#{range}', date) = DATE_TRUNC('#{range}', now())"
-    end
     transactions.
       select("name, SUM(amount)").
       joins("LEFT JOIN categories on categories.id = transactions.category_id").
-      where(where_clause).
+      where(where_clause_for_transactions_by_date_and_category(false, range)).
       group("name")
   end
   
@@ -156,10 +135,6 @@ class User < ActiveRecord::Base
   
   private
   
-    def validate_range(range)
-      raise ArgumentError("Invalid Range") unless %w[all year month].include?(range)
-    end
-    
     def generate_token(column)
       begin 
         self[column] =  SecureRandom.urlsafe_base64
@@ -170,6 +145,20 @@ class User < ActiveRecord::Base
       if name.nil?
         self.name = email
       end
+    end
+    
+    def where_clause_for_transactions_by_date_and_category(is_debit, range)
+      where_clause = is_debit == true ? "is_debit=true" : "is_debit=false" 
+      if !range.nil?
+        if range.include? ':TO:'
+          date_vals = range.split(':TO:')
+          date_vals[0] += ' 00:00:00'
+          date_vals[1] += ' 23:59:59'
+          where_clause += " AND date BETWEEN '#{date_vals[0]}' AND '#{date_vals[1]}'"
+        end
+      end
+      
+      where_clause
     end
     
     def self.create_with_omniauth(auth)
