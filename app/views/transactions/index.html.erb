@@ -9,9 +9,9 @@
 		  <i class="icon-plus icon-white"></i>&nbsp;
 		  <%= t('Add new transaction').html_safe %>
 		<% end %>
-		<span class="download-transactions">Download all transactions:</span> 
-		<%= link_to 'CSV', transactions_path(format: "csv") %> <!-- / 
-				<%= link_to 'Excel', '#' %> -->
+		<span class="download-transactions">
+			<%= link_to 'Download all transactions in CSV format', transactions_path(format: "csv") %> 
+		</span> 
 	</div>
 	<% if @transactions.any? %>
 		<%= will_paginate renderer: BootstrapPagination::Rails %>

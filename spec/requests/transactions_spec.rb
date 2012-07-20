@@ -18,9 +18,7 @@ describe "Transactions" do
       it { should have_selector('title', text: full_title("Transactions")) }
       it { should have_selector('h1', text: "Transactions") }
       it { should have_link('Add New Transaction') }
-      it { should have_selector('span', text: 'Download all transactions:') }
-      it { should have_link('CSV') }
-      #it { should have_link('Excel') }
+      it { should have_link('Download all transactions in CSV format') }
     end
     
     context "mtd / ytd widget" do
