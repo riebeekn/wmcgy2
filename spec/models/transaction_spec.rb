@@ -118,4 +118,36 @@ describe Transaction do
       @transaction.should be_valid
     end
   end
+
+  describe "as csv" do
+    before do
+      income_transaction = FactoryGirl.build(:transaction, date: '29 Jun 2012', amount: 97, 
+                                             is_debit: false, description: 'desc 1')
+      debit_transaction = FactoryGirl.build(:transaction, date: '26 Jun 2012', amount: 65.3, 
+                                            is_debit: true, description: 'desc 2')
+      @transactions = [income_transaction, debit_transaction]
+    end
+    
+    it "should convert transactions to CSV" do
+      csv = Transaction.to_csv(@transactions)
+      
+      lines = csv.split(/\n/)
+      lines.count.should eq 3
+      lines[0].should eq 'Date,Category,Description,Amount'
+      lines[1].should eq '29 Jun 2012,the category,desc 1,97.00'
+      lines[2].should eq '26 Jun 2012,the category,desc 2,-65.30'
+    end
+    
+    it "should ignore nils" do
+      @transactions << nil
+      csv = Transaction.to_csv(@transactions)
+      
+      lines = csv.split(/\n/)
+      lines.count.should eq 3
+      lines[0].should eq 'Date,Category,Description,Amount'
+      lines[1].should eq '29 Jun 2012,the category,desc 1,97.00'
+      lines[2].should eq '26 Jun 2012,the category,desc 2,-65.30'
+    end
+  end
+
 end

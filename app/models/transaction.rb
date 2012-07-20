@@ -59,8 +59,34 @@ class Transaction < ActiveRecord::Base
     end
   end
   
+  def self.to_csv(transactions)
+    CSV.generate do |csv|
+      csv << ["Date", "Category", "Description", "Amount"]
+      transactions.each do |trans|
+        if !trans.nil?
+          csv << [trans.date.strftime('%d %b %Y'), trans.category.name, trans.description, 
+                  stringify_amount_for_csv_excel(format_amount_for_csv_excel(trans))]
+        end
+      end
+    end
+  end
+  
   private
   
+    def self.stringify_amount_for_csv_excel(amount)
+      sprintf("%.2f", amount.to_f) unless amount == '' or amount.to_f == 0
+    end
+    
+    def self.format_amount_for_csv_excel(transaction)
+      if transaction.amount != nil
+        if transaction.is_debit?
+          return transaction.amount.abs * -1
+        else
+          return transaction.amount.abs
+        end
+      end
+    end
+    
     def format_amount
       if amount != nil
         if is_debit?

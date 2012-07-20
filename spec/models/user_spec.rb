@@ -398,32 +398,32 @@ describe User do
       @cat_ent = FactoryGirl.create(:category, user: @user, name: 'Entertainment')
       @cat_gro = FactoryGirl.create(:category, user: @user, name: 'Groceries')
       # income
-      FactoryGirl.create(:transaction, date: 1.day.ago, 
+      FactoryGirl.create(:transaction, date: 1.day.ago.strftime('%d %b %Y'), 
         description: 'A transaction', amount: 50, is_debit: false, user: @user, 
         category: @cat_pay)
-      FactoryGirl.create(:transaction, date: 1.day.ago, 
+      FactoryGirl.create(:transaction, date: 1.day.ago.strftime('%d %b %Y'), 
         description: 'A transaction', amount: 25, is_debit: false, user: @user, 
         category: @cat_pay)
-      FactoryGirl.create(:transaction, date: 2.months.ago, 
+      FactoryGirl.create(:transaction, date: 2.months.ago.strftime('%d %b %Y'), 
         description: 'A transaction', amount: 25, is_debit: false, user: @user, 
         category: @cat_pay)
-      FactoryGirl.create(:transaction, date: 1.day.ago, 
+      FactoryGirl.create(:transaction, date: 1.day.ago.strftime('%d %b %Y'), 
         description: 'A transaction', amount: 25, is_debit: false, user: @user, 
         category: @cat_other)
-      FactoryGirl.create(:transaction, date: 2.years.ago, 
+      FactoryGirl.create(:transaction, date: 2.years.ago.strftime('%d %b %Y'), 
         description: 'A transaction', amount: 25, is_debit: false, user: @user, 
         category: @cat_other)
       # expenses
-      FactoryGirl.create(:transaction, date: 1.day.ago,
+      FactoryGirl.create(:transaction, date: 1.day.ago.strftime('%d %b %Y'),
         description: 'A transaction', amount: 1000, is_debit: true, user: @user,
         category: @cat_ent)
-      FactoryGirl.create(:transaction, date: 1.day.ago,
+      FactoryGirl.create(:transaction, date: 1.day.ago.strftime('%d %b %Y'),
         description: 'A transaction', amount: 2000, is_debit: true, user: @user,
         category: @cat_gro)
-      FactoryGirl.create(:transaction, date: 2.months.ago,
+      FactoryGirl.create(:transaction, date: 2.months.ago.strftime('%d %b %Y'),
         description: 'A transaction', amount: 4000, is_debit: true, user: @user,
         category: @cat_gro)
-      FactoryGirl.create(:transaction, date: 2.years.ago,
+      FactoryGirl.create(:transaction, date: 2.years.ago.strftime('%d %b %Y'),
         description: 'A transaction', amount: 1000, is_debit: true, user: @user,
         category: @cat_gro)
     end
@@ -439,6 +439,12 @@ describe User do
       
       it "should display the correct items when range is one day ago" do
         range = "#{1.day.ago.strftime('%d %b %Y')}:TO:#{1.day.ago.strftime('%d %b %Y')}"
+        puts range
+        puts DateTime.now
+        puts 1.day.ago
+        @user.transactions.each do |t|
+          puts "#{t.is_debit} - #{t.date} - #{t.amount}"
+        end
         income = @user.income_by_category_and_date_range(range)
         income[0]["name"].should eq("Pay")
         income[0]["sum"].should eq("75.00")

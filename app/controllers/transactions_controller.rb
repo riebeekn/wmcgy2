@@ -2,7 +2,13 @@ class TransactionsController < ApplicationController
   helper_method :sort_column, :sort_direction 
   
   def index
-    @transactions = sort
+    respond_to do |format|
+      format.html { @transactions = sort }
+      format.csv { 
+        csv_transactions = current_user.transactions.all(include: :category, order: "date desc")
+        send_data Transaction.to_csv(csv_transactions)
+      }
+    end
   end
   
   def new
