@@ -32,6 +32,7 @@ class User < ActiveRecord::Base
                     uniqueness: { case_sensitive: false }, length: { maximum: 254 }
   validates :password, length: { within: 6..40 }, on: :create
   validates :password, length: { within: 6..40 }, if: :should_validate_password
+  validates :password_confirmation, presence: true, if: :should_validate_password
   
   before_create { generate_token(:auth_token) }
   before_create { set_name_if_empty }

@@ -22,8 +22,11 @@ require 'spec_helper'
 
 describe User do
   
-  before { @user = User.new(email: "user@example.com", password: "foobar", 
-                            password_confirmation: "foobar") }
+  before do 
+    @user = User.new(email: "user@example.com", password: "foobar", 
+                    password_confirmation: "foobar") 
+    @user.should_validate_password = true          
+  end
                             
   subject { @user }
   
@@ -115,6 +118,11 @@ describe User do
     describe "when password doesn't match confirmation" do
       before { @user.password_confirmation = "mismatch" }
       it { should_not be_valid } # validated automatically from has_secure_password
+    end
+    
+    describe "when password confirmation is nil" do
+      before { @user.password_confirmation = nil }
+      it { should_not be_valid }
     end
     
     describe "with a password that's too short" do
@@ -439,12 +447,6 @@ describe User do
       
       it "should display the correct items when range is one day ago" do
         range = "#{1.day.ago.strftime('%d %b %Y')}:TO:#{1.day.ago.strftime('%d %b %Y')}"
-        puts range
-        puts DateTime.now
-        puts 1.day.ago
-        @user.transactions.each do |t|
-          puts "#{t.is_debit} - #{t.date} - #{t.amount}"
-        end
         income = @user.income_by_category_and_date_range(range)
         income[0]["name"].should eq("Pay")
         income[0]["sum"].should eq("75.00")

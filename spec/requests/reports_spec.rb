@@ -166,7 +166,7 @@ describe "Reports" do
       before { visit '/reports/income_and_expense' }
       
       it "should show data for income expense even though only income entries exist" do
-        month = Date::MONTHNAMES[1.hour.ago.month][0..2]
+        month = Date::MONTHNAMES[4.hours.ago.month][0..2]
         page.should have_content('"' + month + '",440.0,0.0')
         month = Date::MONTHNAMES[1.month.ago.month][0..2]
         page.should have_content('"' + month + '",660.0,0.0')
