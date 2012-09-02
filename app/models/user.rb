@@ -173,8 +173,16 @@ class User < ActiveRecord::Base
         else
           user.email = auth["info"]["email"]
         end
-        user.password = 'nopasswordneeded'
-        user.password_confirmation = 'nopasswordneeded'
+        # note this isn't ideal, see project template where we don't create
+        # a password digest for oauth users, in theory with the below
+        # some one could log in via the custom authentication by 
+        # guessing the random password... this is likely close to impossible
+        # but would be better to disallow custom authentication when user
+        # is created via oauth
+        pwd = SecureRandom.urlsafe_base64
+        user.password = pwd
+        user.password_confirmation = pwd
+        
         user.active = true
       end
     end
