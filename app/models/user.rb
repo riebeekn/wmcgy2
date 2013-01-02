@@ -102,10 +102,10 @@ class User < ActiveRecord::Base
       order(1)
   end
   
-  def expenses_by_month_for_current_year
+  def expenses_by_month_for_current_year(year = Time.now.year)
     transactions.
       select("extract(month from date) as period, sum(amount)").
-      where("date_trunc('year', date) = date_trunc('year', now()) AND is_debit = true").
+      where("date_trunc('year', date) = to_timestamp('#{year}', 'YYYY') AND is_debit = true").
       group(1).
       order(1)
   end
@@ -126,10 +126,10 @@ class User < ActiveRecord::Base
       order(1)
   end
   
-  def income_by_month_for_current_year
+  def income_by_month_for_current_year(year = Time.now.year)
     transactions.
       select("extract(month from date) as period, sum(amount)").
-      where("date_trunc('year', date) = date_trunc('year', now()) AND is_debit = false").
+      where("date_trunc('year', date) = to_timestamp('#{year}', 'YYYY') AND is_debit = false").
       group(1).
       order(1)
   end
@@ -174,7 +174,7 @@ class User < ActiveRecord::Base
           user.email = auth["info"]["email"]
         end
         # note this isn't ideal, see project template where we don't create
-        # a password digest for oauth users, in theory with the below
+        # a valid password digest for oauth users, in theory with the below
         # some one could log in via the custom authentication by 
         # guessing the random password... this is likely close to impossible
         # but would be better to disallow custom authentication when user

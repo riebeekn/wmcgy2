@@ -3,20 +3,23 @@ shared_examples_for 'mtd / ytd widget' do
   it { should have_selector('label', text: 'MTD') }
   it { should have_selector('label', text: 'YTD') }
   
+
+  month_to_use_for_year_transactions = Time.now.month == 1 ? "Feb" : "Jan"
+
   describe "when expenses exceed outcome" do
     before(:all) {
       @income_category = FactoryGirl.create(:category, user: user, name: "income") 
       @expense_category = FactoryGirl.create(:category, user: user, name: "expense")  
-      FactoryGirl.create(:transaction, date: 1.day.ago, 
+      FactoryGirl.create(:transaction, date: "31 #{Time.now.strftime('%b')} #{Time.now.year}",
         description: 'Groceries', amount: -50.76, is_debit: true, user: user,
         category: @expense_category)
-      FactoryGirl.create(:transaction, date: 1.day.ago, 
+      FactoryGirl.create(:transaction, date: "31 #{Time.now.strftime('%b')} #{Time.now.year}",
         description: 'Pay', amount: 10, is_debit: false, user: user, 
         category: @income_category)
-      FactoryGirl.create(:transaction, date: DateTime.now.beginning_of_year, 
+      FactoryGirl.create(:transaction, date: "01 #{month_to_use_for_year_transactions} #{Time.now.year}",
         description: 'Groceries', amount: -500, is_debit: true, user: user,
         category: @expense_category)
-      FactoryGirl.create(:transaction, date: DateTime.now.beginning_of_year, 
+      FactoryGirl.create(:transaction, date: "01 #{month_to_use_for_year_transactions} #{Time.now.year}",
         description: 'Pay', amount: 100, is_debit: false, user: user, 
         category: @income_category)
     }
@@ -40,16 +43,16 @@ shared_examples_for 'mtd / ytd widget' do
     before(:all) {
       @income_category = FactoryGirl.create(:category, user: user, name: "income") 
       @expense_category = FactoryGirl.create(:category, user: user, name: "expense")  
-      FactoryGirl.create(:transaction, date: 1.day.ago, 
+      FactoryGirl.create(:transaction, date: "31 #{Time.now.strftime('%b')} #{Time.now.year}", 
         description: 'Groceries', amount: -50.76, is_debit: true, user: user,
         category: @expense_category)
-      FactoryGirl.create(:transaction, date: 1.day.ago, 
+      FactoryGirl.create(:transaction, date: "31 #{Time.now.strftime('%b')} #{Time.now.year}", 
         description: 'Pay', amount: 100, is_debit: false, user: user, 
         category: @income_category)
-      FactoryGirl.create(:transaction, date: DateTime.now.beginning_of_year, 
+      FactoryGirl.create(:transaction, date: "01 #{month_to_use_for_year_transactions} #{Time.now.year}", 
         description: 'Groceries', amount: -500, is_debit: true, user: user,
         category: @expense_category)
-      FactoryGirl.create(:transaction, date: DateTime.now.beginning_of_year, 
+      FactoryGirl.create(:transaction, date: "01 #{month_to_use_for_year_transactions} #{Time.now.year}", 
         description: 'Pay', amount: 10000, is_debit: false, user: user, 
         category: @income_category)
     }
