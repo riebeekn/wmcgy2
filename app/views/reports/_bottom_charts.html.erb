@@ -1,13 +1,7 @@
 <!-- controls -->
 <div class="inline">
 	<label class="left-label">Show:</label>
-	<select id="bottomChartsRange">
-		<option value="year">year to date</option>
-    <option value="2012">2012</option>
-    <option value="2011">2011</option>
-    <option value="asdfsdaf">abba is god</option>
-		<option value="all">all</option>
-	</select>
+  <%= select_tag("bottomChartsRange", options_for_select(@btm_charts_period_options)) %>
 	<%= link_to 'Show / hide details', '#', id:'toggle_btm_details', class:'btn'%>
 </div>
 <!-- charts and data -->

@@ -8,9 +8,6 @@ class Report
     end
   end
 
-  # values is an array of key value pairs 
-  # (ie. for "all"... 2010 52274.76 2010 -123812,  for "mtd"... 1 -800, 1 1500)
-  # so this method just returns the value part of the item when the key matches the period passed in
   def self.get_value_for_period(values, period)
     values.each do |item|
       if item.period == period.to_s
@@ -78,5 +75,21 @@ class Report
     end
     
     results
+  end
+
+  def self.btm_reports_drop_down_options(user)
+    distinct_years_for_users_transactions = 
+        user.transactions.
+          select("distinct(extract(year from date)) as period").
+          where("date_trunc('year', date) != date_trunc('year', current_date)").
+          order("period DESC").map { |i| i.period }
+
+    btm_charts_period_options = {'year to date' => 'year', 'all' => 'all'}
+    
+    distinct_years_for_users_transactions.each do |year|
+      btm_charts_period_options[year] = year 
+    end
+
+    btm_charts_period_options
   end
 end

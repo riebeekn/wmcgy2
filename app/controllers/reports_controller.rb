@@ -1,6 +1,7 @@
 class ReportsController < ApplicationController
   
   def index
+    @btm_charts_period_options = Report.btm_reports_drop_down_options(current_user)
   end
   
   def expenses
@@ -33,7 +34,7 @@ class ReportsController < ApplicationController
     render :json => {
       type: 'LineChart',
       cols: [['string', 'Month'], ['number', 'Income'], ['number', 'Expenses']],
-      rows: Report.calculate_income_expenses(ytd_or_all, current_user),
+      rows: Report.calculate_income_expenses(ytd_or_all, current_user, period_end),
       options: { 
         backgroundColor: { fill:'#F5F5F5'},
         title: 'Overall income and expenses', 
@@ -46,7 +47,7 @@ class ReportsController < ApplicationController
     render :json => {
       type: 'ColumnChart',
       cols: [['string', 'Month'], ['number', 'Profit'], ['number', 'Loss']],
-      rows: Report.calculate_profit_loss(ytd_or_all, current_user),
+      rows: Report.calculate_profit_loss(ytd_or_all, current_user, period_end),
       options: { 
         backgroundColor: { fill:'#F5F5F5'},
         title: 'Overall profit / loss', isStacked: true,
@@ -59,6 +60,14 @@ class ReportsController < ApplicationController
   
     def ytd_or_all
       %w[year all].include?(params[:range]) ? params[:range] : "year"
+    end
+
+    def period_end
+      if params[:range] == nil || !params[:range].match(/^\d{4}$/)
+        Time.now
+      else
+        Time.local(params[:range], "dec")
+      end
     end
     
 end

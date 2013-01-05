@@ -302,4 +302,32 @@ describe Report do
       end
     end
   end
+
+  describe ".btm_reports_drop_down_options_for" do
+    let(:user) { FactoryGirl.create(:user) }
+
+    it "should return only the default hash when the user has no transactions" do
+      dd_options = Report.btm_reports_drop_down_options(user)
+
+      dd_options.count.should eq 2
+      dd_options.keys.should eq ['year to date', 'all']
+      dd_options.values.should eq ['year', 'all']
+    end
+
+    it "should build a hash of drop down options for years in which the user has transactions" do
+       FactoryGirl.create(:transaction, user: user, date: Time.local(2010, "jan", 15))
+       FactoryGirl.create(:transaction, user: user, date: Time.local(2007, "jan", 15))
+       FactoryGirl.create(:transaction, user: user, date: Time.local(2011, "jan", 15))
+       FactoryGirl.create(:transaction, user: user, date: Time.local(2008, "jan", 15))
+       FactoryGirl.create(:transaction, user: user, date: Time.local(2008, "jan", 15))
+       FactoryGirl.create(:transaction, user: user, date: Time.local(2008, "jan", 15))
+       FactoryGirl.create(:transaction, user: user, date: Time.local(2011, "jan", 15))
+
+       dd_options = Report.btm_reports_drop_down_options(user)
+
+       dd_options.count.should eq 6
+       dd_options.keys.should eq ['year to date', 'all', '2011', '2010', '2008', '2007']
+       dd_options.values.should eq ['year', 'all', '2011', '2010', '2008', '2007']
+    end
+  end
 end
