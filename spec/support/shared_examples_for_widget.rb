@@ -10,10 +10,10 @@ shared_examples_for 'mtd / ytd widget' do
     before(:all) {
       @income_category = FactoryGirl.create(:category, user: user, name: "income") 
       @expense_category = FactoryGirl.create(:category, user: user, name: "expense")  
-      FactoryGirl.create(:transaction, date: "31 #{Time.now.strftime('%b')} #{Time.now.year}",
+      FactoryGirl.create(:transaction, date: "28 #{Time.now.strftime('%b')} #{Time.now.year}",
         description: 'Groceries', amount: -50.76, is_debit: true, user: user,
         category: @expense_category)
-      FactoryGirl.create(:transaction, date: "31 #{Time.now.strftime('%b')} #{Time.now.year}",
+      FactoryGirl.create(:transaction, date: "28 #{Time.now.strftime('%b')} #{Time.now.year}",
         description: 'Pay', amount: 10, is_debit: false, user: user, 
         category: @income_category)
       FactoryGirl.create(:transaction, date: "01 #{month_to_use_for_year_transactions} #{Time.now.year}",
@@ -43,10 +43,10 @@ shared_examples_for 'mtd / ytd widget' do
     before(:all) {
       @income_category = FactoryGirl.create(:category, user: user, name: "income") 
       @expense_category = FactoryGirl.create(:category, user: user, name: "expense")  
-      FactoryGirl.create(:transaction, date: "31 #{Time.now.strftime('%b')} #{Time.now.year}", 
+      FactoryGirl.create(:transaction, date: "28 #{Time.now.strftime('%b')} #{Time.now.year}", 
         description: 'Groceries', amount: -50.76, is_debit: true, user: user,
         category: @expense_category)
-      FactoryGirl.create(:transaction, date: "31 #{Time.now.strftime('%b')} #{Time.now.year}", 
+      FactoryGirl.create(:transaction, date: "28 #{Time.now.strftime('%b')} #{Time.now.year}", 
         description: 'Pay', amount: 100, is_debit: false, user: user, 
         category: @income_category)
       FactoryGirl.create(:transaction, date: "01 #{month_to_use_for_year_transactions} #{Time.now.year}", 

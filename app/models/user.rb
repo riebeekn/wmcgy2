@@ -109,6 +109,18 @@ class User < ActiveRecord::Base
       group(1).
       order(1)
   end
+
+  def expenses_for_last_12_months
+    period_start = Time.now - 11.months
+    start_date = "#{period_start.year}-#{period_start.month}-01 00:00:00"
+    end_date = "#{Time.now.year}-#{Time.now.month}-#{Time.now.day} 23:59:59"
+
+    transactions.
+      select("extract(month from date) as period, sum(amount)").
+      where("date BETWEEN '#{start_date}' AND '#{end_date}' AND is_debit = true").
+      group(1).
+      order(1)
+  end
   
   def income_by_category_and_date_range(range)
     transactions.
@@ -116,6 +128,18 @@ class User < ActiveRecord::Base
       joins("LEFT JOIN categories on categories.id = transactions.category_id").
       where(where_clause_for_transactions_by_date_and_category(false, range)).
       group("name")
+  end
+
+  def income_for_last_12_months
+    period_start = Time.now - 11.months
+    start_date = "#{period_start.year}-#{period_start.month}-01 00:00:00"
+    end_date = "#{Time.now.year}-#{Time.now.month}-#{Time.now.day} 23:59:59"
+
+    transactions.
+      select("extract(month from date) as period, sum(amount)").
+      where("date BETWEEN '#{start_date}' AND '#{end_date}' AND is_debit = false").
+      group(1).
+      order(1)
   end
   
   def income_by_year

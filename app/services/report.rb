@@ -1,7 +1,7 @@
 class Report
 
   def self.period_value(range, period)
-    if range == 'year'
+    if range == 'year' || range == '12'
       Date::MONTHNAMES[period.to_i][0..2]
     else
       period.to_s
@@ -27,6 +27,19 @@ class Report
         start = income[0].period.to_i unless income[0].period.to_i > start
       end
       (start..period_end.year).to_a
+    elsif range == "12"
+      start_month = (period_end - 11.months).month
+      periods = []
+      12.times do
+        if start_month <= 12
+          periods << start_month
+        else
+          start_month = 1
+          periods << start_month
+        end
+        start_month += 1
+      end
+      periods
     else
       (1..period_end.month).to_a
     end
@@ -36,6 +49,9 @@ class Report
     if range == "all"
       expenses = user.expenses_by_year
       income = user.income_by_year
+    elsif range == "12"
+      expenses = user.expenses_for_last_12_months
+      income = user.income_for_last_12_months
     else
       expenses = user.expenses_by_month_for_current_year(period_end.year)
       income = user.income_by_month_for_current_year(period_end.year)
@@ -59,6 +75,9 @@ class Report
     if range == "all"
       expenses = user.expenses_by_year
       income = user.income_by_year
+    elsif range == "12"
+      expenses = user.expenses_for_last_12_months
+      income = user.income_for_last_12_months
     else
       expenses = user.expenses_by_month_for_current_year(period_end.year)
       income = user.income_by_month_for_current_year(period_end.year)
@@ -84,7 +103,7 @@ class Report
           where("date_trunc('year', date) != date_trunc('year', current_date)").
           order("period DESC").map { |i| i.period }
 
-    btm_charts_period_options = {'year to date' => 'year', 'all' => 'all'}
+    btm_charts_period_options = {'year to date' => 'year', 'last 12 months' => '12', 'all' => 'all'}
     
     distinct_years_for_users_transactions.each do |year|
       btm_charts_period_options[year] = year 

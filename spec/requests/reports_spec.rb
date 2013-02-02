@@ -141,7 +141,7 @@ describe "Reports" do
       before { visit '/reports/profit_loss'}
       
       it "should show data for profit loss even though only expense entries exist" do
-        month = Date::MONTHNAMES[1.hour.ago.month][0..2]
+        month = Date::MONTHNAMES[1][0..2]
         page.should have_content('"' + month + '",0,-103.0')
       end
     end

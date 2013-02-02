@@ -63,6 +63,25 @@ describe Report do
       end
     end
 
+    context "12" do
+      it "should return an array representing the numerical months from the current month to 12 months ago" do
+        a = Report.calculate_period(expenses = [], income = [], '12', Time.local(2011, 'may', 15))
+        a.count.should eq 12
+        a[0].should eq 6
+        a[1].should eq 7
+        a[2].should eq 8
+        a[3].should eq 9
+        a[4].should eq 10
+        a[5].should eq 11
+        a[6].should eq 12
+        a[7].should eq 1
+        a[8].should eq 2
+        a[9].should eq 3
+        a[10].should eq 4
+        a[11].should eq 5
+      end
+    end
+
     context "all" do
       let(:income_record_1) { PeriodHelperClass.new('2009', 12000) }
       let(:income_record_2) { PeriodHelperClass.new('2010', 13000) }
@@ -309,9 +328,9 @@ describe Report do
     it "should return only the default hash when the user has no transactions" do
       dd_options = Report.btm_reports_drop_down_options(user)
 
-      dd_options.count.should eq 2
-      dd_options.keys.should eq ['year to date', 'all']
-      dd_options.values.should eq ['year', 'all']
+      dd_options.count.should eq 3
+      dd_options.keys.should eq ['year to date', 'last 12 months', 'all']
+      dd_options.values.should eq ['year', '12', 'all']
     end
 
     it "should build a hash of drop down options for years in which the user has transactions" do
@@ -325,9 +344,9 @@ describe Report do
 
        dd_options = Report.btm_reports_drop_down_options(user)
 
-       dd_options.count.should eq 6
-       dd_options.keys.should eq ['year to date', 'all', '2011', '2010', '2008', '2007']
-       dd_options.values.should eq ['year', 'all', '2011', '2010', '2008', '2007']
+       dd_options.count.should eq 7
+       dd_options.keys.should eq ['year to date', 'last 12 months', 'all', '2011', '2010', '2008', '2007']
+       dd_options.values.should eq ['year', '12', 'all', '2011', '2010', '2008', '2007']
     end
   end
 end

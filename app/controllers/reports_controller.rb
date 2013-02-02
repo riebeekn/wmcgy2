@@ -59,7 +59,7 @@ class ReportsController < ApplicationController
   private
   
     def ytd_or_all
-      %w[year all].include?(params[:range]) ? params[:range] : "year"
+      %w[year 12 all].include?(params[:range]) ? params[:range] : "year"
     end
 
     def period_end
