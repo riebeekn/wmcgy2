@@ -22,6 +22,10 @@
 		max-width: 70%;
 		@extend .table, .table-striped;
 	}
+	tfoot {
+		font-weight: bold;
+		border-top: double;
+	}
 	
 	.chart {
 		width: 455px;

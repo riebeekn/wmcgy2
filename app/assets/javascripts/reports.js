@@ -109,14 +109,23 @@ function loadChart(div, range) {
 
 function populateTable(tableId, rows) {
 	tbody = $('table#' + tableId + ' tbody');
+	tfoot = $('table#' + tableId + ' tfoot');
+
 	// remove existing items
 	tbody.find('tr').each(function(i, val) {
+		$(val).remove();
+	});
+	tfoot.find('tr').each(function(i, val) {
 		$(val).remove();
 	});
 	
 	// add new items
 	if (tableId == 'incomeExpenseTable') {
+		income_total = 0;
+		expense_total = 0;
 		$.each(rows, function(i, item) {
+			income_total += item[1];
+			expense_total += item[2];
 			tbody.append(
 				$('<tr>').append(
 					$('<td>').text(item[0]),
@@ -125,9 +134,18 @@ function populateTable(tableId, rows) {
 				)
 			)
 		});
+		tfoot.append(
+			$('<tr>').append(
+				$('<td>').text('Total'),
+				$('<td>').text(income_total).formatCurrency(),
+				$('<td>').text(expense_total).formatCurrency()
+			)
+		)
 	}
 	else if (tableId == 'profitLossTable') {
+		total = 0;
 		$.each(rows, function(i, item) {
+			total += item[1] == 0 ? item[2] : item[1]
 			tbody.append(
 				$('<tr>').append(
 					$('<td>').text(item[0]),
@@ -135,9 +153,17 @@ function populateTable(tableId, rows) {
 				)
 			)
 		});
+		tfoot.append(
+			$('<tr>').append(
+				$('<td>').text('Total'),
+				$('<td>').text(total).formatCurrency()
+			)
+		)
 	}
 	else {
+		total = 0;
 		$.each(rows, function(i, item) {
+			total += item[1];
 			tbody.append(
 				$('<tr>').append(
 					$('<td>').text(item[0]),
@@ -145,5 +171,11 @@ function populateTable(tableId, rows) {
 				)
 			)
 		});
+		tfoot.append(
+			$('<tr>').append(
+				$('<td>').text('Total'),
+				$('<td>').text(total).formatCurrency()
+			)
+		)
 	}
 }
