@@ -109,7 +109,7 @@ function loadChart(div, range) {
 
 function populateTable(tableId, rows) {
 	tbody = $('table#' + tableId + ' tbody');
-	tfoot = $('table#' + tableId + ' tfoot');
+	tfoot = $('table#' + tableId + ' tfoot'); 
 
 	// remove existing items
 	tbody.find('tr').each(function(i, val) {
