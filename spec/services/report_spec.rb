@@ -322,11 +322,61 @@ describe Report do
     end
   end
 
-  describe ".btm_reports_drop_down_options_for" do
+  describe ".calculate_expense_trend" do
+    let(:user) { FactoryGirl.create(:user) }
+    before do
+      @cat1 = FactoryGirl.create(:category, user: user, name: "Transportation")
+      @cat2 = FactoryGirl.create(:category, user: user, name: "Entertainment")
+      @cat3 = FactoryGirl.create(:category, user: user, name: "Groceries")
+    end
+
+    context "year" do
+
+      it "should return zero trend when user has no expense records" do
+        r = Report.calculate_expense_trend("year", user)
+
+        r.count.should eq Time.now.month
+        for i in 1..Time.now.month.to_i do
+          r[i - 1][0].should eq Date::MONTHNAMES[i][0..2]
+          r[i - 1][1].should eq nil
+          r[i - 1][2].should eq nil
+          r[i - 1][3].should eq nil
+        end
+      end
+
+      it "should return the correct trend when user has expense records" do
+        expense_1 = FactoryGirl.create(:transaction, user: user, amount: 20, 
+          is_debit: true, date: Time.local(2010, "jan", 15), category: @cat1)
+        expense_2 = FactoryGirl.create(:transaction, user: user, amount: 40, 
+          is_debit: true, date: Time.local(2010, "feb", 23), category: @cat3)
+        expense_3 = FactoryGirl.create(:transaction, user: user, amount: 100, 
+          is_debit: true, date: Time.local(2010, "mar", 13), category: @cat3)
+        expense_4 = FactoryGirl.create(:transaction, user: user, amount: 50, 
+          is_debit: true, date: Time.local(2010, "mar", 14), category: @cat3)
+        
+        r = Report.calculate_expense_trend("year", user, Time.local("2010", "dec"))
+
+        r[0][0].should eq "Jan"
+        r[0][1].should eq 0
+        r[0][2].should eq 20
+        r[0][3].should eq nil
+        r[1][0].should eq "Feb"
+        r[1][1].should eq 40
+        r[1][2].should eq 0
+        r[1][3].should eq nil
+        r[2][0].should eq "Mar"
+        r[2][1].should eq 150
+        r[2][2].should eq 0
+        r[2][3].should eq nil
+      end
+    end
+  end
+
+  describe ".middle_reports_drop_down_options_for" do
     let(:user) { FactoryGirl.create(:user) }
 
     it "should return only the default hash when the user has no transactions" do
-      dd_options = Report.btm_reports_drop_down_options(user)
+      dd_options = Report.middle_reports_drop_down_options(user)
 
       dd_options.count.should eq 3
       dd_options.keys.should eq ['year to date', 'last 12 months', 'all']
@@ -342,7 +392,7 @@ describe Report do
        FactoryGirl.create(:transaction, user: user, date: Time.local(2008, "jan", 15))
        FactoryGirl.create(:transaction, user: user, date: Time.local(2011, "jan", 15))
 
-       dd_options = Report.btm_reports_drop_down_options(user)
+       dd_options = Report.middle_reports_drop_down_options(user)
 
        dd_options.count.should eq 7
        dd_options.keys.should eq ['year to date', 'last 12 months', 'all', '2011', '2010', '2008', '2007']

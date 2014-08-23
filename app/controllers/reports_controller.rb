@@ -1,7 +1,7 @@
 class ReportsController < ApplicationController
   
   def index
-    @btm_charts_period_options = Report.btm_reports_drop_down_options(current_user)
+    @middle_charts_period_options = Report.middle_reports_drop_down_options(current_user)
   end
   
   def expenses
@@ -52,6 +52,32 @@ class ReportsController < ApplicationController
         backgroundColor: { fill:'#F5F5F5'},
         title: 'Overall profit / loss', isStacked: true,
         titleTextStyle: { fontSize: 18} },
+      format_cols: [1,2]
+    }
+  end
+
+  def expense_trend
+    render :json => {
+      type: 'LineChart',
+      cols: Report.expense_categories(current_user),
+      rows: Report.calculate_expense_trend(ytd_or_all, current_user, period_end),
+      options: { 
+        backgroundColor: { fill:'#F5F5F5'},
+        title: 'Expense trend', 
+        titleTextStyle: { fontSize: 18}, pointSize: 5 },
+      format_cols: [1,2]
+    }
+  end
+
+  def income_trend
+    render :json => {
+      type: 'LineChart',
+      cols: Report.income_categories(current_user),
+      rows: Report.calculate_income_trend(ytd_or_all, current_user, period_end),
+      options: { 
+        backgroundColor: { fill:'#F5F5F5'},
+        title: 'Income trend', 
+        titleTextStyle: { fontSize: 18}, pointSize: 5 },
       format_cols: [1,2]
     }
   end

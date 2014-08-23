@@ -36,6 +36,8 @@ Wmcgy::Application.routes.draw do
   match '/reports/income', to: 'reports#income'
   match '/reports/income_and_expense', to: 'reports#income_and_expense'
   match '/reports/profit_loss', to: 'reports#profit_loss'
+  match '/reports/expense_trend', to: 'reports#expense_trend'
+  match '/reports/income_trend', to: 'reports#income_trend'
   
   root to: 'transactions#index'
 end

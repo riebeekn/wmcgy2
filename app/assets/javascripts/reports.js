@@ -7,8 +7,10 @@ jQuery(function($) {
 				callback: function() {
 					loadChart($('#expensesChart'), getTopChartDateRange()); 
 					loadChart($('#incomeChart'), getTopChartDateRange()); 
-					loadChart($('#incomeExpenseChart'), $('#bottomChartsRange').val());
-					loadChart($('#profitLossChart'), $('#bottomChartsRange').val());
+					loadChart($('#incomeExpenseChart'), $('#middleChartsRange').val());
+					loadChart($('#profitLossChart'), $('#middleChartsRange').val());
+					loadChart($('#expenseTrendChart'), $('#bottomChartsRange').val());
+					loadChart($('#incomeTrendChart'), $('#bottomChartsRange').val());
 				}
 			})
 		});
@@ -43,10 +45,16 @@ jQuery(function($) {
 	// hide tables on page load
 	$('table#expensesTable,table#incomeTable,table#incomeExpenseTable,table#profitLossTable').hide();
 
-	// bottom charts date range selection event
-	$('#bottomChartsRange').change(function() {
+	// middle charts date range selection event
+	$('#middleChartsRange').change(function() {
 		loadChart($('#incomeExpenseChart'), $(this).val());
 		loadChart($('#profitLossChart'), $(this).val());
+	});
+
+	// bottom charts date range selection event
+	$('#bottomChartsRange').change(function() {
+		loadChart($('#expenseTrendChart'), $(this).val());
+		loadChart($('#incomeTrendChart'), $(this).val());
 	});
 	
 	// show / hide top details
@@ -55,8 +63,8 @@ jQuery(function($) {
 		$('table#expensesTable,table#incomeTable').fadeToggle();
 	});
 	
-	// show / hide bottom details
-	$('a#toggle_btm_details').click(function(event) {
+	// show / hide middle details
+	$('a#toggle_middle_details').click(function(event) {
 		event.preventDefault();
 		$('table#incomeExpenseTable,table#profitLossTable').fadeToggle();
 	});

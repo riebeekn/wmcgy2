@@ -20,10 +20,10 @@ class Report
   def self.calculate_period(expenses, income, range, period_end = Time.now)
     if range == "all"
       start = Time.now.year
-      if !expenses[0].nil?
+      if !expenses.nil? && !expenses[0].nil?
         start = expenses[0].period.to_i
       end
-      if !income[0].nil?
+      if !income.nil? && !income[0].nil?
         start = income[0].period.to_i unless income[0].period.to_i > start
       end
       (start..period_end.year).to_a
@@ -96,19 +96,133 @@ class Report
     results
   end
 
-  def self.btm_reports_drop_down_options(user)
+  def self.expense_categories(user)
+    cats = [['string', 'Month']]
+    user.expense_categories.each do |category| 
+      cats.push(['number', category])
+    end
+
+    # hack as for some reason line graph will barf with only a single series
+    # need to investigate this further... for now just inserting a 'dumby'
+    # value so at least the chart shows up
+    if cats.count == 2
+      cats.push(['number', 'nil'])
+    end
+
+    cats
+  end
+
+  def self.income_categories(user)
+    cats = [['string', 'Month']]
+    user.income_categories.each do |category| 
+      cats.push(['number', category])
+    end
+
+    # hack as for some reason line graph will barf with only a single series
+    # need to investigate this further... for now just inserting a 'dumby'
+    # value so at least the chart shows up
+    if cats.count == 2
+      cats.push(['number', 'nil'])
+    end
+
+    cats
+  end
+
+  def self.calculate_expense_trend(range, user, period_end = Time.now)
+    if range == "all"
+      expenses = user.expenses_by_category_and_year
+    elsif range == "12"
+      expenses = user.expenses_by_category_for_last_12_months
+    else
+      expenses = user.expenses_by_category_and_month_for_current_year(period_end.year)
+    end
+
+    results = []
+    periods = Report.calculate_period(expenses, nil, range, period_end)
+    
+    # hack as for some reason line graph will barf with only a single series
+    # need to investigate this further... for now just inserting a 'dumby'
+    # value so at least the chart shows up
+    add = user.expense_categories.count == 1
+    periods.each do |period|
+      result = []
+      result << Report.period_value(range, period)
+      user.expense_categories.each do |category|
+        found = false
+        expenses.each do |item|
+          if item.period == period.to_s && item.name == category
+            result << item.sum.to_f.abs
+            found = true
+            break
+          end
+        end
+        if (!found)
+          result << 0
+        end
+      end
+      if (add)
+        result << 0
+      end
+      results << result
+    end
+    
+    results
+  end
+
+  def self.calculate_income_trend(range, user, period_end = Time.now)
+    if range == "all"
+      income = user.income_by_category_and_year
+    elsif range == "12"
+      income = user.income_by_category_for_last_12_months
+    else
+      income = user.income_by_category_and_month_for_current_year(period_end.year)
+    end
+
+    results = []
+    periods = Report.calculate_period(income, nil, range, period_end)
+    
+    # hack as for some reason line graph will barf with only a single series
+    # need to investigate this further... for now just inserting a 'dumby'
+    # value so at least the chart shows up
+    add = user.income_categories.count == 1
+    periods.each do |period|
+      result = []
+      result << Report.period_value(range, period)
+      user.income_categories.each do |category|
+        found = false
+        income.each do |item|
+          if item.period == period.to_s && item.name == category
+            result << item.sum.to_f.abs
+            found = true
+            break
+          end
+        end
+        if (!found)
+          result << 0
+        end
+      end
+      if (add)
+        result << 0
+      end
+      results << result
+    end
+    
+    results
+  end
+
+  def self.middle_reports_drop_down_options(user)
     distinct_years_for_users_transactions = 
         user.transactions.
           select("distinct(extract(year from date)) as period").
           where("date_trunc('year', date) != date_trunc('year', current_date)").
           order("period DESC").map { |i| i.period }
 
-    btm_charts_period_options = {'year to date' => 'year', 'last 12 months' => '12', 'all' => 'all'}
+    middle_charts_period_options = {'year to date' => 'year', 'last 12 months' => '12', 'all' => 'all'}
     
     distinct_years_for_users_transactions.each do |year|
-      btm_charts_period_options[year] = year 
+      middle_charts_period_options[year] = year 
     end
 
-    btm_charts_period_options
+    middle_charts_period_options
   end
 end

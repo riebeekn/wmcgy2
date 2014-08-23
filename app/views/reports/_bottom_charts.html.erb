@@ -1,11 +1,12 @@
 <!-- controls -->
 <div class="inline">
 	<label class="left-label">Show:</label>
-  <%= select_tag("bottomChartsRange", options_for_select(@btm_charts_period_options)) %>
-	<%= link_to 'Show / hide details', '#', id:'toggle_btm_details', class:'btn'%>
+  <%= select_tag("bottomChartsRange", options_for_select(@middle_charts_period_options)) %>
 </div>
 <!-- charts and data -->
 <div id="btmCharts" class="inline">
-	<%= render 'income_expense' %>
-	<%= render 'profit_loss' %>
+	<%= render 'expense_trend' %>
+</div>
+<div id="btmCharts" class="inline">
+	<%= render 'income_trend' %>
 </div>

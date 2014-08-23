@@ -343,6 +343,36 @@ describe User do
     end
   end
 
+  describe "expense and income categories" do
+    before do
+      @user_1 = FactoryGirl.create(:user)
+      @expense_category_1 = FactoryGirl.create(:category, user: @user_1, name: 'Groceries')
+      @expense_category_2 = FactoryGirl.create(:category, user: @user_1, name: 'Entertainment')
+      @income_category = FactoryGirl.create(:category, user: @user_1, name: 'Pay')
+      FactoryGirl.create(:transaction, category: @expense_category_1, 
+          user: @user_1, date: 1.day.ago, is_debit: true)
+      FactoryGirl.create(:transaction, category: @expense_category_1, 
+          user: @user_1, date: 1.day.ago, is_debit: true)
+      FactoryGirl.create(:transaction, category: @expense_category_2, 
+          user: @user_1, date: 1.day.ago, is_debit: true)
+      FactoryGirl.create(:transaction, category: @income_category,
+          user: @user_1, date: 1.hour.ago, is_debit: false)
+      FactoryGirl.create(:transaction, category: @income_category,
+          user: @user_1, date: 1.hour.ago, is_debit: false)
+    end
+
+    it "should list distinct expense categories" do
+      expense_categories = @user_1.expense_categories
+      expense_categories.count.should eq 2
+      expense_categories[0].should eq 'Entertainment'
+      expense_categories[1].should eq 'Groceries'
+    end
+
+    it "should list distinct income categories" do
+
+    end
+  end
+
   describe "mtd / ytd" do
     before do
       @user = FactoryGirl.create(:user, active: true) 
@@ -434,6 +464,40 @@ describe User do
       FactoryGirl.create(:transaction, date: '1 Jan 2010',
         description: 'A transaction', amount: 1000, is_debit: true, user: @user,
         category: @cat_gro)
+    end
+
+    describe "expenses by category and month for current year" do
+      it "should show the transactions for the current year" do
+        expenses = @user.expenses_by_category_and_month_for_current_year(2012)
+        expenses[0]["period"].should eq("11")
+        expenses[0]["name"].should eq("Groceries")
+        expenses[0]["sum"].should eq("-4000.00")
+
+        expenses[1]["period"].should eq("12")
+        expenses[1]["name"].should eq("Entertainment")
+        expenses[1]["sum"].should eq("-1000.00")
+        
+        expenses[2]["period"].should eq("12")
+        expenses[2]["name"].should eq("Groceries")
+        expenses[2]["sum"].should eq("-2000.00")
+      end
+    end
+
+    describe "expenses_by_category_and_year" do
+      it "should display the correct items" do
+        expenses = @user.expenses_by_category_and_year
+        year_as_number_for_first_record = "2010"
+        expenses[0]["period"].should eq(year_as_number_for_first_record)
+        expenses[0]["name"].should eq("Groceries")
+        expenses[0]["sum"].should eq("-1000.00")
+        year_as_number_for_second_record = "2012"
+        expenses[1]["period"].should eq(year_as_number_for_second_record)
+        expenses[1]["name"].should eq("Entertainment")
+        expenses[1]["sum"].should eq("-1000.00")
+        expenses[2]["period"].should eq(year_as_number_for_second_record)
+        expenses[2]["name"].should eq("Groceries")
+        expenses[2]["sum"].should eq("-6000.00")
+      end
     end
     
     describe "income by category and date range" do
