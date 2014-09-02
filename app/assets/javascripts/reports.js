@@ -43,7 +43,8 @@ jQuery(function($) {
 	});
 
 	// hide tables on page load
-	$('table#expensesTable,table#incomeTable,table#incomeExpenseTable,table#profitLossTable').hide();
+	$('table#expensesTable,table#incomeTable,table#incomeExpenseTable,' + 
+		'table#profitLossTable,table#expenseTrendTable,table#incomeTrendTable').hide();
 
 	// overallIncomeExpenseProfitLossChartsRange charts date range selection event
 	$('#overallIncomeExpenseProfitLossChartsRange').change(function() {
@@ -70,6 +71,18 @@ jQuery(function($) {
 	$('a#toggle_overall_p_l_i_e_details').click(function(event) {
 		event.preventDefault();
 		$('table#incomeExpenseTable,table#profitLossTable').fadeToggle();
+	});
+
+	// show / hide expense trend details
+	$('a#toggle_expense_trend_details').click(function(event) {
+		event.preventDefault();
+		$('table#expenseTrendTable').fadeToggle();
+	});
+
+		// show / hide income trend details
+	$('a#toggle_income_trend_details').click(function(event) {
+		event.preventDefault();
+		$('table#incomeTrendTable').fadeToggle();
 	});
 });
 

@@ -2,6 +2,7 @@
 <div class="inline">
 	<label class="left-label">Show:</label>
   <%= select_tag("expenseTrendChartRange", options_for_select(@chart_period_options)) %>
+  <%= link_to 'Show / hide details', '#', id:'toggle_expense_trend_details', class: 'btn'%>
 </div>
 <!-- charts and data -->
 <div id="expenseTrendChartContainer" class="inline">
