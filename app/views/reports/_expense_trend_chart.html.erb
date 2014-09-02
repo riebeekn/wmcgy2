@@ -1,0 +1,9 @@
+<!-- controls -->
+<div class="inline">
+	<label class="left-label">Show:</label>
+  <%= select_tag("expenseTrendChartRange", options_for_select(@chart_period_options)) %>
+</div>
+<!-- charts and data -->
+<div id="expenseTrendChartContainer" class="inline">
+	<%= render 'expense_trend' %>
+</div>

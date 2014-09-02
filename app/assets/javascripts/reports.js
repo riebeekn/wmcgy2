@@ -5,12 +5,12 @@ jQuery(function($) {
     	google.load("visualization", "1.0", { 
 				packages: ["corechart"], 
 				callback: function() {
-					loadChart($('#expensesChart'), getTopChartDateRange()); 
-					loadChart($('#incomeChart'), getTopChartDateRange()); 
-					loadChart($('#incomeExpenseChart'), $('#middleChartsRange').val());
-					loadChart($('#profitLossChart'), $('#middleChartsRange').val());
-					loadChart($('#expenseTrendChart'), $('#bottomChartsRange').val());
-					loadChart($('#incomeTrendChart'), $('#bottomChartsRange').val());
+					loadChart($('#expensesChart'), getExpenseIncomeChartDateRange()); 
+					loadChart($('#incomeChart'), getExpenseIncomeChartDateRange()); 
+					loadChart($('#incomeExpenseChart'), $('#overallIncomeExpenseProfitLossChartsRange').val());
+					loadChart($('#profitLossChart'), $('#overallIncomeExpenseProfitLossChartsRange').val());
+					loadChart($('#expenseTrendChart'), $('#expenseTrendChartRange').val());
+					loadChart($('#incomeTrendChart'), $('#incomeTrendChartRange').val());
 				}
 			})
 		});
@@ -26,8 +26,8 @@ jQuery(function($) {
 		$('#start_date').datepicker('setDate', firstOfMonth);
 	}
 	$('#start_date').change(function() {
-		loadChart($('#incomeChart'), getTopChartDateRange());
-		loadChart($('#expensesChart'), getTopChartDateRange());
+		loadChart($('#incomeChart'), getExpenseIncomeChartDateRange());
+		loadChart($('#expensesChart'), getExpenseIncomeChartDateRange());
 	});
 	
 	// set up the end date picker (defaults to current day)
@@ -38,39 +38,42 @@ jQuery(function($) {
 		$('#end_date').datepicker('setDate', new Date());
 	}
 	$('#end_date').change(function() {
-		loadChart($('#incomeChart'), getTopChartDateRange());
-		loadChart($('#expensesChart'), getTopChartDateRange());
+		loadChart($('#incomeChart'), getExpenseIncomeChartDateRange());
+		loadChart($('#expensesChart'), getExpenseIncomeChartDateRange());
 	});
 
 	// hide tables on page load
 	$('table#expensesTable,table#incomeTable,table#incomeExpenseTable,table#profitLossTable').hide();
 
-	// middle charts date range selection event
-	$('#middleChartsRange').change(function() {
+	// overallIncomeExpenseProfitLossChartsRange charts date range selection event
+	$('#overallIncomeExpenseProfitLossChartsRange').change(function() {
 		loadChart($('#incomeExpenseChart'), $(this).val());
 		loadChart($('#profitLossChart'), $(this).val());
 	});
 
-	// bottom charts date range selection event
-	$('#bottomChartsRange').change(function() {
+	// trend charts date range selection event
+	$('#expenseTrendChartRange').change(function() {
 		loadChart($('#expenseTrendChart'), $(this).val());
+	});
+
+	$('#incomeTrendChartRange').change(function() {
 		loadChart($('#incomeTrendChart'), $(this).val());
 	});
 	
-	// show / hide top details
-	$('a#toggle_top_details').click(function(event) {
+	// show / hide expense income details
+	$('a#toggle_expense_income_details').click(function(event) {
 		event.preventDefault();
 		$('table#expensesTable,table#incomeTable').fadeToggle();
 	});
 	
-	// show / hide middle details
-	$('a#toggle_middle_details').click(function(event) {
+	// show / hide income / expense; profit / loss details
+	$('a#toggle_overall_p_l_i_e_details').click(function(event) {
 		event.preventDefault();
 		$('table#incomeExpenseTable,table#profitLossTable').fadeToggle();
 	});
 });
 
-function getTopChartDateRange() {
+function getExpenseIncomeChartDateRange() {
 	return $('#start_date').val() + ':TO:' + $('#end_date').val();
 }
 
@@ -129,61 +132,73 @@ function populateTable(tableId, rows) {
 	
 	// add new items
 	if (tableId == 'incomeExpenseTable') {
-		income_total = 0;
-		expense_total = 0;
-		$.each(rows, function(i, item) {
-			income_total += item[1];
-			expense_total += item[2];
-			tbody.append(
-				$('<tr>').append(
-					$('<td>').text(item[0]),
-					$('<td>').text(item[1]).formatCurrency(),
-					$('<td>').text(item[2]).formatCurrency()
-				)
-			)
-		});
-		tfoot.append(
-			$('<tr>').append(
-				$('<td>').text('Total'),
-				$('<td>').text(income_total).formatCurrency(),
-				$('<td>').text(expense_total).formatCurrency()
-			)
-		)
+		populateIncomeExpenseTable(rows, tbody, tfoot);
 	}
 	else if (tableId == 'profitLossTable') {
-		total = 0;
-		$.each(rows, function(i, item) {
-			total += item[1] == 0 ? item[2] : item[1]
-			tbody.append(
-				$('<tr>').append(
-					$('<td>').text(item[0]),
-					$('<td>').text(item[1] == 0 ? item[2] : item[1]).formatCurrency()
-				)
-			)
-		});
-		tfoot.append(
-			$('<tr>').append(
-				$('<td>').text('Total'),
-				$('<td>').text(total).formatCurrency()
-			)
-		)
+		populateProfitLossTable(rows, tbody, tfoot);
 	}
 	else {
-		total = 0;
-		$.each(rows, function(i, item) {
-			total += item[1];
-			tbody.append(
-				$('<tr>').append(
-					$('<td>').text(item[0]),
-					$('<td>').text(item[1]).formatCurrency()
-				)
-			)
-		});
-		tfoot.append(
+		populateIncomeExpenseTable(rows, tbody, tfoot);
+	}
+}
+
+function populateIncomeExpenseTable(rows, tbody, tfoot) {
+	income_total = 0;
+	expense_total = 0;
+	$.each(rows, function(i, item) {
+		income_total += item[1];
+		expense_total += item[2];
+		tbody.append(
 			$('<tr>').append(
-				$('<td>').text('Total'),
-				$('<td>').text(total).formatCurrency()
+				$('<td>').text(item[0]),
+				$('<td>').text(item[1]).formatCurrency(),
+				$('<td>').text(item[2]).formatCurrency()
 			)
 		)
-	}
+	});
+	tfoot.append(
+		$('<tr>').append(
+			$('<td>').text('Total'),
+			$('<td>').text(income_total).formatCurrency(),
+			$('<td>').text(expense_total).formatCurrency()
+		)
+	)
+}
+
+function populateProfitLossTable(rows, tbody, tfoot) {
+	total = 0;
+	$.each(rows, function(i, item) {
+		total += item[1] == 0 ? item[2] : item[1]
+		tbody.append(
+			$('<tr>').append(
+				$('<td>').text(item[0]),
+				$('<td>').text(item[1] == 0 ? item[2] : item[1]).formatCurrency()
+			)
+		)
+	});
+	tfoot.append(
+		$('<tr>').append(
+			$('<td>').text('Total'),
+			$('<td>').text(total).formatCurrency()
+		)
+	)
+}
+
+function populateIncomeExpenseTable(rows, tbody, tfoot) {
+	total = 0;
+	$.each(rows, function(i, item) {
+		total += item[1];
+		tbody.append(
+			$('<tr>').append(
+				$('<td>').text(item[0]),
+				$('<td>').text(item[1]).formatCurrency()
+			)
+		)
+	});
+	tfoot.append(
+		$('<tr>').append(
+			$('<td>').text('Total'),
+			$('<td>').text(total).formatCurrency()
+		)
+	)
 }

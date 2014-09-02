@@ -4,10 +4,10 @@
 	<%=text_field_tag 'start_date', nil, class: 'date-picker' %>
 	<label class="right-label">End date:</label>
 	<%=text_field_tag 'end_date', nil, class: 'date-picker' %>
-	<%= link_to 'Show / hide details', '#', id:'toggle_top_details', class: 'btn'%>
+	<%= link_to 'Show / hide details', '#', id:'toggle_expense_income_details', class: 'btn'%>
 </div>
 <!-- top charts and data -->
-<div id="topCharts" class="inline">
+<div id="expenseIncomeCharts" class="inline">
 	<%= render 'expenses' %>
 	<%= render 'income' %>
 </div>

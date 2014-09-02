@@ -1,7 +1,7 @@
 class ReportsController < ApplicationController
   
   def index
-    @middle_charts_period_options = Report.middle_reports_drop_down_options(current_user)
+    @chart_period_options = Report.period_drop_down_options(current_user)
   end
   
   def expenses

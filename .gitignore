@@ -22,4 +22,4 @@ brakeman.html
 /config/heroku_env.rb
 
 # text file used to keep track of enhancements / changes
-changes.txt
+*.txt

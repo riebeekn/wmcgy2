@@ -210,19 +210,19 @@ class Report
     results
   end
 
-  def self.middle_reports_drop_down_options(user)
+  def self.period_drop_down_options(user)
     distinct_years_for_users_transactions = 
         user.transactions.
           select("distinct(extract(year from date)) as period").
           where("date_trunc('year', date) != date_trunc('year', current_date)").
           order("period DESC").map { |i| i.period }
 
-    middle_charts_period_options = {'year to date' => 'year', 'last 12 months' => '12', 'all' => 'all'}
+    charts_period_options = {'year to date' => 'year', 'last 12 months' => '12', 'all' => 'all'}
     
     distinct_years_for_users_transactions.each do |year|
-      middle_charts_period_options[year] = year 
+      charts_period_options[year] = year 
     end
 
-    middle_charts_period_options
+    charts_period_options
   end
 end
