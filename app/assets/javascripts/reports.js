@@ -43,8 +43,8 @@ jQuery(function($) {
 	});
 
 	// hide tables on page load
-	$('table#expensesTable,table#incomeTable,table#incomeExpenseTable,' + 
-		'table#profitLossTable,table#expenseTrendTable,table#incomeTrendTable').hide();
+	// $('table#expensesTable,table#incomeTable,table#incomeExpenseTable,' + 
+	// 	'table#profitLossTable,table#expenseTrendTable,table#incomeTrendTable').hide();
 
 	// overallIncomeExpenseProfitLossChartsRange charts date range selection event
 	$('#overallIncomeExpenseProfitLossChartsRange').change(function() {
@@ -126,12 +126,15 @@ function loadChart(div, range) {
 		else if(url.indexOf('reports/profit_loss?') >= 0) {
 			populateTable('profitLossTable', data.rows);
 		}
+		else if(url.indexOf('reports/expense_trend?') >= 0) {
+			populateTable('expenseTrendTable', data.rows, data.cols);
+		}
 		
     return chart.draw(div.get(0));
 	});
 }
 
-function populateTable(tableId, rows) {
+function populateTable(tableId, rows, cols) {
 	tbody = $('table#' + tableId + ' tbody');
 	tfoot = $('table#' + tableId + ' tfoot'); 
 
@@ -144,15 +147,75 @@ function populateTable(tableId, rows) {
 	});
 	
 	// add new items
-	if (tableId == 'incomeExpenseTable') {
+	if (tableId === 'incomeExpenseTable') {
 		populateIncomeExpenseTable(rows, tbody, tfoot);
 	}
-	else if (tableId == 'profitLossTable') {
+	else if (tableId === 'profitLossTable') {
 		populateProfitLossTable(rows, tbody, tfoot);
 	}
-	else {
-		populateIncomeExpenseTable(rows, tbody, tfoot);
+	else if (tableId === 'expenseTrendTable') {
+		thead = $('table#' + tableId + ' thead tr');
+		populateExpenseTrendTable(cols, rows, thead, tbody, tfoot, tableId);
 	}
+	else {
+		populateSimpleIncomeExpenseTable(rows, tbody, tfoot);
+	}
+}
+
+function populateExpenseTrendTable(cols, rows, thead, tbody, tfoot, tableId) {
+	// set up the header (the period values)
+	$.each(rows, function(i, item) {
+		thead.append($('<th>').text(item[0]))
+	});
+	thead.append($("<th class='summary-column'>").text('Avg'));
+	
+	// set up the first column (the categories)
+	$.each(cols, function(i, item) {
+		if (i !== 0) {
+			tbody.append(
+				$('<tr>').append(
+					$('<td>').text(item[1])
+				)
+			)
+		}
+	});
+
+	// add summary header
+	tfoot.append(
+		$('<tr>').append(
+			$('<td>').text('Total')
+		)
+	)
+
+	// add the row data
+	lastTableRow = $('table#' + tableId + ' tr:last');
+	$.each(rows, function(i, item) {
+		var monthTotal = 0;
+		$.each(item, function(i2, item2) {
+			if (i2 !== 0) {
+				var tr = $('table#' + tableId + ' tr:eq(' + i2 + ')');
+				tr.append($('<td>').text(item2).formatCurrency())
+				monthTotal +=  item2;
+			}
+		});
+		lastTableRow.append($('<td>').text(monthTotal).formatCurrency())
+	});
+
+	// add the Avg column data
+	$('table#' + tableId + ' tr').each(function(i){
+		if (i !== 0) {
+			var total = 0.0;
+			var colCount = 0;
+			$.each(this.cells, function(i2){
+				if (i2 !== 0) {
+					total += parseFloat(this.innerHTML.replace('$', '').replace(',', ''));
+					colCount++;
+				}
+			});
+			var tr = $('table#' + tableId + ' tr:eq(' + i + ')');
+			tr.append($("<td class='summary-column'>").text(total/colCount).formatCurrency())
+		}
+	});
 }
 
 function populateIncomeExpenseTable(rows, tbody, tfoot) {
@@ -197,7 +260,7 @@ function populateProfitLossTable(rows, tbody, tfoot) {
 	)
 }
 
-function populateIncomeExpenseTable(rows, tbody, tfoot) {
+function populateSimpleIncomeExpenseTable(rows, tbody, tfoot) {
 	total = 0;
 	$.each(rows, function(i, item) {
 		total += item[1];
