@@ -43,8 +43,8 @@ jQuery(function($) {
 	});
 
 	// hide tables on page load
-	// $('table#expensesTable,table#incomeTable,table#incomeExpenseTable,' + 
-	// 	'table#profitLossTable,table#expenseTrendTable,table#incomeTrendTable').hide();
+	$('table#expensesTable,table#incomeTable,table#incomeExpenseTable,' + 
+		'table#profitLossTable,table#expenseTrendTable,table#incomeTrendTable').hide();
 
 	// overallIncomeExpenseProfitLossChartsRange charts date range selection event
 	$('#overallIncomeExpenseProfitLossChartsRange').change(function() {
@@ -116,7 +116,7 @@ function loadChart(div, range) {
 		// populate data tables
 		if (url.indexOf('reports/expenses?') >= 0) {
 			populateTable('expensesTable', data.rows);
-		}
+		} 
 		else if (url.indexOf('reports/income?') >= 0) {
 			populateTable('incomeTable', data.rows);
 		}
@@ -128,6 +128,9 @@ function loadChart(div, range) {
 		}
 		else if(url.indexOf('reports/expense_trend?') >= 0) {
 			populateTable('expenseTrendTable', data.rows, data.cols);
+		}
+		else if(url.indexOf('reports/income_trend?') >= 0) {
+			populateTable('incomeTrendTable', data.rows, data.cols);
 		}
 		
     return chart.draw(div.get(0));
@@ -153,56 +156,49 @@ function populateTable(tableId, rows, cols) {
 	else if (tableId === 'profitLossTable') {
 		populateProfitLossTable(rows, tbody, tfoot);
 	}
-	else if (tableId === 'expenseTrendTable') {
+	else if (tableId === 'expenseTrendTable' || tableId === 'incomeTrendTable') {
 		thead = $('table#' + tableId + ' thead tr');
-		populateExpenseTrendTable(cols, rows, thead, tbody, tfoot, tableId);
-	}
+		populateTrendTable(cols, rows, thead, tbody, tfoot, tableId);
+	} 
 	else {
 		populateSimpleIncomeExpenseTable(rows, tbody, tfoot);
 	}
 }
 
-function populateExpenseTrendTable(cols, rows, thead, tbody, tfoot, tableId) {
-	// set up the header (the period values)
-	$.each(rows, function(i, item) {
-		thead.append($('<th>').text(item[0]))
-	});
-	thead.append($("<th class='summary-column'>").text('Avg'));
+function populateTrendTable(cols, rows, thead, tbody, tfoot, tableId) {
+	var table = $('table#' + tableId);
 	
-	// set up the first column (the categories)
-	$.each(cols, function(i, item) {
+	// set up the categories (the first column of the table) 
+	$.each(cols, function(i) {
 		if (i !== 0) {
-			tbody.append(
-				$('<tr>').append(
-					$('<td>').text(item[1])
-				)
-			)
+			tbody.append($('<tr>').append($('<td>').text(this[1])))
 		}
 	});
+	// create the summary column in the footer
+	tfoot.append($('<tr>').append($('<td>').text('Total')))
+	
+	// add the data
+	lastTableRow = table.find('tr:last');
+	$.each(rows, function() {
+		// add the header values
+		thead.append($('<th>').text(this[0]))
 
-	// add summary header
-	tfoot.append(
-		$('<tr>').append(
-			$('<td>').text('Total')
-		)
-	)
-
-	// add the row data
-	lastTableRow = $('table#' + tableId + ' tr:last');
-	$.each(rows, function(i, item) {
-		var monthTotal = 0;
-		$.each(item, function(i2, item2) {
-			if (i2 !== 0) {
-				var tr = $('table#' + tableId + ' tr:eq(' + i2 + ')');
-				tr.append($('<td>').text(item2).formatCurrency())
-				monthTotal +=  item2;
+		// for each column in the table add the values to the table cells
+		var total = 0;
+		$.each(this, function(i, item) {
+			if (i !== 0) {
+				var tr = table.find('tr:eq(' + i + ')');
+				tr.append($('<td>').text(item).formatCurrency())
+				total +=  item;
 			}
 		});
-		lastTableRow.append($('<td>').text(monthTotal).formatCurrency())
+		lastTableRow.append($('<td>').text(total).formatCurrency())
 	});
 
+	thead.append($("<th class='summary-column'>").text('Avg'));
+
 	// add the Avg column data
-	$('table#' + tableId + ' tr').each(function(i){
+		table.find('tr').each(function(i){
 		if (i !== 0) {
 			var total = 0.0;
 			var colCount = 0;
@@ -212,7 +208,7 @@ function populateExpenseTrendTable(cols, rows, thead, tbody, tfoot, tableId) {
 					colCount++;
 				}
 			});
-			var tr = $('table#' + tableId + ' tr:eq(' + i + ')');
+			var tr = table.find('tr:eq(' + i + ')');
 			tr.append($("<td class='summary-column'>").text(total/colCount).formatCurrency())
 		}
 	});
