@@ -372,11 +372,11 @@ describe Report do
     end
   end
 
-  describe ".middle_reports_drop_down_options_for" do
+  describe ".period_drop_down_options_for" do
     let(:user) { FactoryGirl.create(:user) }
 
     it "should return only the default hash when the user has no transactions" do
-      dd_options = Report.middle_reports_drop_down_options(user)
+      dd_options = Report.period_drop_down_options(user)
 
       dd_options.count.should eq 3
       dd_options.keys.should eq ['year to date', 'last 12 months', 'all']
@@ -392,7 +392,7 @@ describe Report do
        FactoryGirl.create(:transaction, user: user, date: Time.local(2008, "jan", 15))
        FactoryGirl.create(:transaction, user: user, date: Time.local(2011, "jan", 15))
 
-       dd_options = Report.middle_reports_drop_down_options(user)
+       dd_options = Report.period_drop_down_options(user)
 
        dd_options.count.should eq 7
        dd_options.keys.should eq ['year to date', 'last 12 months', 'all', '2011', '2010', '2008', '2007']
