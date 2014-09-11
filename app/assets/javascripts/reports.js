@@ -43,8 +43,8 @@ jQuery(function($) {
 	});
 
 	// hide tables on page load
-	$('table#expensesTable,table#incomeTable,table#incomeExpenseTable,' + 
-		'table#profitLossTable,table#expenseTrendTable,table#incomeTrendTable').hide();
+	// $('table#expensesTable,table#incomeTable,table#incomeExpenseTable,' + 
+	// 	'table#profitLossTable,table#expenseTrendTable,table#incomeTrendTable').hide();
 
 	// overallIncomeExpenseProfitLossChartsRange charts date range selection event
 	$('#overallIncomeExpenseProfitLossChartsRange').change(function() {
@@ -142,11 +142,12 @@ function populateTable(tableId, rows, cols) {
 	tfoot = $('table#' + tableId + ' tfoot'); 
 
 	// remove existing items
-	tbody.find('tr').each(function(i, val) {
-		$(val).remove();
+
+	tbody.find('tr').each(function() {
+		$(this).remove();
 	});
-	tfoot.find('tr').each(function(i, val) {
-		$(val).remove();
+	tfoot.find('tr').each(function() {
+		$(this).remove();
 	});
 	
 	// add new items
@@ -158,6 +159,9 @@ function populateTable(tableId, rows, cols) {
 	}
 	else if (tableId === 'expenseTrendTable' || tableId === 'incomeTrendTable') {
 		thead = $('table#' + tableId + ' thead tr');
+		thead.find('th').each(function() {
+			$(this).remove();
+		});
 		populateTrendTable(cols, rows, thead, tbody, tfoot, tableId);
 	} 
 	else {
@@ -179,6 +183,9 @@ function populateTrendTable(cols, rows, thead, tbody, tfoot, tableId) {
 	
 	// add the data
 	lastTableRow = table.find('tr:last');
+
+	// add first header item (empty header for the categories)
+	thead.append($('<th>'));
 	$.each(rows, function() {
 		// add the header values
 		thead.append($('<th>').text(this[0]))

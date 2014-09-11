@@ -335,8 +335,8 @@ describe Report do
       it "should return zero trend when user has no expense records" do
         r = Report.calculate_expense_trend("year", user)
 
-        r.count.should eq Time.now.month
-        for i in 1..Time.now.month.to_i do
+        r.count.should eq Time.now.ago(1.month).month
+        for i in 1..Time.now.ago(1.month).month.to_i do
           r[i - 1][0].should eq Date::MONTHNAMES[i][0..2]
           r[i - 1][1].should eq nil
           r[i - 1][2].should eq nil
@@ -357,16 +357,16 @@ describe Report do
         r = Report.calculate_expense_trend("year", user, Time.local("2010", "dec"))
 
         r[0][0].should eq "Jan"
-        r[0][1].should eq 0
-        r[0][2].should eq 20
+        r[0][1].should eq 20
+        r[0][2].should eq 0
         r[0][3].should eq nil
         r[1][0].should eq "Feb"
-        r[1][1].should eq 40
-        r[1][2].should eq 0
+        r[1][1].should eq 0
+        r[1][2].should eq 40
         r[1][3].should eq nil
         r[2][0].should eq "Mar"
-        r[2][1].should eq 150
-        r[2][2].should eq 0
+        r[2][1].should eq 0
+        r[2][2].should eq 150
         r[2][3].should eq nil
       end
     end

@@ -164,7 +164,7 @@ class User < ActiveRecord::Base
     transactions.
       select("extract(year from date) as period, name, sum(amount)").
       joins("LEFT JOIN categories on categories.id = transactions.category_id").
-      where("is_debit = true").
+      where("is_debit = true AND extract(year from date) != extract(year from current_date)").
       group(1, 2).
       order(1, 2)
   end
@@ -179,9 +179,10 @@ class User < ActiveRecord::Base
   end
 
   def expenses_by_category_for_last_12_months
-    period_start = Time.now - 11.months
+    period_start = Time.now - 12.months
+    period_end = Time.now.beginning_of_month - 1.day
     start_date = "#{period_start.year}-#{period_start.month}-01 00:00:00"
-    end_date = "#{Time.now.year}-#{Time.now.month}-#{Time.now.day} 23:59:59"
+    end_date = "#{period_end.year}-#{period_end.month}-#{period_end.day} 23:59:59"
 
     transactions.
       select("extract(month from date) as period, name, sum(amount)").
@@ -192,9 +193,10 @@ class User < ActiveRecord::Base
   end
 
   def income_by_category_for_last_12_months
-    period_start = Time.now - 11.months
+    period_start = Time.now - 12.months
+    period_end = Time.now.beginning_of_month - 1.day
     start_date = "#{period_start.year}-#{period_start.month}-01 00:00:00"
-    end_date = "#{Time.now.year}-#{Time.now.month}-#{Time.now.day} 23:59:59"
+    end_date = "#{period_end.year}-#{period_end.month}-#{period_end.day} 23:59:59"
 
     transactions.
       select("extract(month from date) as period, name, sum(amount)").

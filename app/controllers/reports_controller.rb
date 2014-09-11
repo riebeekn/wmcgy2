@@ -63,7 +63,7 @@ class ReportsController < ApplicationController
       rows: Report.calculate_expense_trend(ytd_or_all, current_user, period_end),
       options: { 
         backgroundColor: { fill:'#F5F5F5'},
-        title: 'Expense trend', 
+        title: 'Historical expense trend', 
         titleTextStyle: { fontSize: 18}, pointSize: 5 },
       format_cols: [1,2]
     }
@@ -76,7 +76,7 @@ class ReportsController < ApplicationController
       rows: Report.calculate_income_trend(ytd_or_all, current_user, period_end),
       options: { 
         backgroundColor: { fill:'#F5F5F5'},
-        title: 'Income trend', 
+        title: 'Historical income trend', 
         titleTextStyle: { fontSize: 18}, pointSize: 5 },
       format_cols: [1,2]
     }

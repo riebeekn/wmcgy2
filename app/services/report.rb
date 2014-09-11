@@ -130,10 +130,15 @@ class Report
 
   def self.calculate_expense_trend(range, user, period_end = Time.now)
     if range == "all"
+      period_end = period_end.ago(1.year)
       expenses = user.expenses_by_category_and_year
     elsif range == "12"
+      period_end = period_end.ago(1.month)
       expenses = user.expenses_by_category_for_last_12_months
     else
+      if (period_end.year == Time.now.year)
+        period_end = period_end.ago(1.month)
+      end
       expenses = user.expenses_by_category_and_month_for_current_year(period_end.year)
     end
 
@@ -171,10 +176,15 @@ class Report
 
   def self.calculate_income_trend(range, user, period_end = Time.now)
     if range == "all"
+      period_end = period_end.ago(1.year)
       income = user.income_by_category_and_year
     elsif range == "12"
+      period_end = period_end.ago(1.month)
       income = user.income_by_category_for_last_12_months
     else
+      if (period_end.year == Time.now.year)
+        period_end = period_end.ago(1.month)
+      end
       income = user.income_by_category_and_month_for_current_year(period_end.year)
     end
 
