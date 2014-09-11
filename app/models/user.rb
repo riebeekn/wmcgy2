@@ -128,7 +128,8 @@ class User < ActiveRecord::Base
     names = transactions.
       select("distinct name").
       joins("inner join categories on transactions.category_id = categories.id").
-      where("is_debit = true")
+      where("is_debit = true").
+      order(1)
 
     names.map{|c| c.name}
   end
@@ -137,7 +138,8 @@ class User < ActiveRecord::Base
     names = transactions.
       select("distinct name").
       joins("inner join categories on transactions.category_id = categories.id").
-      where("is_debit = false")
+      where("is_debit = false").
+      order(1)
 
     names.map{|c| c.name}
   end

@@ -357,16 +357,16 @@ describe Report do
         r = Report.calculate_expense_trend("year", user, Time.local("2010", "dec"))
 
         r[0][0].should eq "Jan"
-        r[0][1].should eq 20
-        r[0][2].should eq 0
+        r[0][1].should eq 0
+        r[0][2].should eq 20
         r[0][3].should eq nil
         r[1][0].should eq "Feb"
-        r[1][1].should eq 0
-        r[1][2].should eq 40
+        r[1][1].should eq 40
+        r[1][2].should eq 0
         r[1][3].should eq nil
         r[2][0].should eq "Mar"
-        r[2][1].should eq 0
-        r[2][2].should eq 150
+        r[2][1].should eq 150
+        r[2][2].should eq 0
         r[2][3].should eq nil
       end
     end

@@ -43,8 +43,8 @@ jQuery(function($) {
 	});
 
 	// hide tables on page load
-	// $('table#expensesTable,table#incomeTable,table#incomeExpenseTable,' + 
-	// 	'table#profitLossTable,table#expenseTrendTable,table#incomeTrendTable').hide();
+	$('table#expensesTable,table#incomeTable,table#incomeExpenseTable,' + 
+		'table#profitLossTable,table#expenseTrendTable,table#incomeTrendTable').hide();
 
 	// overallIncomeExpenseProfitLossChartsRange charts date range selection event
 	$('#overallIncomeExpenseProfitLossChartsRange').change(function() {
