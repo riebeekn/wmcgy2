@@ -1,6 +1,6 @@
 <section>
 	<header class="delete">Delete account</header>
-	<p>Account deletion cannot be undone, please be certain.</p>
+	<p class="delete-message">Account deletion cannot be undone, please be certain.</p>
 	<%= button_to "Delete account", user_path(@user), method: :delete, class: "btn btn-danger",
 	 						data: { confirm: "WARNING, your account will be deleted and cannot be recovered." } %>
 </section>

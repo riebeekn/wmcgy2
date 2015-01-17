@@ -73,4 +73,14 @@ footer {
 	}
 }
 
+@media (max-width: 480px) {
+	.mtd-ytd {
+		float: left;
+	}
+	.page-header {
+		float: left;
+		min-width: 250px;
+	}
+}
+
 .test-css-class-on-about-page { color: blue; display:none; }

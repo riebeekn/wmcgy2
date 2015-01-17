@@ -17,3 +17,21 @@
 	.delete { color: #dc3912; }
 	.btn-danger { margin-left: 50px; }
 }
+
+@media (max-width: 480px) {
+	.account {
+		header {
+			float: left;
+			min-width: 250px;
+		}
+		.delete-message {
+			float: left;
+		}
+		section {
+			border-bottom: none;
+		}
+		.delete {
+			display: none;
+		}
+	}
+}

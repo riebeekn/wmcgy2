@@ -25,10 +25,6 @@
 	}
 	
 	.add-trans { margin-bottom: 20px; }
-	
-	.download-transactions { 
-		float:right; 
-	}
 }
 
 .ui-autocomplete {
@@ -38,6 +34,16 @@
 	overflow-x: hidden;
 	/* add padding to account for vertical scrollbar */
 	padding-right: 20px;
+}
+
+@media (max-width: 480px) {
+	.add-trans {
+		float: left;
+		min-width: 250px;
+	}
+	.top-pager {
+		display: none;
+	}
 }
 	
 	

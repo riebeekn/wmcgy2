@@ -9,12 +9,11 @@
 		  <i class="icon-plus icon-white"></i>&nbsp;
 		  <%= t('Add new transaction').html_safe %>
 		<% end %>
-		<span class="download-transactions">
-			<%= link_to 'Download all transactions in CSV format', transactions_path(format: "csv") %> 
-		</span> 
 	</div>
 	<% if @transactions.any? %>
-		<%= will_paginate renderer: BootstrapPagination::Rails %>
+		<span class="top-pager">
+			<%= will_paginate renderer: BootstrapPagination::Rails, page_links: false %>
+		</span>
 		<table>
 			<thead>
 				<tr>
@@ -30,6 +29,9 @@
 				<%= render @transactions %>
 			</tbody>
 		</table>
-		<%= will_paginate renderer: BootstrapPagination::Rails %>
+		<%= will_paginate renderer: BootstrapPagination::Rails, page_links: false %>
 	<% end %>
+	<span class="download-transactions">
+		<%= link_to 'Download all transactions in CSV format', transactions_path(format: "csv") %> 
+	</span> 
 </div>

@@ -1,10 +1,7 @@
 <% provide(:title, 'Contact') %>
 <div class="contact">
 	<div class="page-header">
-		<h1>
-			Contact
-			<small>... feedback, questions?  Use the form below.</small>
-		</h1>
+		<h1>Contact</h1>
 	</div>
 	<%= simple_form_for @message, url: contacts_path, html: { class: "form-horizontal" } do |f| %>
 		<fieldset>

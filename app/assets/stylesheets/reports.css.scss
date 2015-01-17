@@ -59,6 +59,12 @@
 	.right-label {
 		margin-left: 5px;
 	}
+
+	@media (max-width: 480px) {
+		.well {
+			float: left;
+		}
+	}
 }
 
 
