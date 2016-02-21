@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 ruby "2.2.4"
 
 gem 'rails', '3.2.19'
-gem 'pg'
+gem 'pg', '~> 0.18.4'
 gem 'jquery-rails'
 gem 'bcrypt-ruby', '~> 3.0.0'
 gem 'active_attr'
