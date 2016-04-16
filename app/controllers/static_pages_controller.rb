@@ -3,6 +3,6 @@ class StaticPagesController < ApplicationController
   
   def letsencrypt
     # use your code here, not mine
-    render text: "aYGbqKexyaQ1RRCqbYkAu4F3U1H9TzfR4icmIlCDrtg.ElwIer_jaW8HCKuGoiS_jg9BQ-vXBrFsbbKFYlXCG78"
+    render text: "WXdnfN4wJoZrq64RPcut9opMA_jGYDXhE-NBME5Hnd4.ElwIer_jaW8HCKuGoiS_jg9BQ-vXBrFsbbKFYlXCG78"
   end
 end
