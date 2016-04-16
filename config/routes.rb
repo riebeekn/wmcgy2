@@ -40,4 +40,6 @@ Wmcgy::Application.routes.draw do
   match '/reports/income_trend', to: 'reports#income_trend'
   
   root to: 'transactions#index'
+
+  get '/.well-known/acme-challenge/:id' => 'static_pages#letsencrypt'
 end
