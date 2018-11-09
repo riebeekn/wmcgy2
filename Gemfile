@@ -8,11 +8,11 @@ gem 'bcrypt-ruby', '~> 3.0.0'
 gem 'active_attr'
 gem 'simple_form'
 gem 'best_in_place'
-gem 'faker' 
+gem 'faker'
 gem 'will_paginate', '~> 3.0.3'
 gem 'will_paginate-bootstrap'
 gem 'exception_notification'
-gem 'newrelic_rpm'
+# gem 'newrelic_rpm'
 gem 'omniauth-twitter'
 gem 'omniauth-google-oauth2'
 
@@ -42,7 +42,3 @@ group :test do
 	gem 'factory_girl_rails', '1.7.0'
 	gem 'launchy'
 end
-
-
-
-
