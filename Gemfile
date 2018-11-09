@@ -12,7 +12,7 @@ gem 'faker'
 gem 'will_paginate', '~> 3.0.3'
 gem 'will_paginate-bootstrap'
 gem 'exception_notification'
-# gem 'newrelic_rpm'
+gem 'newrelic_rpm'
 gem 'omniauth-twitter'
 gem 'omniauth-google-oauth2'
 
