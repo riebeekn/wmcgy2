@@ -1,13 +1,15 @@
 source 'https://rubygems.org'
+ruby '2.2.4'
 
 gem 'rails', '3.2.19'
-gem 'pg'
+gem 'pg', '~> 0.18.4'
+gem 'rake', '< 11.0'
 gem 'jquery-rails'
 gem 'bcrypt-ruby', '~> 3.0.0'
 gem 'active_attr'
 gem 'simple_form'
 gem 'best_in_place'
-gem 'faker' 
+gem 'faker'
 gem 'will_paginate', '~> 3.0.3'
 gem 'will_paginate-bootstrap'
 gem 'exception_notification'
@@ -41,7 +43,3 @@ group :test do
 	gem 'factory_girl_rails', '1.7.0'
 	gem 'launchy'
 end
-
-
-
-
