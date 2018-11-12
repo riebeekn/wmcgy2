@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
-ruby '2.2.4'
+ruby '2.3.6'
 
-gem 'rails', '3.2.19'
+gem 'rails', '3.2.22.5'
 gem 'pg', '~> 0.18.4'
 gem 'rake', '< 11.0'
 gem 'jquery-rails'
@@ -28,7 +28,8 @@ group :assets do
 end
 
 group :development, :test do
-	gem 'rspec-rails', '~>2.12.1'
+  gem 'rspec-rails', '~>2.99'
+  gem 'test-unit', '~> 3.0'
 end
 
 group :development do
