@@ -181,38 +181,6 @@ describe User do
         @user.should be_active
       end
     end
-
-    context "Twitter" do
-      before do
-        @provider = "twitter"
-        @auth["provider"] = @provider
-      end
-
-      it "should create a new user if and return it if user does not exist" do
-        expect do
-          @user = User.from_omniauth(@auth)
-        end.to change(User, :count).by(1)
-        @user.should_not be_nil
-        @user.email.should eq "#{@uid}.no.email.for.twitter@example.com"
-        @user.name.should eq @name
-        @user.uid.should eq @uid
-        @user.provider.should eq @provider
-        @user.should be_active
-      end
-
-      it "should return the user if the user already exists and not create a new one" do
-        User.from_omniauth(@auth)
-        expect do
-          @user = User.from_omniauth(@auth)
-        end.to_not change(User, :count).by(1)
-        @user.should_not be_nil
-        @user.email.should eq "#{@uid}.no.email.for.twitter@example.com"
-        @user.name.should eq @name
-        @user.uid.should eq @uid
-        @user.provider.should eq @provider
-        @user.should be_active
-      end
-    end
   end
 
   describe "send activation email" do

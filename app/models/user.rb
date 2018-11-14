@@ -279,12 +279,7 @@ class User < ActiveRecord::Base
         user.provider = auth["provider"]
         user.uid = auth["uid"]
         user.name = auth["info"]["name"]
-        if user.provider == 'twitter'
-          # twitter does not provide the user's email
-          user.email = "#{user.uid}.no.email.for.twitter@example.com"
-        else
-          user.email = auth["info"]["email"]
-        end
+        user.email = auth["info"]["email"]
         # note this isn't ideal, see project template where we don't create
         # a valid password digest for oauth users, in theory with the below
         # some one could log in via the custom authentication by
