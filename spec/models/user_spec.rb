@@ -43,7 +43,6 @@ describe User do
   it { should respond_to(:send_activation_email) }
   it { should respond_to(:categories) }
   it { should respond_to(:transactions) }
-  it { should respond_to(:name) }
   it { should respond_to(:provider) }
   it { should respond_to(:uid) }
 
@@ -162,7 +161,6 @@ describe User do
         end.to change(User, :count).by(1)
         @user.should_not be_nil
         @user.email.should eq @email
-        @user.name.should eq @name
         @user.uid.should eq @uid
         @user.provider.should eq @provider
         @user.should be_active
@@ -175,7 +173,6 @@ describe User do
         end.to_not change(User, :count).by(1)
         @user.should_not be_nil
         @user.email.should eq @email
-        @user.name.should eq @name
         @user.uid.should eq @uid
         @user.provider.should eq @provider
         @user.should be_active

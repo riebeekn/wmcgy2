@@ -13,7 +13,6 @@
 #  active                 :boolean
 #  created_at             :datetime        not null
 #  updated_at             :datetime        not null
-#  name                   :string(255)
 #  provider               :string(255)
 #  uid                    :string(255)
 #
@@ -35,7 +34,6 @@ class User < ActiveRecord::Base
   validates :password_confirmation, presence: true, if: :should_validate_password
 
   before_create { generate_token(:auth_token) }
-  before_create { set_name_if_empty }
   before_save { |user| user.email = user.email.downcase }
 
   def send_activation_email
@@ -254,12 +252,6 @@ class User < ActiveRecord::Base
       end while User.exists?(column => self[column])
     end
 
-    def set_name_if_empty
-      if name.nil?
-        self.name = email
-      end
-    end
-
     def where_clause_for_transactions_by_date_and_category(is_debit, range)
       where_clause = is_debit == true ? "is_debit=true" : "is_debit=false"
       if !range.nil?
@@ -278,7 +270,6 @@ class User < ActiveRecord::Base
       User.create do |user|
         user.provider = auth["provider"]
         user.uid = auth["uid"]
-        user.name = auth["info"]["name"]
         user.email = auth["info"]["email"]
         # note this isn't ideal, see project template where we don't create
         # a valid password digest for oauth users, in theory with the below
