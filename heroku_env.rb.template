@@ -1,0 +1,11 @@
+#  This file is used to hold environment variables that are required to
+#  run the application locally but that contain sensitive information so
+#  should not be checked into source control.  As a result we can't add
+#  these values directly to /config/environments/development.rb
+#
+#  Set-up steps:
+#  1) Copy this file to config/heroku_env.rb, i.e. cp heroku_env.rb.template config/heroku_env.rb
+#  2) Enter appropriate values for the configuration settings below
+
+ENV['GOOGLE_KEY'] = "put the google key here"
+ENV['GOOGLE_SECRET'] = "put the google secret here"
