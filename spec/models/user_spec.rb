@@ -26,6 +26,7 @@ describe User do
     @user = User.new(email: "user@example.com", password: "foobar",
                     password_confirmation: "foobar")
     @user.should_validate_password = true
+    ENV["registration_locked"] = "false"
   end
 
   subject { @user }
@@ -62,6 +63,23 @@ describe User do
        u = User.find_by_email(email.downcase)
        u.should_not be_nil
        u.email.should eq 'joejimple@example.com'
+    end
+
+    it "should not save a user when registration locked" do
+      ENV["registration_locked"] = "true"
+      email = "bob@example.com"
+      @user.email = email
+      @user.save
+       u = User.find_by_email(email)
+       u.should be_nil
+    end
+
+    it "should save a user when registration is not locked" do
+      email = "bob@example.com"
+      @user.email = email
+      @user.save
+       u = User.find_by_email(email)
+       u.should_not be_nil
     end
   end
 

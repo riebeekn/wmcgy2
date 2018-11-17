@@ -33,6 +33,7 @@ class User < ActiveRecord::Base
   validates :password, length: { within: 6..40 }, if: :should_validate_password
   validates :password_confirmation, presence: true, if: :should_validate_password
 
+  before_create { save?() }
   before_create { generate_token(:auth_token) }
   before_save { |user| user.email = user.email.downcase }
 
@@ -246,6 +247,10 @@ class User < ActiveRecord::Base
 
   private
 
+    def save?()
+      ENV['registration_locked'] == "true" ? false : true
+    end
+
     def generate_token(column)
       begin
         self[column] =  SecureRandom.urlsafe_base64
@@ -267,21 +272,23 @@ class User < ActiveRecord::Base
     end
 
     def self.create_with_omniauth(auth)
-      User.create do |user|
-        user.provider = auth["provider"]
-        user.uid = auth["uid"]
-        user.email = auth["info"]["email"]
-        # note this isn't ideal, see project template where we don't create
-        # a valid password digest for oauth users, in theory with the below
-        # some one could log in via the custom authentication by
-        # guessing the random password... this is likely close to impossible
-        # but would be better to disallow custom authentication when user
-        # is created via oauth
-        pwd = SecureRandom.urlsafe_base64
-        user.password = pwd
-        user.password_confirmation = pwd
+      if ENV['registration_locked'] != "true"
+        User.create do |user|
+          user.provider = auth["provider"]
+          user.uid = auth["uid"]
+          user.email = auth["info"]["email"]
+          # note this isn't ideal, see project template where we don't create
+          # a valid password digest for oauth users, in theory with the below
+          # some one could log in via the custom authentication by
+          # guessing the random password... this is likely close to impossible
+          # but would be better to disallow custom authentication when user
+          # is created via oauth
+          pwd = SecureRandom.urlsafe_base64
+          user.password = pwd
+          user.password_confirmation = pwd
 
-        user.active = true
+          user.active = true
+        end
       end
     end
 end

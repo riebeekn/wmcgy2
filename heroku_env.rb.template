@@ -9,3 +9,4 @@
 
 ENV['GOOGLE_KEY'] = "put the google key here"
 ENV['GOOGLE_SECRET'] = "put the google secret here"
+ENV['registration_locked'] = "true|false"

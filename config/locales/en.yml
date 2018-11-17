@@ -18,4 +18,5 @@ en:
     password_resets:
       email_sent: "Check your email for instructions on how to reset your password."
       invalid_token: "Invalid password reset token, please try again."
+    registration_locked: "Sorry, we are not accepting new registrations at this time."
   app_base_title: "Where did my cash go yo?"
