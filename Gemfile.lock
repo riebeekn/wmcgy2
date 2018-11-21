@@ -101,7 +101,6 @@ GEM
     mime-types (1.25.1)
     multi_json (1.13.1)
     multipart-post (1.1.5)
-    newrelic_rpm (3.9.1.236)
     nokogiri (1.5.5)
     oauth2 (0.6.1)
       faraday (~> 0.7)
@@ -213,7 +212,6 @@ DEPENDENCIES
   faker
   jquery-rails
   launchy
-  newrelic_rpm
   omniauth-google-oauth2
   pg (~> 0.18.4)
   rails (= 3.2.22.5)
