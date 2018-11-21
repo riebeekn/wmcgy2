@@ -1,8 +1,9 @@
 source 'https://rubygems.org'
-ruby "2.2.4"
+ruby '2.3.6'
 
-gem 'rails', '3.2.19'
+gem 'rails', '3.2.22.5'
 gem 'pg', '~> 0.18.4'
+gem 'rake', '< 11.0'
 gem 'jquery-rails'
 gem 'bcrypt-ruby', '~> 3.0.0'
 gem 'active_attr'
@@ -13,7 +14,6 @@ gem 'will_paginate', '~> 3.0.3'
 gem 'will_paginate-bootstrap'
 gem 'exception_notification'
 gem 'newrelic_rpm'
-gem 'omniauth-twitter'
 gem 'omniauth-google-oauth2'
 
 # Gems used only for assets and not required
@@ -27,7 +27,8 @@ group :assets do
 end
 
 group :development, :test do
-	gem 'rspec-rails', '~>2.12.1'
+  gem 'rspec-rails', '~>2.99'
+  gem 'test-unit', '~> 3.0'
 end
 
 group :development do
