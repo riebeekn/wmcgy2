@@ -24,3 +24,5 @@ brakeman.html
 # text file used to keep track of enhancements / changes
 *.txt
 .DS_Store
+
+.ruby-version

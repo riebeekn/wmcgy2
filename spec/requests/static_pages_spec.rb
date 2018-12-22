@@ -31,6 +31,7 @@ describe "Static pages" do
       before { visit root_path }
       it { should_not have_link("Transactions")}
       it { should_not have_link("Categories") }
+      it { should_not have_link("Budget")}
       it { should_not have_link("Sign out") }
       it { should_not have_content("Signed in as") }
     end
@@ -43,7 +44,7 @@ describe "Static pages" do
       it { should have_link("Transactions") }
       it { should have_link("Categories") }
       it { should have_link("Reports") }
-      it { should have_link("Account") }
+      it { should have_link("Budget") }
       it { should have_link("Sign out") }
       it { should have_link("Signed in as #{user.email}") }
       it { should_not have_link("Sign in") }
@@ -57,10 +58,10 @@ describe "Static pages" do
         page.should have_selector("title", text: full_title("Categories"))
         click_link "Reports"
         page.should have_selector("title", text: full_title("Reports"))
-        click_link "Account"
-        page.should have_selector("title", text: full_title("Account Settings"))
+        click_link "Budget"
+        page.should have_selector("title", text: full_title("Budget"))
         visit root_path
-        click_link "Signed in as #{user.email}"
+        find("#accountLink", visible: false).click
         page.should have_selector("title", text: full_title("Account Settings"))
       end
     end
