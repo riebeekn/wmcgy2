@@ -1,0 +1,11 @@
+<tr>
+  <td><%= category.name %></td>
+  <td>
+    <%= best_in_place category, :budgeted,
+      activator: "##{category.id}",
+      :display_with => :number_to_currency %>
+    <a id="<%= "#{category.id}" %>" href="#">Edit</a>
+  </td>
+  <td><%= category.spent %></td>
+  <td></td>
+</tr>

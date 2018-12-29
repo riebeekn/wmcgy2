@@ -10,12 +10,14 @@
 #
 
 class Category < ActiveRecord::Base
-  attr_accessible :name
+  attr_accessible :name, :budgeted
+  attr_accessor :spent
   belongs_to :user
-  
+
   validates :name, presence: true, length: { maximum: 255 }
   validates :user_id, presence: true
   validates :name, :uniqueness => { scope: :user_id, case_sensitive: false }
-  
-  default_scope order: 'LOWER(categories.name)' 
+  validates_numericality_of :budgeted
+
+  default_scope order: 'LOWER(categories.name)'
 end

@@ -86,10 +86,10 @@ class User < ActiveRecord::Base
 
   def expenses_by_category_and_date_range(range)
     transactions.
-      select("name, SUM(amount)").
+      select("name, SUM(amount), categories.id").
       joins("LEFT JOIN categories on categories.id = transactions.category_id").
       where(where_clause_for_transactions_by_date_and_category(true, range)).
-      group("name").
+      group("name, categories.id").
       order("name")
   end
 
