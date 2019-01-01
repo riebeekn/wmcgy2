@@ -6,6 +6,6 @@
       :display_with => :number_to_currency %>
     <a id="<%= "#{category.id}" %>" href="#">Edit</a>
   </td>
-  <td><%= category.spent %></td>
-  <td></td>
+  <td class="spent-item"><%= number_to_currency(category.spent.to_f.abs) %></td>
+  <td class="plus-minus"></td>
 </tr>

@@ -1,6 +1,7 @@
 <% provide(:title, 'Transactions') %>
 <div class="transactions">
 	<%= render 'shared/mtd_ytd' %>
+	<%= render 'shared/budget_status' %>
 	<div class="page-header">
 		<h1>Transactions</h1>
 	</div>
@@ -32,6 +33,6 @@
 		<%= will_paginate renderer: BootstrapPagination::Rails, page_links: false %>
 	<% end %>
 	<span class="download-transactions">
-		<%= link_to 'Download all transactions in CSV format', transactions_path(format: "csv") %> 
-	</span> 
+		<%= link_to 'Download all transactions in CSV format', transactions_path(format: "csv") %>
+	</span>
 </div>

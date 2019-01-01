@@ -60,6 +60,15 @@ class User < ActiveRecord::Base
     User.find_by_provider_and_uid(auth["provider"], auth["uid"]) || create_with_omniauth(auth)
   end
 
+  def monthly_budget_remaining
+    expenses = transactions.
+      select("SUM(amount)").
+      where("date_trunc('month', date) = date_trunc('month', now()) AND is_debit = true").
+      first.sum
+    budgeted = categories.sum(:budgeted)
+    budgeted.to_f.abs - expenses.to_f.abs
+  end
+
   def mtd
     credit = transactions.
       select("SUM(amount)").

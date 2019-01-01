@@ -19,6 +19,11 @@ describe "Budget" do
       it_behaves_like 'mtd / ytd widget'
     end
 
+    context "budget widget" do
+      before { visit budget_path }
+      it_behaves_like 'budget status widget'
+    end
+
     describe "when no categories have been created" do
       before { visit budget_path }
       it { should have_content("You need to create some categories") }

@@ -356,6 +356,57 @@ describe User do
     end
   end
 
+  describe "budgeting" do
+    before do
+      @user = FactoryGirl.create(:user, active: true)
+    end
+
+    describe "with no transactions" do
+      it "should return 0" do
+        @user.monthly_budget_remaining.should eq 0
+      end
+    end
+
+    describe "when over budget" do
+      before do
+        @cat_gro = FactoryGirl.create(:category, user: @user, name: 'Groceries', budgeted: 800)
+        FactoryGirl.create(:transaction, date: 1.hour.ago,
+          description: 'A transaction', amount: 801, is_debit: true, user: @user,
+          category: @cat_gro)
+      end
+
+      it "should return a negative value" do
+        @user.monthly_budget_remaining.should eq -1
+      end
+    end
+
+    describe "when under budget" do
+      before do
+        @cat_gro = FactoryGirl.create(:category, user: @user, name: 'Groceries', budgeted: 800)
+        FactoryGirl.create(:transaction, date: 1.hour.ago,
+          description: 'A transaction', amount: 799, is_debit: true, user: @user,
+          category: @cat_gro)
+      end
+
+      it "should return a negative value" do
+        @user.monthly_budget_remaining.should eq 1
+      end
+    end
+
+    describe "when exactly on budget" do
+      before do
+        @cat_gro = FactoryGirl.create(:category, user: @user, name: 'Groceries', budgeted: 800)
+        FactoryGirl.create(:transaction, date: 1.hour.ago,
+          description: 'A transaction', amount: 800, is_debit: true, user: @user,
+          category: @cat_gro)
+      end
+
+      it "should return a negative value" do
+        @user.monthly_budget_remaining.should eq 0
+      end
+    end
+  end
+
   describe "mtd / ytd" do
     before do
       @user = FactoryGirl.create(:user, active: true)

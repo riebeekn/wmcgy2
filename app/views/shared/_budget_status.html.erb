@@ -1,0 +1,7 @@
+<% user ||= current_user %>
+<% budget_left = user.monthly_budget_remaining %>
+<section class="budget-status">
+  <header class="<%= budget_left < 0 ? 'debit' : 'credit'%>">
+    <%= budget_left < 0 ? 'OVER BUDGET' : 'ON BUDGET'%>
+  </header>
+</section>

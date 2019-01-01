@@ -37,6 +37,10 @@ describe "Users" do
         context "mtd / ytd widget" do
           it_behaves_like 'mtd / ytd widget'
         end
+
+        context "budget widget" do
+          it_behaves_like 'budget status widget'
+        end
       end
     end
 
@@ -67,6 +71,10 @@ describe "Users" do
 
         context "mtd / ytd widget" do
          it_behaves_like 'mtd / ytd widget'
+        end
+
+        context "budget widget" do
+          it_behaves_like 'budget status widget'
         end
       end
 
