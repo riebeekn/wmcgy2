@@ -12,7 +12,20 @@ function bindBudgetValueUpdateSuccessEvent() {
     setPlusMinus();
     setBudgetedTotal();
     setPlusMinusTotal();
+    updateBudgetStatus();
   });
+}
+
+function updateBudgetStatus() {
+  if ($('#plus-minus-total').asNumber() < 0) {
+    $('section.budget-status header').html('OVER BUDGET')
+    $('section.budget-status header').addClass('debit');
+    $('section.budget-status header').removeClass('credit');
+  } else {
+    $('section.budget-status header').html('ON BUDGET');
+    $('section.budget-status header').addClass('credit');
+    $('section.budget-status header').removeClass('debit');
+  }
 }
 
 function setPlusMinus() {

@@ -3,12 +3,11 @@
 // You can use Sass (SCSS) here: http://sass-lang.com/
 .categories {
 	table {
-		width: 10px;
 		min-width: 25%;
 		@extend .table, .table-striped;
 	}
 	.field_with_errors { display: inline-block; }
-	#category_name { 
+	#category_name {
 		margin-top: 10px;
 	}
 }

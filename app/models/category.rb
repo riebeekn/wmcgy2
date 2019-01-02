@@ -10,7 +10,7 @@
 #
 
 class Category < ActiveRecord::Base
-  attr_accessible :name, :budgeted
+  attr_accessible :name, :budgeted, :include_in_budget
   attr_accessor :spent
   belongs_to :user
 

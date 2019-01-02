@@ -11,13 +11,15 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20181118033717) do
+ActiveRecord::Schema.define(:version => 20190102185743) do
 
   create_table "categories", :force => true do |t|
     t.string   "name"
     t.integer  "user_id"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",                                                         :null => false
+    t.datetime "updated_at",                                                         :null => false
+    t.decimal  "budgeted",          :precision => 10, :scale => 2, :default => 0.0
+    t.boolean  "include_in_budget",                                :default => true
   end
 
   add_index "categories", ["user_id"], :name => "index_categories_on_user_id"

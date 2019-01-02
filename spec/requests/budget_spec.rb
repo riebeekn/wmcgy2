@@ -31,6 +31,7 @@ describe "Budget" do
 
     describe "when categories have been created" do
       before do
+        user.categories.build(name: "Pay", include_in_budget: false).save!
         user.categories.build(name: "Rent", budgeted: 800).save!
         user.categories.build(name: "Groceries", budgeted: 500).save!
         user.categories.build(name: "Entertainment", budgeted: 200).save!

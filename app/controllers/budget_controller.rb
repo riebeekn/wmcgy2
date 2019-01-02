@@ -9,7 +9,7 @@ class BudgetController < ApplicationController
     range = "01 #{month} #{year}:TO:#{endDay} #{month} #{year}"
     expenses = current_user.expenses_by_category_and_date_range(range)
 
-    @categories = current_user.categories
+    @categories = current_user.categories.where(include_in_budget: true)
     @categories.entries.each do |category|
       expenses.each do |expense|
         if expense.id == category.id

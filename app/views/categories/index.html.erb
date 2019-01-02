@@ -11,7 +11,12 @@
 		<%= f.submit "Add", class: "btn btn-primary" %>
 	<% end %>
 	<% if @categories.any? %>
-		<table>
+	  <table>
+	    <thead>
+	      <th>Name</th>
+	      <th colspan="2"></th>
+	      <th>Include category in budget?</th>
+	    </thead>
 			<tbody>
 				<%= render @categories %>
 			</tbody>

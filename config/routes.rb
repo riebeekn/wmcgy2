@@ -13,6 +13,7 @@ Wmcgy::Application.routes.draw do
 
   match '/budget',  to: 'budget#index'
   match '/about',   to: 'static_pages#about'
+  match '/toggle',  to: 'categories#toggle_budget_inclusion_flag'
 
   match '/contact', to: 'contacts#new', as: :new_contact
 

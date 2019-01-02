@@ -22,6 +22,7 @@ describe Category do
   it { should respond_to :user }
   it { should respond_to :spent }
   it { should respond_to :budgeted }
+  it { should respond_to :include_in_budget }
   it { should be_valid}
 
   describe "validations" do
