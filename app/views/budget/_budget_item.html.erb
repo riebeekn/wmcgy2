@@ -1,10 +1,12 @@
 <tr>
-  <td><%= category.name %></td>
+  <td>
+    <%= category.name %>
+    <a class="pull-right" id="<%= "#{category.id}" %>" href="#">Edit</a>
+  </td>
   <td>
     <%= best_in_place category, :budgeted,
       activator: "##{category.id}",
       :display_with => :number_to_currency %>
-    <a id="<%= "#{category.id}" %>" href="#">Edit</a>
   </td>
   <td class="spent-item"><%= number_to_currency(category.spent.to_f.abs) %></td>
   <td class="plus-minus"></td>

@@ -36,9 +36,11 @@ function setPlusMinus() {
       var plusMinus = budgeted - spent;
       var $field = $(this).find('.plus-minus');
       if (plusMinus < 0) {
-        $field.addClass('debit');
+        $field.addClass('debit').removeClass('warning');
+      } else if (spent >= budgeted * 0.2) {
+        $field.addClass('warning').removeClass('debit');
       } else {
-        $field.removeClass('debit');
+        $field.removeClass('debit').removeClass('warning');
       }
       $field.html(plusMinus).formatCurrency();
     }
@@ -69,8 +71,15 @@ function setPlusMinusTotal() {
     sum += $(this).asNumber();
   });
 
+  var budgetedTotal = $('#budget-total').asNumber();
+  var spentTotal = $('#spent-total').asNumber();
+  console.log(budgetedTotal);
+  console.log(spentTotal);
+
   if (sum < 0) {
-    $('#plus-minus-total').addClass('debit');
+    $('#plus-minus-total').addClass('debit').removeClass('warning');
+  } else if (spentTotal >= budgetedTotal * 0.2) {
+    $('#plus-minus-total').addClass('warning').removeClass('debit');
   } else {
     $('#plus-minus-total').removeClass('debit');
   }
