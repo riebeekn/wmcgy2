@@ -37,7 +37,7 @@ function setPlusMinus() {
       var $field = $(this).find('.plus-minus');
       if (plusMinus < 0) {
         $field.addClass('debit').removeClass('warning');
-      } else if (spent >= budgeted * 0.2) {
+      } else if (spent >= budgeted * 0.8) {
         $field.addClass('warning').removeClass('debit');
       } else {
         $field.removeClass('debit').removeClass('warning');
@@ -78,7 +78,7 @@ function setPlusMinusTotal() {
 
   if (sum < 0) {
     $('#plus-minus-total').addClass('debit').removeClass('warning');
-  } else if (spentTotal >= budgetedTotal * 0.2) {
+  } else if (spentTotal >= budgetedTotal * 0.8) {
     $('#plus-minus-total').addClass('warning').removeClass('debit');
   } else {
     $('#plus-minus-total').removeClass('debit');
