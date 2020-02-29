@@ -3,7 +3,7 @@ ruby '2.3.6'
 
 gem 'rails', '3.2.22.5'
 gem 'pg', '~> 0.18.4'
-gem 'rake', '< 11.0'
+gem 'rake', '< 13.0'
 gem 'jquery-rails'
 gem 'bcrypt-ruby', '~> 3.0.0'
 gem 'active_attr'
